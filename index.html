@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FIRST! — The Icebreaker Card Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --col-ent: #7B3FA0;
+  --col-adv: #1A7A6E;
+  --col-rel: #D94F3D;
+  --col-mil: #D4A800;
+  --col-sch: #3A7EC6;
+  --white: #FFFFFF;
+  --cream: #FFFDF5;
+  --dark: #1A1A2E;
+}
+
+html, body {
+  height: 100%;
+  background: #1A1A2E;
+  font-family: 'Nunito Sans', sans-serif;
+  overflow: hidden;
+}
+
+/* ══════════ SPLASH SCREEN ══════════ */
+#splash {
+  position: fixed; inset: 0;
+  background: linear-gradient(160deg, #1A1A2E 0%, #2D1B4E 50%, #1A2E4E 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 100;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#splash.hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
+
+.splash-stars { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.sstar {
+  position: absolute; background: #fff; border-radius: 50%;
+  animation: twinkle var(--d) ease-in-out infinite var(--delay);
+}
+@keyframes twinkle { 0%,100%{opacity:0.1;transform:scale(0.8)} 50%{opacity:0.8;transform:scale(1.2)} }
+
+.splash-deck {
+  position: relative; width: 200px; height: 260px; margin-bottom: 40px;
+}
+.splash-card-bg {
+  position: absolute; width: 160px; height: 210px; border-radius: 16px;
+  border: 3px solid rgba(255,255,255,0.15);
+}
+.splash-card-bg:nth-child(1) { background: var(--col-sch); transform: rotate(-12deg) translate(-30px, 10px); }
+.splash-card-bg:nth-child(2) { background: var(--col-mil); transform: rotate(-6deg) translate(-10px, 5px); }
+.splash-card-bg:nth-child(3) { background: var(--col-rel); transform: rotate(0deg); }
+.splash-card-bg:nth-child(4) { background: var(--col-adv); transform: rotate(6deg) translate(10px, 5px); }
+.splash-card-bg:nth-child(5) { background: var(--col-ent); transform: rotate(12deg) translate(30px, 10px); }
+.splash-card-front {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 160px; height: 210px; border-radius: 16px;
+  background: var(--col-ent);
+  border: 3px solid rgba(255,255,255,0.3);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: floatCard 3s ease-in-out infinite;
+}
+@keyframes floatCard { 0%,100%{transform:translate(-50%,-50%) rotate(-2deg)} 50%{transform:translate(-50%,-56%) rotate(2deg)} }
+.splash-card-front .cf-icon { font-size: 52px; }
+.splash-card-front .cf-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 900; color: #fff;
+  text-transform: uppercase; letter-spacing: 1px; text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.game-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 52px; font-weight: 900; color: #fff;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  line-height: 1;
+}
+.game-title span { color: #FFD700; }
+.game-subtitle {
+  font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.55);
+  letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; margin-bottom: 36px;
+}
+
+.start-btn {
+  background: linear-gradient(180deg, #FFD700 0%, #FF8C00 100%);
+  border: none; border-radius: 50px;
+  padding: 18px 56px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px; font-weight: 900; color: #1A1A2E;
+  cursor: pointer; letter-spacing: 1px;
+  box-shadow: 0 6px 0 #B85C00, 0 10px 30px rgba(255,165,0,0.4);
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: uppercase;
+}
+.start-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #B85C00, 0 4px 15px rgba(255,165,0,0.3); }
+
+.card-count-label {
+  margin-top: 20px; font-size: 12px; font-weight: 700;
+  color: rgba(255,255,255,0.3); letter-spacing: 1.5px; text-transform: uppercase;
+}
+
+/* ══════════ GAME SCREEN ══════════ */
+#game {
+  position: fixed; inset: 0;
+  background: #1A1A2E;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+#game.active { opacity: 1; pointer-events: all; }
+
+/* game header */
+.g-header {
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.g-logo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 1px;
+}
+.g-logo span { color: #FFD700; }
+.g-counter {
+  background: rgba(255,215,0,0.15);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 50px; padding: 5px 14px;
+  font-size: 13px; font-weight: 800; color: #FFD700;
+}
+.g-exit {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50px; padding: 6px 14px;
+  font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.65);
+  cursor: pointer; font-family: 'Nunito Sans', sans-serif;
+  display: flex; align-items: center; gap: 5px;
+}
+.g-exit:active { background: rgba(255,80,80,0.2); }
+
+/* progress */
+.g-progress {
+  padding: 10px 18px 0; flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+}
+.prog-bar {
+  flex: 1; height: 8px; background: rgba(255,255,255,0.1);
+  border-radius: 50px; overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD700, #FF8C00);
+  border-radius: 50px;
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.prog-num { font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.4); min-width: 32px; text-align: right; }
+
+/* card stage */
+.card-stage {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+/* THE PLAYING CARD — matches sample exactly */
+.playing-card {
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100vh - 200px);
+  aspect-ratio: 2/3;
+  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.15) inset,
+    0 -2px 0 rgba(0,0,0,0.2) inset,
+    0 25px 60px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.1);
+  transform-style: preserve-3d;
+  transition: transform 0.12s ease;
+  user-select: none;
+}
+.playing-card:active { transform: scale(0.98); }
+
+/* category colors */
+.playing-card.c-ent { background: var(--col-ent); }
+.playing-card.c-adv { background: var(--col-adv); }
+.playing-card.c-rel { background: var(--col-rel); }
+.playing-card.c-mil { background: var(--col-mil); }
+.playing-card.c-sch { background: var(--col-sch); }
+
+/* inner border like real card */
+.card-inner-border {
+  position: absolute; inset: 8px; border-radius: 15px;
+  border: 2px solid rgba(255,255,255,0.2);
+  pointer-events: none; z-index: 10;
+}
+
+/* subtle texture overlay */
+.card-texture {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none; z-index: 1;
+}
+
+/* card top — title section */
+.card-top {
+  padding: 24px 22px 12px;
+  position: relative; z-index: 5;
+  flex-shrink: 0;
+}
+.card-main-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(20px, 6vw, 28px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  letter-spacing: 0.5px;
+}
+.card-sub-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(10px, 3vw, 13px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 5px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* card illustration — center big icon */
+.card-illustration {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 5;
+  padding: 0 20px;
+}
+.card-big-icon {
+  font-size: clamp(80px, 22vw, 120px);
+  line-height: 1;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+  animation: iconFloat 3s ease-in-out infinite;
+}
+@keyframes iconFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+/* card bottom — category */
+.card-bottom {
+  padding: 14px 22px 22px;
+  position: relative; z-index: 5;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+.card-category {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(10px, 3vw, 13px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* mil card has dark text */
+.c-mil .card-main-title,
+.c-mil .card-sub-title { color: #1A1A2E; text-shadow: none; }
+.c-mil .card-category { color: rgba(26,26,46,0.6); text-shadow: none; }
+.c-mil .card-bottom { border-top-color: rgba(0,0,0,0.1); }
+.c-mil .card-inner-border { border-color: rgba(0,0,0,0.1); }
+
+/* flip animation */
+.card-flip-out {
+  animation: flipOut 0.2s ease-in forwards;
+}
+.card-flip-in {
+  animation: flipIn 0.25s ease-out forwards;
+}
+@keyframes flipOut {
+  0% { transform: rotateY(0deg) scale(1); }
+  100% { transform: rotateY(90deg) scale(0.9); }
+}
+@keyframes flipIn {
+  0% { transform: rotateY(-90deg) scale(0.9); }
+  100% { transform: rotateY(0deg) scale(1); }
+}
+
+/* swipe hint */
+.swipe-hint {
+  text-align: center; padding: 8px 0 0;
+  font-size: 12px; font-weight: 700;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+/* bottom action area */
+.g-actions {
+  padding: 10px 18px 20px;
+  display: flex; gap: 10px;
+  flex-shrink: 0;
+}
+.btn-next {
+  flex: 1;
+  background: linear-gradient(180deg, #FFD700 0%, #FF8C00 100%);
+  border: none; border-radius: 16px; padding: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 900; color: #1A1A2E;
+  cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 5px 0 #B85C00;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: uppercase;
+}
+.btn-next:active { transform: translateY(4px); box-shadow: 0 1px 0 #B85C00; }
+.btn-shuffle {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px; padding: 16px 18px;
+  font-size: 20px; cursor: pointer;
+  transition: transform 0.1s, background 0.1s;
+}
+.btn-shuffle:active { transform: scale(0.93); background: rgba(255,255,255,0.15); }
+
+/* end screen */
+#end-screen {
+  position: absolute; inset: 0;
+  background: rgba(26, 26, 46, 0.97);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 50; padding: 32px;
+  text-align: center;
+}
+#end-screen.show { display: flex; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+.end-icon { font-size: 72px; margin-bottom: 16px; animation: bounce 1s ease infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.end-title {
+  font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 900;
+  color: #FFD700; margin-bottom: 8px;
+}
+.end-sub { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.55); margin-bottom: 32px; line-height: 1.5; }
+.btn-play-again {
+  background: linear-gradient(180deg, #FFD700 0%, #FF8C00 100%);
+  border: none; border-radius: 50px; padding: 16px 44px;
+  font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 900;
+  color: #1A1A2E; cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 5px 0 #B85C00; text-transform: uppercase;
+}
+.btn-play-again:active { transform: translateY(4px); box-shadow: 0 1px 0 #B85C00; }
+
+/* touch/swipe */
+.card-stage { touch-action: pan-y; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-stars" id="splash-stars"></div>
+
+  <div class="splash-deck">
+    <div class="splash-card-bg"></div>
+    <div class="splash-card-bg"></div>
+    <div class="splash-card-bg"></div>
+    <div class="splash-card-bg"></div>
+    <div class="splash-card-bg"></div>
+    <div class="splash-card-front">
+      <div class="cf-icon">🎬</div>
+      <div class="cf-title">First!</div>
+    </div>
+  </div>
+
+  <div class="game-title">FIRST<span>!</span></div>
+  <div class="game-subtitle">The Icebreaker Card Game</div>
+
+  <button class="start-btn" onclick="startGame()">▶ &nbsp; Start Game</button>
+  <div class="card-count-label">50 cards · 5 categories · Shuffle every game</div>
+</div>
+
+<!-- GAME -->
+<div id="game">
+  <div class="g-header">
+    <div class="g-logo">FIRST<span>!</span></div>
+    <div class="g-counter" id="g-counter">1 / 50</div>
+    <button class="g-exit" onclick="exitGame()">✕ Exit</button>
+  </div>
+
+  <div class="g-progress">
+    <div class="prog-bar"><div class="prog-bar-fill" id="prog-fill" style="width:2%"></div></div>
+    <div class="prog-num" id="prog-num">1/50</div>
+  </div>
+
+  <div class="swipe-hint">Tap card or use button to flip</div>
+
+  <div class="card-stage" id="card-stage">
+    <div class="playing-card c-ent" id="playing-card" onclick="nextCard()">
+      <div class="card-inner-border"></div>
+      <div class="card-texture"></div>
+      <div class="card-top">
+        <div class="card-main-title" id="card-title">FIRST MOVIE</div>
+        <div class="card-sub-title" id="card-subtitle">YOU WATCHED IN A THEATER</div>
+      </div>
+      <div class="card-illustration">
+        <div class="card-big-icon" id="card-icon">🎬</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-category" id="card-cat">Entertainment &amp; Pop Culture</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g-actions">
+    <button class="btn-next" onclick="nextCard()">Next Card →</button>
+    <button class="btn-shuffle" onclick="reshuffleDeck()" title="Reshuffle">🔀</button>
+  </div>
+
+  <div id="end-screen">
+    <div class="end-icon">🎉</div>
+    <div class="end-title">All Done!</div>
+    <div class="end-sub">You've gone through all 50 cards!<br>Ready for another round?</div>
+    <button class="btn-play-again" onclick="reshuffleDeck()">🔀 &nbsp; Play Again</button>
+  </div>
+</div>
+
+<script>
+const CARDS = [
+  // Entertainment & Pop Culture
+  { title: "FIRST MOVIE", sub: "YOU WATCHED IN A THEATER", icon: "🎬", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST SONG", sub: "YOU MEMORIZED", icon: "🎵", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST CELEBRITY", sub: "CRUSH YOU HAD", icon: "⭐", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST CONCERT", sub: "YOU ATTENDED", icon: "🎤", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST TV SHOW", sub: "YOU WERE OBSESSED WITH", icon: "📺", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST VIDEO GAME", sub: "YOU EVER PLAYED", icon: "🕹️", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST BOOK", sub: "YOU TRULY LOVED", icon: "📖", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST CARTOON", sub: "YOU COULDN'T MISS", icon: "📽️", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST MUSIC ALBUM", sub: "YOU OWNED", icon: "💿", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  { title: "FIRST REALITY SHOW", sub: "YOU FOLLOWED", icon: "🎥", cat: "Entertainment & Pop Culture", cls: "c-ent" },
+  // Experiences & Adventures
+  { title: "FIRST TRIP", sub: "WITH FRIENDS", icon: "✈️", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST SOLO TRIP", sub: "YOU TOOK ALONE", icon: "🎒", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST FLIGHT", sub: "EXPERIENCE YOU HAD", icon: "🛫", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST TIME", sub: "YOU SAW THE SEA", icon: "🌊", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST HOTEL", sub: "YOU STAYED IN", icon: "🏨", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST TIME", sub: "YOU WENT CAMPING", icon: "⛺", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST TIME", sub: "YOU WENT ABROAD", icon: "🌍", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST AMUSEMENT", sub: "PARK RIDE YOU TOOK", icon: "🎡", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST ADVENTURE", sub: "SPORT YOU TRIED", icon: "🪂", cat: "Experiences & Adventures", cls: "c-adv" },
+  { title: "FIRST FESTIVAL", sub: "YOU ATTENDED", icon: "🎊", cat: "Experiences & Adventures", cls: "c-adv" },
+  // Relationships & Emotions
+  { title: "FIRST CRUSH", sub: "YOU EVER HAD", icon: "💘", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST LOVE", sub: "OF YOUR LIFE", icon: "❤️", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST BREAKUP", sub: "YOU WENT THROUGH", icon: "💔", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST KISS", sub: "YOU REMEMBER", icon: "💋", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST PROPOSAL", sub: "MADE OR RECEIVED", icon: "💍", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST BEST FRIEND", sub: "YOU EVER HAD", icon: "🤝", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST FIGHT", sub: "WITH A FRIEND", icon: "😤", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST HEARTBREAK", sub: "SONG YOU REMEMBER", icon: "🎶", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST COMPLIMENT", sub: "YOU STILL REMEMBER", icon: "🌸", cat: "Relationships & Emotions", cls: "c-rel" },
+  { title: "FIRST PERSON", sub: "WHO TRULY INSPIRED YOU", icon: "🌟", cat: "Relationships & Emotions", cls: "c-rel" },
+  // Personal Milestones
+  { title: "FIRST JOB", sub: "OR INTERNSHIP", icon: "💼", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST SALARY", sub: "YOU EVER EARNED", icon: "💰", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST PET", sub: "YOU EVER HAD", icon: "🐾", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST CAR", sub: "OR BIKE YOU OWNED", icon: "🚗", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST HOME", sub: "YOU LIVED IN AS AN ADULT", icon: "🏠", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST MEAL", sub: "YOU COOKED YOURSELF", icon: "👨‍🍳", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST GADGET", sub: "YOU BOUGHT YOURSELF", icon: "📱", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST BILL", sub: "YOU PAID YOURSELF", icon: "📄", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST TIME", sub: "YOU MOVED CITIES", icon: "🏙️", cat: "Personal Milestones", cls: "c-mil" },
+  { title: "FIRST TIME", sub: "YOU LIVED ALONE", icon: "🚪", cat: "Personal Milestones", cls: "c-mil" },
+  // School & Growing Up
+  { title: "FIRST SCHOOL", sub: "YOU EVER ATTENDED", icon: "🏫", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST TEACHER", sub: "YOU LIKED", icon: "👩‍🏫", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST SCHOOL TRIP", sub: "YOU WENT ON", icon: "🚌", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST COMPETITION", sub: "YOU WON", icon: "🏆", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST SUBJECT", sub: "YOU TRULY LOVED", icon: "📐", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST NICKNAME", sub: "YOU WERE GIVEN", icon: "😄", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST PUNISHMENT", sub: "YOU GOT IN SCHOOL", icon: "😬", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST DREAM JOB", sub: "AS A CHILD", icon: "🚀", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST TOY", sub: "YOU WERE OBSESSED WITH", icon: "🧸", cat: "School & Growing Up", cls: "c-sch" },
+  { title: "FIRST TIME", sub: "YOU BUNKED A CLASS", icon: "😈", cat: "School & Growing Up", cls: "c-sch" },
+];
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+let deck = [], idx = 0, isAnimating = false;
+
+function startGame() {
+  deck = shuffle(CARDS);
+  idx = 0;
+  renderCard(idx, false);
+  document.getElementById('splash').classList.add('hidden');
+  const g = document.getElementById('game');
+  g.classList.add('active');
+}
+
+function renderCard(i, animate) {
+  const c = deck[i];
+  const card = document.getElementById('playing-card');
+  const total = deck.length;
+
+  if (animate) {
+    card.classList.add('card-flip-out');
+    setTimeout(() => {
+      applyCard(c);
+      card.classList.remove('card-flip-out');
+      card.classList.add('card-flip-in');
+      setTimeout(() => card.classList.remove('card-flip-in'), 250);
+    }, 200);
+  } else {
+    applyCard(c);
+  }
+
+  document.getElementById('g-counter').textContent = `${i + 1} / ${total}`;
+  document.getElementById('prog-num').textContent = `${i + 1}/${total}`;
+  document.getElementById('prog-fill').style.width = Math.round((i + 1) / total * 100) + '%';
+}
+
+function applyCard(c) {
+  const card = document.getElementById('playing-card');
+  card.className = 'playing-card ' + c.cls;
+  document.getElementById('card-title').textContent = c.title;
+  document.getElementById('card-subtitle').textContent = c.sub;
+  document.getElementById('card-icon').textContent = c.icon;
+  document.getElementById('card-cat').textContent = c.cat;
+}
+
+function nextCard() {
+  if (isAnimating) return;
+  if (idx >= deck.length - 1) {
+    document.getElementById('end-screen').classList.add('show');
+    return;
+  }
+  isAnimating = true;
+  idx++;
+  renderCard(idx, true);
+  setTimeout(() => isAnimating = false, 450);
+}
+
+function reshuffleDeck() {
+  document.getElementById('end-screen').classList.remove('show');
+  deck = shuffle(CARDS);
+  idx = 0;
+  renderCard(idx, true);
+}
+
+function exitGame() {
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('game').classList.remove('active');
+  const splash = document.getElementById('splash');
+  splash.classList.remove('hidden');
+}
+
+// swipe support
+let touchStartX = 0, touchStartY = 0;
+document.getElementById('card-stage').addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.getElementById('card-stage').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+    nextCard();
+  }
+}, { passive: true });
+
+// splash stars
+(function() {
+  const c = document.getElementById('splash-stars');
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement('div');
+    s.className = 'sstar';
+    const size = 1 + Math.random() * 3;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--d:${1.5+Math.random()*2.5}s;--delay:${Math.random()*3}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
