@@ -48,7 +48,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 /* carousel fills space between header and bottom nav */
 .carousel-track {
   flex:1; display:flex; align-items:stretch;
-  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  transition:transform .3s cubic-bezier(.25,1,.5,1);
   will-change:transform;
 }
 
@@ -538,7 +538,7 @@ const CARDS = [
 // ── CAROUSEL ──
 const TOTAL_SLIDES = 3;
 let currentSlide = 0;
-let carouselStartX = 0, carouselDragging = false;
+let carouselStartX = 0, carouselDragging = false, carouselCurrentX = 0;
 
 const SLIDE_BG = [
   'linear-gradient(160deg,#1A1A2E 0%,#2D1B4E 55%,#1A2E4E 100%)',
@@ -547,7 +547,10 @@ const SLIDE_BG = [
 ];
 function goToSlide(n) {
   currentSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, n));
-  document.getElementById('carousel').style.transform = `translateX(-${currentSlide * 100}vw)`;
+  const carousel = document.getElementById('carousel');
+  // Re-enable transition for snap
+  carousel.style.transition = 'transform .3s cubic-bezier(.25,1,.5,1)';
+  carousel.style.transform = `translateX(-${currentSlide * 100}vw)`;
   document.getElementById('launcher').style.background = SLIDE_BG[currentSlide];
   for (let i = 0; i < TOTAL_SLIDES; i++) {
     document.getElementById(`dot-${i}`).classList.toggle('active', i === currentSlide);
@@ -563,18 +566,47 @@ function goToSlide(n) {
 
 document.addEventListener('DOMContentLoaded', function() {
   const carousel = document.getElementById('carousel');
-  if(carousel){
-    carousel.addEventListener('touchstart', e => {
-      carouselStartX = e.touches[0].clientX;
-      carouselDragging = true;
-    }, { passive: true });
-    carousel.addEventListener('touchend', e => {
-      if (!carouselDragging) return;
-      const dx = e.changedTouches[0].clientX - carouselStartX;
-      if (Math.abs(dx) > 45) goToSlide(currentSlide + (dx < 0 ? 1 : -1));
-      carouselDragging = false;
-    }, { passive: true });
-  }
+  if (!carousel) return;
+
+  carousel.addEventListener('touchstart', e => {
+    carouselStartX = e.touches[0].clientX;
+    carouselCurrentX = 0;
+    carouselDragging = true;
+    // Kill transition so drag is instant
+    carousel.style.transition = 'none';
+  }, { passive: true });
+
+  carousel.addEventListener('touchmove', e => {
+    if (!carouselDragging) return;
+    const dx = e.touches[0].clientX - carouselStartX;
+    carouselCurrentX = dx;
+    // Resist dragging past first/last slide
+    let resistance = 1;
+    if ((currentSlide === 0 && dx > 0) || (currentSlide === TOTAL_SLIDES - 1 && dx < 0)) {
+      resistance = 0.18;
+    }
+    const base = -currentSlide * window.innerWidth;
+    carousel.style.transform = `translateX(${base + dx * resistance}px)`;
+  }, { passive: true });
+
+  carousel.addEventListener('touchend', e => {
+    if (!carouselDragging) return;
+    carouselDragging = false;
+    const dx = carouselCurrentX;
+    const threshold = window.innerWidth * 0.22; // 22% of screen width
+    const velocity = Math.abs(dx) > 30; // quick flick
+    if ((Math.abs(dx) > threshold || velocity) && Math.abs(dx) > 20) {
+      goToSlide(currentSlide + (dx < 0 ? 1 : -1));
+    } else {
+      // Snap back to current slide
+      goToSlide(currentSlide);
+    }
+  }, { passive: true });
+
+  carousel.addEventListener('touchcancel', () => {
+    carouselDragging = false;
+    goToSlide(currentSlide);
+  }, { passive: true });
 });
 
 // ── LANGUAGE ──
