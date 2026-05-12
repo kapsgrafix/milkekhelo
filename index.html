@@ -2,198 +2,228 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mil ke Khelo!">
+<meta name="theme-color" content="#1A1A2E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FIRST! — The Icebreaker Card Game</title>
+<title>Mil ke Khelo!</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 :root {
   --col-ent:#7B3FA0; --col-adv:#1A7A6E; --col-rel:#D94F3D;
   --col-mil:#D4A800; --col-sch:#3A7EC6;
+  /* Thank You palette */
+  --col-ty1:#1A6B3C; --col-ty2:#0F5A6E; --col-ty3:#5A3A1A;
+  --col-ty4:#6E1A5A; --col-ty5:#1A3A6E; --col-ty6:#5A1A1A;
 }
 html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-serif; overflow:hidden; }
 
-/* ── SPLASH ── */
-#splash {
+/* ══ LAUNCHER ══ */
+#launcher {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#1A1A2E 0%,#2D1B4E 50%,#1A2E4E 100%);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  z-index:100; transition:opacity .5s ease, transform .5s ease;
+  display:flex; flex-direction:column;
+  transition:opacity .4s, background 0.5s ease;
+  background:linear-gradient(160deg,#1A1A2E 0%,#2D1B4E 55%,#1A2E4E 100%);
+  overflow:hidden;
 }
-#splash.hidden { opacity:0; pointer-events:none; transform:scale(1.05); }
+#launcher.hidden { opacity:0; pointer-events:none; }
 
-.splash-stars { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-.sstar { position:absolute; background:#fff; border-radius:50%; animation:twinkle var(--d) ease-in-out infinite var(--delay); }
-@keyframes twinkle { 0%,100%{opacity:.1;transform:scale(.8)} 50%{opacity:.8;transform:scale(1.2)} }
-
-.splash-deck { position:relative; width:200px; height:260px; margin-bottom:32px; }
-.splash-card-bg { position:absolute; width:160px; height:210px; border-radius:16px; border:3px solid rgba(255,255,255,.15); }
-.splash-card-bg:nth-child(1){background:var(--col-sch);transform:rotate(-12deg) translate(-30px,10px);}
-.splash-card-bg:nth-child(2){background:var(--col-mil);transform:rotate(-6deg) translate(-10px,5px);}
-.splash-card-bg:nth-child(3){background:var(--col-rel);transform:rotate(0deg);}
-.splash-card-bg:nth-child(4){background:var(--col-adv);transform:rotate(6deg) translate(10px,5px);}
-.splash-card-bg:nth-child(5){background:var(--col-ent);transform:rotate(12deg) translate(30px,10px);}
-.splash-card-front {
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:160px; height:210px; border-radius:16px; background:var(--col-ent);
-  border:3px solid rgba(255,255,255,.3);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-  animation:floatCard 3s ease-in-out infinite;
+/* header — transparent, floats over slide bg */
+.mkk-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 18px 0; flex-shrink:0; position:relative; z-index:10;
+  background:transparent;
 }
-@keyframes floatCard { 0%,100%{transform:translate(-50%,-50%) rotate(-2deg)} 50%{transform:translate(-50%,-56%) rotate(2deg)} }
-.splash-card-front .cf-icon { font-size:52px; }
-.splash-card-front .cf-title { font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:1px; }
-
-.game-title { font-family:'Montserrat',sans-serif; font-size:52px; font-weight:900; color:#fff; letter-spacing:2px; text-shadow:0 4px 20px rgba(0,0,0,.4); line-height:1; }
-.game-title span { color:#FFD700; }
-.game-subtitle { font-size:13px; font-weight:700; color:rgba(255,255,255,.5); letter-spacing:2px; text-transform:uppercase; margin-top:6px; margin-bottom:36px; }
-
-/* language toggle — top right */
-.lang-toggle {
-  position:absolute; top:16px; right:16px;
-  display:flex; align-items:center; gap:0;
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-  border-radius:50px; overflow:hidden; z-index:10;
-}
-.lang-btn {
-  padding:6px 14px; font-size:11px; font-weight:800; letter-spacing:1px;
-  color:rgba(255,255,255,.5); cursor:pointer; transition:all .2s;
-  background:transparent; border:none; font-family:'Nunito Sans',sans-serif;
-}
+.mkk-logo { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:#fff; letter-spacing:.3px; }
+.mkk-logo span { color:#FFD700; }
+.lang-toggle { display:flex; align-items:center; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:50px; overflow:hidden; }
+.lang-btn { padding:5px 13px; font-size:11px; font-weight:800; letter-spacing:.8px; color:rgba(255,255,255,.45); cursor:pointer; background:transparent; border:none; font-family:'Nunito Sans',sans-serif; transition:all .2s; }
 .lang-btn.active { background:#FFD700; color:#1A1A2E; border-radius:50px; }
 
-/* splash buttons row */
-.splash-btns { display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; padding:0 40px; }
+/* carousel fills space between header and bottom nav */
+.carousel-track {
+  flex:1; display:flex; align-items:stretch;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+
+/* each slide — transparent so #launcher bg shows */
+.slide {
+  min-width:100vw; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:10px 24px 0; position:relative; overflow:hidden;
+  background:transparent;
+}
+
+/* bottom nav — dots + swipe hint */
+.bottom-nav {
+  flex-shrink:0; position:relative; z-index:10;
+  display:flex; flex-direction:column; align-items:center;
+  padding:10px 0 30px; gap:6px; background:transparent;
+}
+.dot-row { display:flex; align-items:center; justify-content:center; gap:7px; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.25); transition:all .3s; }
+.dot.active { width:22px; border-radius:4px; background:#FFD700; }
+.swipe-nav-hint { font-size:11px; font-weight:700; color:rgba(255,255,255,.22); letter-spacing:1px; }
+
+/* stars bg */
+.slide-stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.sstar { position:absolute; background:#fff; border-radius:50%; animation:twinkle var(--d) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%,100%{opacity:.08;transform:scale(.8)} 50%{opacity:.6;transform:scale(1.2)} }
+
+/* ── FIRST slide ── */
+.first-slide { }
+
+.splash-deck { position:relative; width:190px; height:245px; margin-bottom:20px; flex-shrink:0; }
+.splash-card-bg { position:absolute; width:152px; height:200px; border-radius:16px; border:3px solid rgba(255,255,255,.13); }
+.splash-card-bg:nth-child(1){background:var(--col-sch);transform:rotate(-12deg) translate(-28px,10px);}
+.splash-card-bg:nth-child(2){background:var(--col-mil);transform:rotate(-6deg) translate(-9px,5px);}
+.splash-card-bg:nth-child(3){background:var(--col-rel);}
+.splash-card-bg:nth-child(4){background:var(--col-adv);transform:rotate(6deg) translate(9px,5px);}
+.splash-card-bg:nth-child(5){background:var(--col-ent);transform:rotate(12deg) translate(28px,10px);}
+.splash-card-front {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:152px; height:200px; border-radius:16px; background:var(--col-ent);
+  border:3px solid rgba(255,255,255,.28);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5); animation:floatCard 3s ease-in-out infinite;
+}
+@keyframes floatCard { 0%,100%{transform:translate(-50%,-50%) rotate(-2deg)} 50%{transform:translate(-50%,-56%) rotate(2deg)} }
+.splash-card-front .cf-icon { font-size:50px; }
+.splash-card-front .cf-title { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:1px; }
+
+.game-title { font-family:'Montserrat',sans-serif; font-size:48px; font-weight:900; color:#fff; letter-spacing:2px; text-shadow:0 4px 20px rgba(0,0,0,.4); line-height:1; }
+.game-title span { color:#FFD700; }
+.game-subtitle { font-size:12px; font-weight:700; color:rgba(255,255,255,.48); letter-spacing:2px; text-transform:uppercase; margin-top:5px; margin-bottom:28px; }
+
 .start-btn {
-  width:100%;
+  width:100%; max-width:280px;
   background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%);
-  border:none; border-radius:50px; padding:17px 0;
-  font-family:'Montserrat',sans-serif; font-size:17px; font-weight:900; color:#1A1A2E;
+  border:none; border-radius:50px; padding:16px 0;
+  font-family:'Montserrat',sans-serif; font-size:16px; font-weight:900; color:#1A1A2E;
   cursor:pointer; letter-spacing:1px; text-transform:uppercase;
-  box-shadow:0 6px 0 #B85C00, 0 10px 30px rgba(255,165,0,.4);
+  box-shadow:0 6px 0 #B85C00, 0 10px 30px rgba(255,165,0,.35);
   transition:transform .1s, box-shadow .1s;
 }
 .start-btn:active { transform:translateY(4px); box-shadow:0 2px 0 #B85C00; }
 
-.how-link {
-  font-size:13px; font-weight:800; color:rgba(255,255,255,.45);
-  letter-spacing:1px; text-transform:uppercase; cursor:pointer;
-  border-bottom:1px dashed rgba(255,255,255,.25); padding-bottom:1px;
-  transition:color .2s; margin-top:28px;
+.card-count-label { margin-top:16px; font-size:11px; font-weight:700; color:rgba(255,255,255,.22); letter-spacing:1.5px; text-transform:uppercase; }
+.how-link { font-size:12px; font-weight:800; color:rgba(255,255,255,.38); letter-spacing:1px; text-transform:uppercase; cursor:pointer; border-bottom:1px dashed rgba(255,255,255,.22); padding-bottom:1px; transition:color .2s; margin-top:22px; }
+.how-link:hover { color:rgba(255,255,255,.75); }
+
+/* ── COMING SOON slides ── */
+.coming-slide { justify-content:center; }
+.cs-inner { display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; padding:20px 0; }
+.cs-icon-wrap { position:relative; width:100px; height:100px; margin:0 auto 20px; }
+.cs-icon-ring { position:absolute; inset:0; border-radius:50%; border:2px solid transparent; border-top-color:rgba(255,215,0,.6); border-right-color:rgba(255,140,0,.35); animation:spin 2.5s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.cs-icon { width:100px; height:100px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:48px; }
+.cs-ribbon { display:inline-flex; align-items:center; gap:6px; background:rgba(255,215,0,.14); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 16px; margin-bottom:12px; }
+.cs-ribbon-txt { font-size:11px; font-weight:900; color:#FFD700; letter-spacing:1.5px; text-transform:uppercase; }
+.cs-title { font-family:'Montserrat',sans-serif; font-size:32px; font-weight:900; color:#fff; text-shadow:0 3px 10px rgba(0,0,0,.3); margin-bottom:8px; }
+.cs-sub { font-size:13px; font-weight:700; color:rgba(255,255,255,.45); line-height:1.6; text-align:center; }
+
+/* slide colour schemes */
+.thankyou-slide { }
+.your3-slide    { }
+
+/* top game label on coming slides */
+.slide-game-tag {
+  display:flex; align-items:center; gap:7px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+  border-radius:50px; padding:6px 16px; margin-bottom:0; flex-shrink:0;
+  align-self:flex-start; margin:14px 0 0 0;
 }
-.how-link:hover { color:rgba(255,255,255,.8); }
+.slide-game-tag-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.3); }
+.slide-game-tag-name { font-size:11px; font-weight:800; color:rgba(255,255,255,.55); letter-spacing:1px; text-transform:uppercase; }
 
-.card-count-label { margin-top:20px; font-size:11px; font-weight:700; color:rgba(255,255,255,.25); letter-spacing:1.5px; text-transform:uppercase; }
+/* ══ HOW TO PLAY OVERLAY ══ */
+#ty-how-overlay {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(5,20,15,.88); backdrop-filter:blur(8px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+#ty-how-overlay.open { display:flex; animation:slideUp .35s cubic-bezier(.34,1.56,.64,1); }
 
-/* ── HOW TO PLAY OVERLAY ── */
 #how-overlay {
-  position:fixed; inset:0; z-index:200;
+  position:fixed; inset:0; z-index:300;
   background:rgba(10,10,30,.85); backdrop-filter:blur(8px);
   display:none; align-items:flex-end; justify-content:center;
-  padding:0;
 }
 #how-overlay.open { display:flex; animation:slideUp .35s cubic-bezier(.34,1.56,.64,1); }
 @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-
-.how-sheet {
-  background:linear-gradient(160deg,#1E1040,#0D2040);
-  border-radius:28px 28px 0 0;
-  border:1px solid rgba(255,255,255,.12);
-  border-bottom:none;
-  width:100%; max-width:520px;
-  max-height:88vh; overflow-y:auto;
-  padding:24px 24px 40px;
-}
+.how-sheet { background:linear-gradient(160deg,#1E1040,#0D2040); border-radius:28px 28px 0 0; border:1px solid rgba(255,255,255,.12); border-bottom:none; width:100%; max-width:520px; max-height:88vh; overflow-y:auto; padding:24px 24px 40px; }
 .how-handle { width:40px; height:4px; background:rgba(255,255,255,.2); border-radius:2px; margin:0 auto 20px; }
 .how-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.how-title { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:#FFD700; letter-spacing:.5px; }
+.how-title { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:#FFD700; }
 .how-close { width:32px; height:32px; background:rgba(255,255,255,.1); border-radius:50%; border:none; color:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-
 .how-steps { display:flex; flex-direction:column; gap:16px; }
 .how-step { display:flex; gap:14px; align-items:flex-start; }
-.step-num {
-  width:34px; height:34px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg,#FFD700,#FF8C00);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Montserrat',sans-serif; font-size:14px; font-weight:900; color:#1A1A2E;
-}
-.step-body {}
+.step-num { width:34px; height:34px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#FFD700,#FF8C00); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:900; color:#1A1A2E; }
 .step-title { font-size:15px; font-weight:900; color:#fff; margin-bottom:3px; }
 .step-desc { font-size:13px; font-weight:600; color:rgba(255,255,255,.55); line-height:1.5; }
 .step-example { font-size:12px; font-weight:700; color:#FFD700; margin-top:4px; font-style:italic; }
-
-.how-goal {
-  margin-top:22px; background:rgba(255,215,0,.1); border:1px solid rgba(255,215,0,.25);
-  border-radius:16px; padding:16px;
-}
+.how-goal { margin-top:22px; background:rgba(255,215,0,.1); border:1px solid rgba(255,215,0,.25); border-radius:16px; padding:16px; }
 .how-goal-title { font-size:13px; font-weight:900; color:#FFD700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
 .how-goal-text { font-size:13px; font-weight:600; color:rgba(255,255,255,.65); line-height:1.5; }
 
-/* ── GAME SCREEN ── */
+
+/* ══ THANK YOU GAME SCREEN ══ */
+#ty-game {
+  position:fixed; inset:0;
+  background:linear-gradient(160deg,#0A2A1E 0%,#0D4A34 55%,#0A3028 100%);
+  display:none; flex-direction:column;
+}
+#ty-game.active { display:flex; }
+#ty-end-screen { position:absolute; inset:0; background:rgba(5,20,15,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
+#ty-end-screen.show { display:flex; animation:fadeIn .4s ease; }
+
+/* ══ GAME SCREEN ══ */
 #game {
   position:fixed; inset:0; background:#1A1A2E;
-  display:flex; flex-direction:column;
-  opacity:0; pointer-events:none; transition:opacity .5s ease;
+  display:none; flex-direction:column;
 }
-#game.active { opacity:1; pointer-events:all; }
+#game.active { display:flex; }
 
-.g-header {
-  background:rgba(255,255,255,.05); border-bottom:1px solid rgba(255,255,255,.08);
-  padding:13px 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
-}
+.g-header { background:transparent; padding:20px 16px 10px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
 .g-logo { font-family:'Montserrat',sans-serif; font-size:21px; font-weight:900; color:#fff; letter-spacing:1px; }
 .g-logo span { color:#FFD700; }
 .g-counter { background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 13px; font-size:13px; font-weight:800; color:#FFD700; }
-.g-exit { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
-.g-exit:active { background:rgba(255,80,80,.2); }
+.g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
+.g-back:active { background:rgba(255,80,80,.2); }
 
 .g-progress { padding:10px 16px 0; flex-shrink:0; display:flex; align-items:center; gap:10px; }
 .prog-bar { flex:1; height:8px; background:rgba(255,255,255,.1); border-radius:50px; overflow:hidden; }
 .prog-bar-fill { height:100%; background:linear-gradient(90deg,#FFD700,#FF8C00); border-radius:50px; transition:width .5s cubic-bezier(.34,1.56,.64,1); }
 .prog-num { font-size:12px; font-weight:800; color:rgba(255,255,255,.4); min-width:32px; text-align:right; }
 
-.swipe-hint { text-align:center; padding:7px 0 0; font-size:11px; font-weight:700; color:rgba(255,255,255,.2); letter-spacing:1px; flex-shrink:0; }
+.card-swipe-hint { text-align:center; padding:6px 0 0; font-size:11px; font-weight:700; color:rgba(255,255,255,.2); letter-spacing:1px; flex-shrink:0; }
+.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:12px 14px; perspective:1000px; overflow:hidden; touch-action:pan-y; }
 
-.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:14px; perspective:1000px; overflow:hidden; touch-action:pan-y; }
-
-/* THE CARD */
-.playing-card {
-  width:min(300px, calc(100vw - 28px));
-  max-height:calc(100vh - 210px);
-  aspect-ratio:2/3;
-  border-radius:22px; position:relative; overflow:hidden;
-  display:flex; flex-direction:column;
-  box-shadow:0 2px 0 rgba(255,255,255,.15) inset, 0 -2px 0 rgba(0,0,0,.2) inset, 0 25px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.1);
-  user-select:none; cursor:pointer; transition:transform .12s ease;
-}
+.playing-card { width:min(300px,calc(100vw - 28px)); max-height:calc(100vh - 205px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 25px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
 .playing-card:active { transform:scale(.98); }
-.c-ent{background:var(--col-ent);}
-.c-adv{background:var(--col-adv);}
-.c-rel{background:var(--col-rel);}
-.c-mil{background:var(--col-mil);}
-.c-sch{background:var(--col-sch);}
-
+.c-ent{background:var(--col-ent);} .c-adv{background:var(--col-adv);} .c-rel{background:var(--col-rel);} .c-mil{background:var(--col-mil);} .c-sch{background:var(--col-sch);}
+.c-ty1{background:var(--col-ty1);} .c-ty2{background:var(--col-ty2);} .c-ty3{background:var(--col-ty3);}
+.c-ty4{background:var(--col-ty4);} .c-ty5{background:var(--col-ty5);} .c-ty6{background:var(--col-ty6);}
 .card-inner-border { position:absolute; inset:8px; border-radius:15px; border:2px solid rgba(255,255,255,.22); pointer-events:none; z-index:10; }
-.card-texture { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size:20px 20px; pointer-events:none; z-index:1; }
-
+.card-texture { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px); background-size:20px 20px; pointer-events:none; z-index:1; }
 .card-top { padding:22px 20px 10px; position:relative; z-index:5; flex-shrink:0; }
 .card-main-title { font-family:'Montserrat',sans-serif; font-size:clamp(18px,5.5vw,26px); font-weight:900; color:#fff; line-height:1.1; text-transform:uppercase; text-shadow:0 2px 6px rgba(0,0,0,.25); letter-spacing:.5px; }
 .card-sub-title { font-family:'Montserrat',sans-serif; font-size:clamp(9px,2.8vw,12px); font-weight:700; color:rgba(255,255,255,.72); text-transform:uppercase; letter-spacing:1.5px; margin-top:5px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
-
 .card-illustration { flex:1; display:flex; align-items:center; justify-content:center; position:relative; z-index:5; padding:0 20px; }
 .card-big-icon { font-size:clamp(72px,20vw,110px); line-height:1; filter:drop-shadow(0 8px 16px rgba(0,0,0,.3)); animation:iconFloat 3s ease-in-out infinite; }
 @keyframes iconFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-
 .card-bottom { padding:12px 20px 20px; position:relative; z-index:5; flex-shrink:0; border-top:1px solid rgba(255,255,255,.15); }
 .card-category { font-family:'Montserrat',sans-serif; font-size:clamp(9px,2.8vw,12px); font-weight:700; color:rgba(255,255,255,.78); text-transform:uppercase; letter-spacing:2px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
-
-/* yellow card dark text */
 .c-mil .card-main-title,.c-mil .card-sub-title { color:#1A1A2E; text-shadow:none; }
 .c-mil .card-category { color:rgba(26,26,46,.6); text-shadow:none; }
 .c-mil .card-bottom { border-top-color:rgba(0,0,0,.12); }
 .c-mil .card-inner-border { border-color:rgba(0,0,0,.12); }
-
 .card-flip-out { animation:flipOut .2s ease-in forwards; }
 .card-flip-in  { animation:flipIn  .25s ease-out forwards; }
 @keyframes flipOut { 0%{transform:rotateY(0) scale(1)} 100%{transform:rotateY(90deg) scale(.9)} }
@@ -205,7 +235,6 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .btn-shuffle { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:15px 17px; font-size:19px; cursor:pointer; transition:transform .1s, background .1s; }
 .btn-shuffle:active { transform:scale(.93); background:rgba(255,255,255,.15); }
 
-/* end screen */
 #end-screen { position:absolute; inset:0; background:rgba(26,26,46,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
 #end-screen.show { display:flex; animation:fadeIn .4s ease; }
 @keyframes fadeIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
@@ -215,82 +244,159 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .end-sub { font-size:14px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:28px; line-height:1.5; }
 .btn-play-again { background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%); border:none; border-radius:50px; padding:15px 40px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:#1A1A2E; cursor:pointer; box-shadow:0 5px 0 #B85C00; text-transform:uppercase; }
 .btn-play-again:active { transform:translateY(4px); box-shadow:0 1px 0 #B85C00; }
-</style>
-</head>
 
+/* ── Desktop nav arrows (hidden on mobile) ── */
+.slide-arrow {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .slide-arrow {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    backdrop-filter: blur(6px);
+    user-select: none;
+  }
+  .slide-arrow:hover {
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-50%) scale(1.08);
+  }
+  .slide-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+  .slide-arrow.left  { left: 20px; }
+  .slide-arrow.right { right: 20px; }
+  .slide-arrow.hidden-arrow { opacity: 0.2; pointer-events: none; }
+}
+
+</style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8THRWNXLC3"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-8THRWNXLC3');
 </script>
+</head>
 <body>
 
-<!-- SPLASH -->
-<div id="splash">
-  <div class="splash-stars" id="splash-stars"></div>
+<!-- ══════════ LAUNCHER (3 slides) ══════════ -->
+<div id="launcher">
 
-  <div class="splash-deck">
-    <div class="splash-card-bg"></div><div class="splash-card-bg"></div>
-    <div class="splash-card-bg"></div><div class="splash-card-bg"></div>
-    <div class="splash-card-bg"></div>
-    <div class="splash-card-front">
-      <div class="cf-icon">🎬</div>
-      <div class="cf-title">First!</div>
+  <!-- header — transparent, merges with slide bg -->
+  <div class="mkk-bar">
+    <div class="mkk-logo">Mil ke <span>Khelo!</span></div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
     </div>
   </div>
 
-  <!-- Language Toggle — top right corner -->
-  <div class="lang-toggle">
-    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
+  <!-- carousel -->
+  <div class="carousel-track" id="carousel">
+
+    <!-- SLIDE 0 — FIRST -->
+    <div class="slide first-slide">
+      <div class="slide-stars" id="stars-0"></div>
+
+      <div class="splash-deck">
+        <div class="splash-card-bg"></div><div class="splash-card-bg"></div>
+        <div class="splash-card-bg"></div><div class="splash-card-bg"></div>
+        <div class="splash-card-bg"></div>
+        <div class="splash-card-front">
+          <div class="cf-icon">🎬</div>
+          <div class="cf-title">First!</div>
+        </div>
+      </div>
+
+      <div class="game-title">FIRST<span>!</span></div>
+      <div class="game-subtitle" id="splash-tagline">The Icebreaker Card Game</div>
+
+      <button class="start-btn" id="btn-start" onclick="startGame()">▶ &nbsp; Start Game</button>
+      <span class="how-link" id="how-link" onclick="openHow()">How to Play</span>
+    </div>
+
+    <!-- SLIDE 1 — THANK YOU -->
+    <div class="slide first-slide thankyou-slide">
+      <div class="slide-stars" id="stars-1"></div>
+
+      <div class="splash-deck">
+        <div class="splash-card-bg" style="background:var(--col-ty1)"></div>
+        <div class="splash-card-bg" style="background:var(--col-ty2)"></div>
+        <div class="splash-card-bg" style="background:var(--col-ty3)"></div>
+        <div class="splash-card-bg" style="background:var(--col-ty4)"></div>
+        <div class="splash-card-bg" style="background:var(--col-ty5)"></div>
+        <div class="splash-card-front" style="background:var(--col-ty1)">
+          <div class="cf-icon">🙏</div>
+          <div class="cf-title">Thank You!</div>
+        </div>
+      </div>
+
+      <div class="game-title" style="font-size:38px;">THANK <span>YOU!</span></div>
+      <div class="game-subtitle">The Gratitude Card Game</div>
+
+      <button class="start-btn" onclick="startTyGame()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 6px 0 #0D6B31,0 10px 30px rgba(22,163,74,.4);color:#fff;">▶ &nbsp; Start Game</button>
+      <span class="how-link" onclick="openTyHow()">How to Play</span>
+    </div>
+
+    <!-- SLIDE 2 — YOUR 3 -->
+    <div class="slide coming-slide your3-slide">
+      <div class="slide-stars" id="stars-2"></div>
+      <div class="cs-inner">
+        <div class="cs-icon-wrap">
+          <div class="cs-icon-ring"></div>
+          <div class="cs-icon">✨</div>
+        </div>
+        <div class="cs-ribbon"><span class="cs-ribbon-txt">👑 Coming Soon 👑</span></div>
+        <div class="cs-title">Your 3</div>
+        <div class="cs-sub">Share your top 3 on anything.<br>Coming very soon! 🎯</div>
+      </div>
+    </div>
+
+  </div><!-- /carousel -->
+
+  <!-- bottom nav — dots + hint -->
+  <div class="bottom-nav">
+    <div class="dot-row">
+      <div class="dot active" id="dot-0"></div>
+      <div class="dot" id="dot-1"></div>
+      <div class="dot" id="dot-2"></div>
+    </div>
+    <div class="swipe-nav-hint" id="nav-hint">← swipe to explore games →</div>
   </div>
 
-  <div class="game-title">FIRST<span>!</span></div>
-  <div class="game-subtitle" id="splash-tagline">The Icebreaker Card Game</div>
 
-  <div class="splash-btns">
-    <button class="start-btn" id="btn-start" onclick="startGame()">▶ &nbsp; Start Game</button>
-  </div>
+  <!-- Desktop slide arrows -->
+  <button class="slide-arrow left hidden-arrow" id="arrow-left" onclick="goToSlide(currentSlide - 1)">&#8592;</button>
+  <button class="slide-arrow right" id="arrow-right" onclick="goToSlide(currentSlide + 1)">&#8594;</button>
 
-  <div class="card-count-label" id="splash-count">50 cards · 5 categories · Shuffled every game</div>
+</div><!-- /launcher -->
 
-  <span class="how-link" id="how-link" onclick="openHow()">How to Play</span>
-</div>
-
-<!-- HOW TO PLAY OVERLAY -->
-<div id="how-overlay" onclick="closeHow(event)">
-  <div class="how-sheet" id="how-sheet">
-    <div class="how-handle"></div>
-    <div class="how-header">
-      <div class="how-title" id="how-title">How to Play</div>
-      <button class="how-close" onclick="closeHow()">✕</button>
-    </div>
-    <div class="how-steps" id="how-steps">
-      <!-- filled by JS -->
-    </div>
-    <div class="how-goal">
-      <div class="how-goal-title" id="how-goal-title">🎯 Goal of the Game</div>
-      <div class="how-goal-text" id="how-goal-text">A fun way to break the ice, share memories, and get to know each other better.</div>
-    </div>
-  </div>
-</div>
-
-<!-- GAME -->
+<!-- ══════════ GAME SCREEN ══════════ -->
 <div id="game">
   <div class="g-header">
     <div class="g-logo">FIRST<span>!</span></div>
     <div class="g-counter" id="g-counter">1 / 50</div>
-    <button class="g-exit" id="g-exit" onclick="exitGame()">✕ Exit</button>
+    <button class="g-back" id="g-back" onclick="exitGame()">✕ Exit</button>
   </div>
   <div class="g-progress">
     <div class="prog-bar"><div class="prog-bar-fill" id="prog-fill" style="width:2%"></div></div>
     <div class="prog-num" id="prog-num">1/50</div>
   </div>
-  <div class="swipe-hint" id="swipe-hint">Tap card or swipe to flip</div>
+  <div class="card-swipe-hint" id="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="card-stage" id="card-stage">
     <div class="playing-card c-ent" id="playing-card" onclick="nextCard()">
       <div class="card-inner-border"></div>
@@ -309,7 +415,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   </div>
   <div class="g-actions">
     <button class="btn-next" id="btn-next" onclick="nextCard()">Next Card →</button>
-    <button class="btn-shuffle" onclick="reshuffleDeck()" title="Reshuffle">🔀</button>
+    <button class="btn-shuffle" onclick="reshuffleDeck()">🔀</button>
   </div>
   <div id="end-screen">
     <div class="end-icon">🎉</div>
@@ -319,264 +425,467 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   </div>
 </div>
 
+<!-- HOW TO PLAY OVERLAY -->
+<div id="how-overlay" onclick="closeHow(event)">
+  <div class="how-sheet">
+    <div class="how-handle"></div>
+    <div class="how-header">
+      <div class="how-title" id="how-title">How to Play</div>
+      <button class="how-close" onclick="closeHow()">✕</button>
+    </div>
+    <div class="how-steps" id="how-steps"></div>
+    <div class="how-goal">
+      <div class="how-goal-title" id="how-goal-title">🎯 Goal of the Game</div>
+      <div class="how-goal-text" id="how-goal-text"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── TRANSLATIONS ──
 const T = {
   en: {
-    tagline: "The Icebreaker Card Game",
-    startBtn: "▶  Start Game",
-    howLink: "How to Play",
-    countLabel: "50 cards · 5 categories · Shuffled every game",
-    exitBtn: "✕ Exit",
-    swipeHint: "Tap card or swipe to flip",
-    nextBtn: "Next Card →",
-    endTitle: "All Done!",
-    endSub: "You've gone through all 50 cards!\nReady for another round?",
-    playAgain: "🔀  Play Again",
-    howTitle: "How to Play",
-    goalTitle: "🎯 Goal of the Game",
-    goalText: "A fun way to break the ice, share memories, and get to know each other better.",
-    steps: [
-      { title: "Gather Players", desc: "Minimum 2 players are required to play.", example: "" },
-      { title: "Open a Card", desc: "A \"First\" question will appear on the screen.", example: "Example: What was your first movie in a theatre?" },
-      { title: "Everyone Answers", desc: "Players take turns sharing their answer out loud.", example: "" },
-      { title: "Share the Story", desc: "Add a short story or memory behind your answer if you'd like.", example: "" },
-      { title: "Go to the Next Card", desc: "Tap Next Card and continue playing!", example: "" },
+    tagline:"The Icebreaker Card Game", startBtn:"▶  Start Game",
+    howLink:"How to Play", countLabel:"50 cards · 5 categories · Shuffled every game",
+    backBtn:"✕ Exit", swipeHint:"Tap card or swipe to flip", nextBtn:"Next Card →",
+    endTitle:"All Done!", endSub:"You've gone through all 50 cards!\nReady for another round?",
+    playAgain:"🔀  Play Again", howTitle:"How to Play",
+    goalTitle:"🎯 Goal of the Game",
+    goalText:"A fun way to break the ice, share memories, and get to know each other better.",
+    navHint:"← swipe to explore games →",
+    steps:[
+      {title:"Gather Players",desc:"Minimum 2 players are required.",example:""},
+      {title:"Open a Card",desc:"A \"First\" question appears on screen.",example:"Example: What was your first movie in a theatre?"},
+      {title:"Everyone Answers",desc:"Players take turns sharing their answer.",example:""},
+      {title:"Share the Story",desc:"Add a memory or story behind your answer.",example:""},
+      {title:"Next Card",desc:"Tap Next Card and keep playing!",example:""},
     ],
-    cats: {
-      ent: "Entertainment & Pop Culture",
-      adv: "Experiences & Adventures",
-      rel: "Relationships & Emotions",
-      mil: "Personal Milestones",
-      sch: "School & Growing Up",
-    }
+    cats:{ent:"Entertainment & Pop Culture",adv:"Experiences & Adventures",rel:"Relationships & Emotions",mil:"Personal Milestones",sch:"School & Growing Up"}
   },
   hi: {
-    tagline: "Ice-Breaker Card Game",
-    startBtn: "▶  खेल शुरू करें",
-    howLink: "कैसे खेलें",
-    countLabel: "50 कार्ड · 5 श्रेणियाँ · हर बार अलग क्रम",
-    exitBtn: "✕ बाहर जाएं",
-    swipeHint: "कार्ड दबाएं या स्वाइप करें",
-    nextBtn: "अगला कार्ड →",
-    endTitle: "शाबाश!",
-    endSub: "सभी 50 कार्ड देख लिए!\nएक और राउंड खेलें?",
-    playAgain: "🔀  फिर खेलें",
-    howTitle: "कैसे खेलें",
-    goalTitle: "🎯 खेल का मकसद",
-    goalText: "एक-दूसरे को जानने का, यादें साझा करने का और मौज करने का मज़ेदार तरीका।",
-    steps: [
-      { title: "खिलाड़ी जुटाएं", desc: "कम से कम 2 खिलाड़ी होने चाहिए।", example: "" },
-      { title: "कार्ड खोलें", desc: "स्क्रीन पर एक \"First\" सवाल दिखेगा।", example: "उदाहरण: आपकी पहली थिएटर फिल्म कौन सी थी?" },
-      { title: "सब जवाब दें", desc: "सभी खिलाड़ी बारी-बारी अपना जवाब बताएं।", example: "" },
-      { title: "किस्सा सुनाएं", desc: "चाहें तो अपने जवाब से जुड़ी यादें भी साझा करें।", example: "" },
-      { title: "अगला कार्ड खोलें", desc: "Next Card दबाएं और खेल जारी रखें!", example: "" },
+    tagline:"Ice-Breaker Card Game", startBtn:"▶  खेल शुरू करें",
+    howLink:"कैसे खेलें", countLabel:"50 कार्ड · 5 श्रेणियाँ · हर बार अलग क्रम",
+    backBtn:"✕ Exit", swipeHint:"कार्ड दबाएं या स्वाइप करें", nextBtn:"अगला कार्ड →",
+    endTitle:"शाबाश!", endSub:"सभी 50 कार्ड देख लिए!\nएक और राउंड खेलें?",
+    playAgain:"🔀  फिर खेलें", howTitle:"कैसे खेलें",
+    goalTitle:"🎯 खेल का मकसद",
+    goalText:"एक-दूसरे को जानने का, यादें साझा करने का और मौज करने का मज़ेदार तरीका।",
+    navHint:"← स्वाइप करें →",
+    steps:[
+      {title:"खिलाड़ी जुटाएं",desc:"कम से कम 2 खिलाड़ी होने चाहिए।",example:""},
+      {title:"कार्ड खोलें",desc:"स्क्रीन पर एक \"First\" सवाल दिखेगा।",example:"उदाहरण: आपकी पहली थिएटर फिल्म?"},
+      {title:"सब जवाब दें",desc:"सभी खिलाड़ी बारी-बारी जवाब बताएं।",example:""},
+      {title:"किस्सा सुनाएं",desc:"चाहें तो अपनी यादें भी साझा करें।",example:""},
+      {title:"अगला कार्ड",desc:"Next Card दबाएं और जारी रखें!",example:""},
     ],
-    cats: {
-      ent: "मनोरंजन",
-      adv: "यात्रा और अनुभव",
-      rel: "रिश्ते और भावनाएं",
-      mil: "जीवन के पड़ाव",
-      sch: "स्कूल के दिन",
-    }
+    cats:{ent:"मनोरंजन",adv:"यात्रा और अनुभव",rel:"रिश्ते और भावनाएं",mil:"जीवन के पड़ाव",sch:"स्कूल के दिन"}
   }
 };
 
-// ── CARDS ──
 const CARDS = [
-  // Entertainment
-  { titleEn:"FIRST MOVIE", subEn:"YOU WATCHED IN A THEATER", titleHi:"पहली फ़िल्म", subHi:"जो थिएटर में देखी", icon:"🎬", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST SONG", subEn:"YOU MEMORIZED", titleHi:"पहला गाना", subHi:"जो आपको याद हुआ", icon:"🎵", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST CELEBRITY", subEn:"CRUSH YOU HAD", titleHi:"पहला सेलिब्रिटी क्रश", subHi:"जो आपको पसंद था", icon:"⭐", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST CONCERT", subEn:"YOU ATTENDED", titleHi:"पहला कॉन्सर्ट", subHi:"जो आपने अटेंड किया", icon:"🎤", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST TV SHOW", subEn:"YOU WERE OBSESSED WITH", titleHi:"पहला TV शो", subHi:"जिसका आप दीवाने थे", icon:"📺", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST VIDEO GAME", subEn:"YOU EVER PLAYED", titleHi:"पहला वीडियो गेम", subHi:"जो आपने खेला", icon:"🕹️", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST BOOK", subEn:"YOU TRULY LOVED", titleHi:"पहली किताब", subHi:"जो आपको दिल से पसंद आई", icon:"📖", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST CARTOON", subEn:"YOU COULDN'T MISS", titleHi:"पहला कार्टून", subHi:"जो आप कभी नहीं छोड़ते थे", icon:"📽️", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST MUSIC ALBUM", subEn:"YOU OWNED", titleHi:"पहला म्यूज़िक एल्बम", subHi:"जो आपके पास था", icon:"💿", catKey:"ent", cls:"c-ent" },
-  { titleEn:"FIRST REALITY SHOW", subEn:"YOU FOLLOWED", titleHi:"पहला रियलिटी शो", subHi:"जो आप देखते थे", icon:"🎥", catKey:"ent", cls:"c-ent" },
-  // Adventures
-  { titleEn:"FIRST TRIP", subEn:"WITH FRIENDS", titleHi:"पहली ट्रिप", subHi:"दोस्तों के साथ", icon:"✈️", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST SOLO TRIP", subEn:"YOU TOOK ALONE", titleHi:"पहली अकेली यात्रा", subHi:"जो आपने अकेले की", icon:"🎒", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST FLIGHT", subEn:"EXPERIENCE YOU HAD", titleHi:"पहली उड़ान", subHi:"जब आप पहली बार उड़े", icon:"🛫", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST TIME", subEn:"YOU SAW THE SEA", titleHi:"पहली बार समुद्र", subHi:"जब आपने समुद्र देखा", icon:"🌊", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST HOTEL", subEn:"YOU STAYED IN", titleHi:"पहला होटल", subHi:"जहाँ आप रुके", icon:"🏨", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST TIME CAMPING", subEn:"IN THE OUTDOORS", titleHi:"पहली बार कैंपिंग", subHi:"जब आप जंगल में रुके", icon:"⛺", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST TIME ABROAD", subEn:"COUNTRY YOU VISITED", titleHi:"पहली विदेश यात्रा", subHi:"जो देश आपने पहले देखा", icon:"🌍", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST AMUSEMENT RIDE", subEn:"THAT THRILLED YOU", titleHi:"पहली एडवेंचर राइड", subHi:"जिसने रोमांचित किया", icon:"🎡", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST ADVENTURE SPORT", subEn:"YOU EVER TRIED", titleHi:"पहला एडवेंचर स्पोर्ट", subHi:"जो आपने आज़माया", icon:"🪂", catKey:"adv", cls:"c-adv" },
-  { titleEn:"FIRST FESTIVAL", subEn:"YOU ATTENDED", titleHi:"पहला त्योहार", subHi:"जो आपने मनाया", icon:"🎊", catKey:"adv", cls:"c-adv" },
-  // Relationships
-  { titleEn:"FIRST CRUSH", subEn:"YOU EVER HAD", titleHi:"पहला क्रश", subHi:"जो आपके दिल में था", icon:"💘", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST LOVE", subEn:"OF YOUR LIFE", titleHi:"पहला प्यार", subHi:"जो आपकी ज़िंदगी में आया", icon:"❤️", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST BREAKUP", subEn:"YOU WENT THROUGH", titleHi:"पहला ब्रेकअप", subHi:"जिससे आप गुज़रे", icon:"💔", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST KISS", subEn:"YOU REMEMBER", titleHi:"पहला किस", subHi:"जो आपको याद है", icon:"💋", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST PROPOSAL", subEn:"MADE OR RECEIVED", titleHi:"पहला प्रपोज़ल", subHi:"किया या मिला", icon:"💍", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST BEST FRIEND", subEn:"YOU EVER HAD", titleHi:"पहला पक्का दोस्त", subHi:"जो सच्चा यार था", icon:"🤝", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST FIGHT", subEn:"WITH A FRIEND", titleHi:"पहली लड़ाई", subHi:"किसी दोस्त से", icon:"😤", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST HEARTBREAK SONG", subEn:"YOU REMEMBER", titleHi:"पहला दर्द भरा गाना", subHi:"जो दिल को छू गया", icon:"🎶", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST COMPLIMENT", subEn:"YOU STILL REMEMBER", titleHi:"पहली तारीफ़", subHi:"जो आज भी याद है", icon:"🌸", catKey:"rel", cls:"c-rel" },
-  { titleEn:"FIRST INSPIRATION", subEn:"PERSON WHO INSPIRED YOU", titleHi:"पहली प्रेरणा", subHi:"जिसने आपको प्रेरित किया", icon:"🌟", catKey:"rel", cls:"c-rel" },
-  // Milestones
-  { titleEn:"FIRST JOB", subEn:"OR INTERNSHIP", titleHi:"पहली नौकरी", subHi:"या इंटर्नशिप", icon:"💼", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST SALARY", subEn:"YOU EVER EARNED", titleHi:"पहली तनख्वाह", subHi:"जो आपने कमाई", icon:"💰", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST PET", subEn:"YOU EVER HAD", titleHi:"पहला पालतू जानवर", subHi:"जो आपके घर में था", icon:"🐾", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST CAR", subEn:"OR BIKE YOU OWNED", titleHi:"पहली गाड़ी", subHi:"या बाइक जो आपकी थी", icon:"🚗", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST HOME", subEn:"YOU LIVED IN AS AN ADULT", titleHi:"पहला घर", subHi:"जहाँ आप बड़े होकर रहे", icon:"🏠", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST MEAL", subEn:"YOU COOKED YOURSELF", titleHi:"पहला खाना", subHi:"जो आपने खुद बनाया", icon:"👨‍🍳", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST GADGET", subEn:"YOU BOUGHT YOURSELF", titleHi:"पहला गैजेट", subHi:"जो आपने खुद खरीदा", icon:"📱", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST BILL", subEn:"YOU PAID YOURSELF", titleHi:"पहला बिल", subHi:"जो आपने खुद भरा", icon:"📄", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST CITY MOVE", subEn:"WHEN YOU SHIFTED", titleHi:"पहली बार शहर बदला", subHi:"जब आपने नया शहर चुना", icon:"🏙️", catKey:"mil", cls:"c-mil" },
-  { titleEn:"FIRST TIME ALONE", subEn:"LIVING BY YOURSELF", titleHi:"पहली बार अकेले रहे", subHi:"जब आप खुद रहने लगे", icon:"🚪", catKey:"mil", cls:"c-mil" },
-  // School
-  { titleEn:"FIRST SCHOOL", subEn:"YOU EVER ATTENDED", titleHi:"पहला स्कूल", subHi:"जहाँ आप पढ़े", icon:"🏫", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST TEACHER", subEn:"YOU LIKED", titleHi:"पहले टीचर", subHi:"जो आपको पसंद थे", icon:"👩‍🏫", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST SCHOOL TRIP", subEn:"YOU WENT ON", titleHi:"पहली स्कूल ट्रिप", subHi:"जो आप कभी नहीं भूले", icon:"🚌", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST COMPETITION", subEn:"YOU WON", titleHi:"पहली जीत", subHi:"जो प्रतियोगिता में मिली", icon:"🏆", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST SUBJECT", subEn:"YOU TRULY LOVED", titleHi:"पहला पसंदीदा विषय", subHi:"जो आपको दिल से भाया", icon:"📐", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST NICKNAME", subEn:"YOU WERE GIVEN", titleHi:"पहला उपनाम", subHi:"जो आपको मिला", icon:"😄", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST PUNISHMENT", subEn:"YOU GOT IN SCHOOL", titleHi:"पहली सज़ा", subHi:"जो स्कूल में मिली", icon:"😬", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST DREAM JOB", subEn:"AS A CHILD", titleHi:"बचपन का पहला सपना", subHi:"जो बनना चाहते थे", icon:"🚀", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST TOY", subEn:"YOU WERE OBSESSED WITH", titleHi:"पहला खिलौना", subHi:"जो आपको सबसे प्यारा था", icon:"🧸", catKey:"sch", cls:"c-sch" },
-  { titleEn:"FIRST TIME BUNKING", subEn:"A CLASS", titleHi:"पहली बार बंकी", subHi:"जब आपने क्लास छोड़ी", icon:"😈", catKey:"sch", cls:"c-sch" },
+  {titleEn:"FIRST MOVIE",subEn:"YOU WATCHED IN A THEATER",titleHi:"पहली फ़िल्म",subHi:"जो थिएटर में देखी",icon:"🎬",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST SONG",subEn:"YOU MEMORIZED",titleHi:"पहला गाना",subHi:"जो आपको याद हुआ",icon:"🎵",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST CELEBRITY",subEn:"CRUSH YOU HAD",titleHi:"पहला सेलिब्रिटी क्रश",subHi:"जो आपको पसंद था",icon:"⭐",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST CONCERT",subEn:"YOU ATTENDED",titleHi:"पहला कॉन्सर्ट",subHi:"जो आपने अटेंड किया",icon:"🎤",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST TV SHOW",subEn:"YOU WERE OBSESSED WITH",titleHi:"पहला TV शो",subHi:"जिसका आप दीवाने थे",icon:"📺",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST VIDEO GAME",subEn:"YOU EVER PLAYED",titleHi:"पहला वीडियो गेम",subHi:"जो आपने खेला",icon:"🕹️",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST BOOK",subEn:"YOU TRULY LOVED",titleHi:"पहली किताब",subHi:"जो आपको दिल से पसंद आई",icon:"📖",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST CARTOON",subEn:"YOU COULDN'T MISS",titleHi:"पहला कार्टून",subHi:"जो आप कभी नहीं छोड़ते थे",icon:"📽️",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST MUSIC ALBUM",subEn:"YOU OWNED",titleHi:"पहला म्यूज़िक एल्बम",subHi:"जो आपके पास था",icon:"💿",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST REALITY SHOW",subEn:"YOU FOLLOWED",titleHi:"पहला रियलिटी शो",subHi:"जो आप देखते थे",icon:"🎥",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST TRIP",subEn:"WITH FRIENDS",titleHi:"पहली ट्रिप",subHi:"दोस्तों के साथ",icon:"✈️",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST SOLO TRIP",subEn:"YOU TOOK ALONE",titleHi:"पहली अकेली यात्रा",subHi:"जो आपने अकेले की",icon:"🎒",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST FLIGHT",subEn:"EXPERIENCE YOU HAD",titleHi:"पहली उड़ान",subHi:"जब आप पहली बार उड़े",icon:"🛫",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST TIME",subEn:"YOU SAW THE SEA",titleHi:"पहली बार समुद्र",subHi:"जब आपने समुद्र देखा",icon:"🌊",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST HOTEL",subEn:"YOU STAYED IN",titleHi:"पहला होटल",subHi:"जहाँ आप रुके",icon:"🏨",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST TIME CAMPING",subEn:"IN THE OUTDOORS",titleHi:"पहली बार कैंपिंग",subHi:"जब आप जंगल में रुके",icon:"⛺",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST TIME ABROAD",subEn:"COUNTRY YOU VISITED",titleHi:"पहली विदेश यात्रा",subHi:"जो देश आपने पहले देखा",icon:"🌍",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST AMUSEMENT RIDE",subEn:"THAT THRILLED YOU",titleHi:"पहली एडवेंचर राइड",subHi:"जिसने रोमांचित किया",icon:"🎡",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST ADVENTURE SPORT",subEn:"YOU EVER TRIED",titleHi:"पहला एडवेंचर स्पोर्ट",subHi:"जो आपने आज़माया",icon:"🪂",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST FESTIVAL",subEn:"YOU ATTENDED",titleHi:"पहला त्योहार",subHi:"जो आपने मनाया",icon:"🎊",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST CRUSH",subEn:"YOU EVER HAD",titleHi:"पहला क्रश",subHi:"जो आपके दिल में था",icon:"💘",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST LOVE",subEn:"OF YOUR LIFE",titleHi:"पहला प्यार",subHi:"जो आपकी ज़िंदगी में आया",icon:"❤️",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST BREAKUP",subEn:"YOU WENT THROUGH",titleHi:"पहला ब्रेकअप",subHi:"जिससे आप गुज़रे",icon:"💔",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST KISS",subEn:"YOU REMEMBER",titleHi:"पहला किस",subHi:"जो आपको याद है",icon:"💋",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST PROPOSAL",subEn:"MADE OR RECEIVED",titleHi:"पहला प्रपोज़ल",subHi:"किया या मिला",icon:"💍",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST BEST FRIEND",subEn:"YOU EVER HAD",titleHi:"पहला पक्का दोस्त",subHi:"जो सच्चा यार था",icon:"🤝",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST FIGHT",subEn:"WITH A FRIEND",titleHi:"पहली लड़ाई",subHi:"किसी दोस्त से",icon:"😤",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST HEARTBREAK SONG",subEn:"YOU REMEMBER",titleHi:"पहला दर्द भरा गाना",subHi:"जो दिल को छू गया",icon:"🎶",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST COMPLIMENT",subEn:"YOU STILL REMEMBER",titleHi:"पहली तारीफ़",subHi:"जो आज भी याद है",icon:"🌸",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST INSPIRATION",subEn:"PERSON WHO INSPIRED YOU",titleHi:"पहली प्रेरणा",subHi:"जिसने आपको प्रेरित किया",icon:"🌟",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST JOB",subEn:"OR INTERNSHIP",titleHi:"पहली नौकरी",subHi:"या इंटर्नशिप",icon:"💼",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST SALARY",subEn:"YOU EVER EARNED",titleHi:"पहली तनख्वाह",subHi:"जो आपने कमाई",icon:"💰",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST PET",subEn:"YOU EVER HAD",titleHi:"पहला पालतू जानवर",subHi:"जो आपके घर में था",icon:"🐾",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST CAR",subEn:"OR BIKE YOU OWNED",titleHi:"पहली गाड़ी",subHi:"या बाइक जो आपकी थी",icon:"🚗",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST HOME",subEn:"YOU LIVED IN AS AN ADULT",titleHi:"पहला घर",subHi:"जहाँ आप बड़े होकर रहे",icon:"🏠",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST MEAL",subEn:"YOU COOKED YOURSELF",titleHi:"पहला खाना",subHi:"जो आपने खुद बनाया",icon:"👨‍🍳",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST GADGET",subEn:"YOU BOUGHT YOURSELF",titleHi:"पहला गैजेट",subHi:"जो आपने खुद खरीदा",icon:"📱",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST BILL",subEn:"YOU PAID YOURSELF",titleHi:"पहला बिल",subHi:"जो आपने खुद भरा",icon:"📄",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST CITY MOVE",subEn:"WHEN YOU SHIFTED",titleHi:"पहली बार शहर बदला",subHi:"जब आपने नया शहर चुना",icon:"🏙️",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST TIME ALONE",subEn:"LIVING BY YOURSELF",titleHi:"पहली बार अकेले रहे",subHi:"जब आप खुद रहने लगे",icon:"🚪",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST SCHOOL",subEn:"YOU EVER ATTENDED",titleHi:"पहला स्कूल",subHi:"जहाँ आप पढ़े",icon:"🏫",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST TEACHER",subEn:"YOU LIKED",titleHi:"पहले टीचर",subHi:"जो आपको पसंद थे",icon:"👩‍🏫",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST SCHOOL TRIP",subEn:"YOU WENT ON",titleHi:"पहली स्कूल ट्रिप",subHi:"जो आप कभी नहीं भूले",icon:"🚌",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST COMPETITION",subEn:"YOU WON",titleHi:"पहली जीत",subHi:"जो प्रतियोगिता में मिली",icon:"🏆",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST SUBJECT",subEn:"YOU TRULY LOVED",titleHi:"पहला पसंदीदा विषय",subHi:"जो आपको दिल से भाया",icon:"📐",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST NICKNAME",subEn:"YOU WERE GIVEN",titleHi:"पहला उपनाम",subHi:"जो आपको मिला",icon:"😄",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST PUNISHMENT",subEn:"YOU GOT IN SCHOOL",titleHi:"पहली सज़ा",subHi:"जो स्कूल में मिली",icon:"😬",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST DREAM JOB",subEn:"AS A CHILD",titleHi:"बचपन का पहला सपना",subHi:"जो बनना चाहते थे",icon:"🚀",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST TOY",subEn:"YOU WERE OBSESSED WITH",titleHi:"पहला खिलौना",subHi:"जो आपको सबसे प्यारा था",icon:"🧸",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST TIME BUNKING",subEn:"A CLASS",titleHi:"पहली बार बंकी",subHi:"जब आपने क्लास छोड़ी",icon:"😈",catKey:"sch",cls:"c-sch"},
 ];
 
-let lang = 'en', deck = [], idx = 0, isAnimating = false;
+// ── CAROUSEL ──
+const TOTAL_SLIDES = 3;
+let currentSlide = 0;
+let carouselStartX = 0, carouselDragging = false;
 
+const SLIDE_BG = [
+  'linear-gradient(160deg,#1A1A2E 0%,#2D1B4E 55%,#1A2E4E 100%)',
+  'linear-gradient(160deg,#0A2A1E 0%,#0D4A34 55%,#0A3028 100%)',
+  'linear-gradient(160deg,#1A0A2E 0%,#3D1270 50%,#280A3D 100%)'
+];
+function goToSlide(n) {
+  currentSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, n));
+  document.getElementById('carousel').style.transform = `translateX(-${currentSlide * 100}vw)`;
+  document.getElementById('launcher').style.background = SLIDE_BG[currentSlide];
+  for (let i = 0; i < TOTAL_SLIDES; i++) {
+    document.getElementById(`dot-${i}`).classList.toggle('active', i === currentSlide);
+  }
+  // Update desktop arrows
+  const al = document.getElementById('arrow-left');
+  const ar = document.getElementById('arrow-right');
+  if (al && ar) {
+    al.classList.toggle('hidden-arrow', currentSlide === 0);
+    ar.classList.toggle('hidden-arrow', currentSlide === TOTAL_SLIDES - 1);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const carousel = document.getElementById('carousel');
+  if(carousel){
+    carousel.addEventListener('touchstart', e => {
+      carouselStartX = e.touches[0].clientX;
+      carouselDragging = true;
+    }, { passive: true });
+    carousel.addEventListener('touchend', e => {
+      if (!carouselDragging) return;
+      const dx = e.changedTouches[0].clientX - carouselStartX;
+      if (Math.abs(dx) > 45) goToSlide(currentSlide + (dx < 0 ? 1 : -1));
+      carouselDragging = false;
+    }, { passive: true });
+  }
+});
+
+// ── LANGUAGE ──
+let lang = 'en';
 function setLang(l) {
   lang = l;
   document.getElementById('btn-en').classList.toggle('active', l === 'en');
   document.getElementById('btn-hi').classList.toggle('active', l === 'hi');
-  applyLangToSplash();
-  if (document.getElementById('how-overlay').classList.contains('open')) renderHow();
-}
-
-function applyLangToSplash() {
-  const t = T[lang];
+  const t = T[l];
   document.getElementById('splash-tagline').textContent = t.tagline;
   document.getElementById('btn-start').textContent = t.startBtn;
   document.getElementById('how-link').textContent = t.howLink;
-  document.getElementById('splash-count').textContent = t.countLabel;
+  document.getElementById('nav-hint').textContent = t.navHint;
+  if (document.getElementById('how-overlay').classList.contains('open')) renderHow();
 }
 
+// ── HOW TO PLAY ──
 function renderHow() {
   const t = T[lang];
   document.getElementById('how-title').textContent = t.howTitle;
   document.getElementById('how-goal-title').textContent = t.goalTitle;
   document.getElementById('how-goal-text').textContent = t.goalText;
-  const stepsEl = document.getElementById('how-steps');
-  stepsEl.innerHTML = t.steps.map((s, i) => `
+  document.getElementById('how-steps').innerHTML = t.steps.map((s, i) => `
     <div class="how-step">
-      <div class="step-num">${i + 1}</div>
+      <div class="step-num">${i+1}</div>
       <div class="step-body">
         <div class="step-title">${s.title}</div>
         <div class="step-desc">${s.desc}</div>
         ${s.example ? `<div class="step-example">${s.example}</div>` : ''}
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
+function openHow() { renderHow(); const o=document.getElementById('how-overlay'); o.style.display='flex'; requestAnimationFrame(()=>o.classList.add('open')); }
+function closeHow(e) { if(e&&e.target!==document.getElementById('how-overlay'))return; const o=document.getElementById('how-overlay'); o.classList.remove('open'); setTimeout(()=>o.style.display='none',350); }
 
-function openHow() {
-  renderHow();
-  const o = document.getElementById('how-overlay');
-  o.style.display = 'flex';
-  requestAnimationFrame(() => o.classList.add('open'));
-}
-
-function closeHow(e) {
-  if (e && e.target !== document.getElementById('how-overlay')) return;
-  const o = document.getElementById('how-overlay');
-  o.classList.remove('open');
-  setTimeout(() => o.style.display = 'none', 350);
-}
-
-function shuffle(a) {
-  const b = [...a];
-  for (let i = b.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [b[i], b[j]] = [b[j], b[i]];
-  }
-  return b;
-}
+// ── GAME ──
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+let deck=[], idx=0, isAnimating=false;
 
 function startGame() {
   deck = shuffle(CARDS); idx = 0;
-  applyGameLang();
-  renderCard(idx, false);
-  document.getElementById('splash').classList.add('hidden');
-  document.getElementById('game').classList.add('active');
-}
-
-function applyGameLang() {
   const t = T[lang];
-  document.getElementById('g-exit').textContent = t.exitBtn;
-  document.getElementById('swipe-hint').textContent = t.swipeHint;
+  document.getElementById('g-back').textContent = t.backBtn;
+  document.getElementById('card-swipe-hint').textContent = t.swipeHint;
   document.getElementById('btn-next').textContent = t.nextBtn;
   document.getElementById('end-title').textContent = t.endTitle;
-  document.getElementById('end-sub').innerHTML = t.endSub.replace('\n', '<br>');
+  document.getElementById('end-sub').innerHTML = t.endSub.replace('\n','<br>');
   document.getElementById('btn-again').textContent = t.playAgain;
-}
-
-function renderCard(i, animate) {
-  const c = deck[i], total = deck.length;
-  if (animate) {
-    const card = document.getElementById('playing-card');
-    card.classList.add('card-flip-out');
-    setTimeout(() => { applyCard(c); card.classList.remove('card-flip-out'); card.classList.add('card-flip-in'); setTimeout(() => card.classList.remove('card-flip-in'), 250); }, 200);
-  } else { applyCard(c); }
-  document.getElementById('g-counter').textContent = `${i + 1} / ${total}`;
-  document.getElementById('prog-num').textContent = `${i + 1}/${total}`;
-  document.getElementById('prog-fill').style.width = Math.round((i + 1) / total * 100) + '%';
-}
-
-function applyCard(c) {
-  const card = document.getElementById('playing-card');
-  card.className = 'playing-card ' + c.cls;
-  document.getElementById('card-title').textContent = lang === 'hi' ? c.titleHi : c.titleEn;
-  document.getElementById('card-subtitle').textContent = lang === 'hi' ? c.subHi : c.subEn;
-  document.getElementById('card-icon').textContent = c.icon;
-  document.getElementById('card-cat').textContent = T[lang].cats[c.catKey];
-}
-
-function nextCard() {
-  if (isAnimating) return;
-  if (idx >= deck.length - 1) { document.getElementById('end-screen').classList.add('show'); return; }
-  isAnimating = true; idx++;
-  renderCard(idx, true);
-  setTimeout(() => isAnimating = false, 450);
-}
-
-function reshuffleDeck() {
-  document.getElementById('end-screen').classList.remove('show');
-  deck = shuffle(CARDS); idx = 0;
-  renderCard(idx, true);
+  renderCard(idx, false);
+  document.getElementById('launcher').classList.add('hidden');
+  document.getElementById('game').classList.add('active');
 }
 
 function exitGame() {
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('game').classList.remove('active');
-  document.getElementById('splash').classList.remove('hidden');
+  document.getElementById('launcher').classList.remove('hidden');
 }
 
-// swipe
-let tx = 0, ty = 0;
-document.getElementById('card-stage').addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
-document.getElementById('card-stage').addEventListener('touchend', e => {
-  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) nextCard();
-}, { passive: true });
+function renderCard(i, animate) {
+  const c=deck[i], total=deck.length;
+  if (animate) {
+    const card=document.getElementById('playing-card');
+    card.classList.add('card-flip-out');
+    setTimeout(()=>{applyCard(c);card.classList.remove('card-flip-out');card.classList.add('card-flip-in');setTimeout(()=>card.classList.remove('card-flip-in'),250);},200);
+  } else { applyCard(c); }
+  document.getElementById('g-counter').textContent=`${i+1} / ${total}`;
+  document.getElementById('prog-num').textContent=`${i+1}/${total}`;
+  document.getElementById('prog-fill').style.width=Math.round((i+1)/total*100)+'%';
+}
 
-// splash stars
-(function() {
-  const c = document.getElementById('splash-stars');
-  for (let i = 0; i < 30; i++) {
-    const s = document.createElement('div'); s.className = 'sstar';
-    const sz = 1 + Math.random() * 3;
-    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${1.5+Math.random()*2.5}s;--delay:${Math.random()*3}s;`;
+function applyCard(c) {
+  const card=document.getElementById('playing-card');
+  card.className='playing-card '+c.cls;
+  document.getElementById('card-title').textContent=lang==='hi'?c.titleHi:c.titleEn;
+  document.getElementById('card-subtitle').textContent=lang==='hi'?c.subHi:c.subEn;
+  document.getElementById('card-icon').textContent=c.icon;
+  document.getElementById('card-cat').textContent=T[lang].cats[c.catKey];
+}
+
+function nextCard() {
+  if(isAnimating)return;
+  if(idx>=deck.length-1){document.getElementById('end-screen').classList.add('show');return;}
+  isAnimating=true; idx++;
+  renderCard(idx,true);
+  setTimeout(()=>isAnimating=false,450);
+}
+function reshuffleDeck() {
+  document.getElementById('end-screen').classList.remove('show');
+  deck=shuffle(CARDS); idx=0; renderCard(idx,true);
+}
+
+// card swipe — wrapped in DOMContentLoaded so elements exist
+document.addEventListener('DOMContentLoaded', function() {
+  let cx=0,cy=0;
+  const cardStage = document.getElementById('card-stage');
+  if(cardStage){
+    cardStage.addEventListener('touchstart',e=>{cx=e.touches[0].clientX;cy=e.touches[0].clientY;},{passive:true});
+    cardStage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-cx,dy=e.changedTouches[0].clientY-cy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))nextCard();},{passive:true});
+  }
+  const tyCardStage = document.getElementById('ty-card-stage');
+  if(tyCardStage){
+    let tyx=0,tyy=0;
+    tyCardStage.addEventListener('touchstart',e=>{tyx=e.touches[0].clientX;tyy=e.touches[0].clientY;},{passive:true});
+    tyCardStage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tyx,dy=e.changedTouches[0].clientY-tyy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))nextTyCard();},{passive:true});
+  }
+  makeStars('stars-0'); makeStars('stars-1'); makeStars('stars-2');
+});
+
+// stars
+function makeStars(id) {
+  const c=document.getElementById(id); if(!c)return;
+  for(let i=0;i<22;i++){
+    const s=document.createElement('div'); s.className='sstar';
+    const sz=1+Math.random()*2.5;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${1.5+Math.random()*2.5}s;--delay:${Math.random()*3}s;`;
     c.appendChild(s);
   }
-})();
+}
+
+// ══ THANK YOU GAME ══════════════════════════════════════════
+const TY_CARDS = [
+  {title:"ONE ELECTRIC APPLIANCE",sub:"YOU ARE THANKFUL FOR",icon:"⚡",cat:"Everyday Things",cls:"c-ty1"},
+  {title:"ONE WEATHER OR SEASON",sub:"YOU ARE GRATEFUL FOR",icon:"🌤️",cat:"Nature",cls:"c-ty2"},
+  {title:"AN ORGAN IN YOUR BODY",sub:"YOU ARE THANKFUL FOR",icon:"❤️",cat:"Your Body",cls:"c-ty6"},
+  {title:"ONE FRIEND",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🤝",cat:"People",cls:"c-ty4"},
+  {title:"ONE TEACHER",sub:"YOU ARE THANKFUL FOR",icon:"👩‍🏫",cat:"People",cls:"c-ty5"},
+  {title:"ONE RELATIVE OR FAMILY MEMBER",sub:"YOU ARE GRATEFUL FOR",icon:"👨‍👩‍👧",cat:"Family",cls:"c-ty1"},
+  {title:"ONE PIECE OF CLOTHING",sub:"YOU ARE THANKFUL FOR",icon:"👕",cat:"Everyday Things",cls:"c-ty3"},
+  {title:"ONE BEVERAGE",sub:"YOU ARE GRATEFUL FOR",icon:"☕",cat:"Food & Drink",cls:"c-ty2"},
+  {title:"ONE FOOD ITEM",sub:"YOU ARE THANKFUL FOR",icon:"🍲",cat:"Food & Drink",cls:"c-ty3"},
+  {title:"ONE MOVIE",sub:"YOU ARE GRATEFUL FOR",icon:"🎬",cat:"Arts & Culture",cls:"c-ty1"},
+  {title:"ONE SONG",sub:"YOU ARE THANKFUL FOR",icon:"🎵",cat:"Arts & Culture",cls:"c-ty4"},
+  {title:"ONE ARTIST",sub:"ALIVE OR NOT, YOU ARE GRATEFUL FOR",icon:"🎨",cat:"Arts & Culture",cls:"c-ty5"},
+  {title:"ONE LEADER",sub:"ALIVE OR NOT, YOU ARE THANKFUL FOR",icon:"👑",cat:"Society",cls:"c-ty6"},
+  {title:"ONE SPORT",sub:"YOU ARE GRATEFUL FOR",icon:"⚽",cat:"Lifestyle",cls:"c-ty2"},
+  {title:"ONE DAILY ROUTINE",sub:"YOU ARE THANKFUL FOR",icon:"🌅",cat:"Lifestyle",cls:"c-ty1"},
+  {title:"ONE CHILDHOOD MEMORY",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🧸",cat:"Memories",cls:"c-ty3"},
+  {title:"ONE SCHOOL SUBJECT",sub:"YOU ARE THANKFUL FOR",icon:"📐",cat:"Learning",cls:"c-ty5"},
+  {title:"ONE BOOK",sub:"YOU ARE GRATEFUL FOR",icon:"📖",cat:"Learning",cls:"c-ty2"},
+  {title:"ONE LIFE LESSON",sub:"YOU ARE THANKFUL FOR",icon:"💡",cat:"Wisdom",cls:"c-ty4"},
+  {title:"ONE PIECE OF FURNITURE",sub:"YOU ARE GRATEFUL FOR",icon:"🛋️",cat:"Home",cls:"c-ty3"},
+  {title:"ONE HOLIDAY",sub:"YOU ARE THANKFUL FOR",icon:"🏖️",cat:"Experiences",cls:"c-ty1"},
+  {title:"ONE FAMILY TRADITION",sub:"YOU ARE GRATEFUL FOR",icon:"🏡",cat:"Family",cls:"c-ty6"},
+  {title:"ONE FESTIVAL",sub:"YOU ARE THANKFUL FOR",icon:"🎊",cat:"Culture",cls:"c-ty2"},
+  {title:"ONE TRAIT IN YOUR PARTNER",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"💑",cat:"Relationships",cls:"c-ty4"},
+  {title:"ONE TRAIT IN YOURSELF",sub:"YOU ARE THANKFUL FOR",icon:"🌟",cat:"Self",cls:"c-ty5"},
+  {title:"ONE TRAIT IN YOUR CHILD",sub:"YOU ARE GRATEFUL FOR",icon:"👶",cat:"Family",cls:"c-ty1"},
+  {title:"ONE TRAIT IN YOUR BROTHER",sub:"YOU ARE THANKFUL FOR",icon:"🧑",cat:"Family",cls:"c-ty3"},
+  {title:"ONE TRAIT IN YOUR SISTER",sub:"YOU ARE GRATEFUL FOR",icon:"👧",cat:"Family",cls:"c-ty6"},
+  {title:"ONE FLOWER",sub:"YOU ARE THANKFUL FOR",icon:"🌸",cat:"Nature",cls:"c-ty4"},
+  {title:"ONE NATURAL FORCE",sub:"WIND, WATER, SOIL OR SUNRAYS",icon:"🌊",cat:"Nature",cls:"c-ty2"},
+  {title:"ONE SOCIAL MEDIA PLATFORM",sub:"YOU ARE GRATEFUL FOR",icon:"📱",cat:"Technology",cls:"c-ty5"},
+  {title:"ONE MEDICAL INVENTION",sub:"YOU ARE THANKFUL FOR",icon:"💊",cat:"Health",cls:"c-ty6"},
+  {title:"ONE CULTURAL REFORM",sub:"YOU ARE GRATEFUL FOR",icon:"✊",cat:"Society",cls:"c-ty1"},
+  {title:"ONE ACCESSORY YOU OWN",sub:"YOU ARE THANKFUL FOR",icon:"💍",cat:"Everyday Things",cls:"c-ty3"},
+  {title:"ONE VEHICLE",sub:"YOU ARE GRATEFUL FOR",icon:"🚗",cat:"Everyday Things",cls:"c-ty2"},
+  {title:"ONE PROFESSIONAL MENTOR",sub:"YOU ARE THANKFUL FOR",icon:"🧑‍💼",cat:"People",cls:"c-ty5"},
+  {title:"ONE HOBBY OR SKILL",sub:"YOU ARE GRATEFUL FOR",icon:"🎯",cat:"Lifestyle",cls:"c-ty4"},
+  {title:"ONE PRIVILEGE YOU HAVE",sub:"NOT EVERYONE GETS",icon:"🙌",cat:"Reflection",cls:"c-ty6"},
+  {title:"ONE THING ABOUT YOUR COUNTRY",sub:"YOU ARE THANKFUL FOR",icon:"🗺️",cat:"Identity",cls:"c-ty1"},
+  {title:"ONE THING ABOUT YOUR CULTURE",sub:"YOU ARE GRATEFUL FOR",icon:"🎭",cat:"Identity",cls:"c-ty3"},
+  {title:"ONE UTENSIL",sub:"YOU ARE THANKFUL FOR",icon:"🥄",cat:"Home",cls:"c-ty2"},
+  {title:"ONE PHOTO OR VIDEO",sub:"PRIVATE & PERSONAL, YOU TREASURE",icon:"📸",cat:"Memories",cls:"c-ty5"},
+  {title:"ONE FUN MEMORY WITH FRIENDS",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🎉",cat:"Memories",cls:"c-ty4"},
+  {title:"ONE PERSONAL ACHIEVEMENT",sub:"YOU ARE THANKFUL FOR",icon:"🏆",cat:"Growth",cls:"c-ty6"},
+];
+
+let tyDeck=[], tyIdx=0, tyAnimating=false;
+
+function shuffleArr(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function startTyGame(){
+  tyDeck=shuffleArr(TY_CARDS); tyIdx=0;
+  applyTyCard(tyDeck[0], false);
+  document.getElementById('launcher').classList.add('hidden');
+  document.getElementById('ty-game').classList.add('active');
+}
+
+function exitTyGame(){
+  document.getElementById('ty-end-screen').classList.remove('show');
+  document.getElementById('ty-game').classList.remove('active');
+  document.getElementById('launcher').classList.remove('hidden');
+}
+
+function applyTyCard(c, animate){
+  const card=document.getElementById('ty-playing-card');
+  const total=tyDeck.length;
+  if(animate){
+    card.classList.add('card-flip-out');
+    setTimeout(()=>{
+      setTyCard(c);
+      card.classList.remove('card-flip-out');
+      card.classList.add('card-flip-in');
+      setTimeout(()=>card.classList.remove('card-flip-in'),250);
+    },200);
+  } else { setTyCard(c); }
+  document.getElementById('ty-counter').textContent=`${tyIdx+1} / ${total}`;
+  document.getElementById('ty-prog-num').textContent=`${tyIdx+1}/${total}`;
+  document.getElementById('ty-prog-fill').style.width=Math.round((tyIdx+1)/total*100)+'%';
+}
+
+function setTyCard(c){
+  const card=document.getElementById('ty-playing-card');
+  card.className='playing-card '+c.cls;
+  document.getElementById('ty-card-title').textContent=c.title;
+  document.getElementById('ty-card-subtitle').textContent=c.sub;
+  document.getElementById('ty-card-icon').textContent=c.icon;
+  document.getElementById('ty-card-cat').textContent=c.cat;
+}
+
+function nextTyCard(){
+  if(tyAnimating)return;
+  if(tyIdx>=tyDeck.length-1){document.getElementById('ty-end-screen').classList.add('show');return;}
+  tyAnimating=true; tyIdx++;
+  applyTyCard(tyDeck[tyIdx],true);
+  setTimeout(()=>tyAnimating=false,450);
+}
+
+function reshuffleTyDeck(){
+  document.getElementById('ty-end-screen').classList.remove('show');
+  tyDeck=shuffleArr(TY_CARDS); tyIdx=0;
+  applyTyCard(tyDeck[0],true);
+}
+
+
+
+// TY How to Play overlay
+function openTyHow(){
+  const o=document.getElementById('ty-how-overlay');
+  o.style.display='flex'; requestAnimationFrame(()=>o.classList.add('open'));
+}
+function closeTyHow(e){
+  if(e&&e.target!==document.getElementById('ty-how-overlay'))return;
+  const o=document.getElementById('ty-how-overlay');
+  o.classList.remove('open'); setTimeout(()=>o.style.display='none',350);
+}
+
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+
+</script>
+
+<!-- ══════════ THANK YOU GAME SCREEN ══════════ -->
+<div id="ty-game">
+  <div class="g-header">
+    <div class="g-logo" style="font-size:17px;">THANK <span>YOU!</span></div>
+    <div class="g-counter" id="ty-counter">1 / 44</div>
+    <button class="g-back" onclick="exitTyGame()">✕ Exit</button>
+  </div>
+  <div class="g-progress">
+    <div class="prog-bar"><div class="prog-bar-fill" id="ty-prog-fill" style="width:2%"></div></div>
+    <div class="prog-num" id="ty-prog-num">1/44</div>
+  </div>
+  <div class="card-swipe-hint">Tap card or swipe to flip</div>
+  <div class="card-stage" id="ty-card-stage">
+    <div class="playing-card c-ty1" id="ty-playing-card" onclick="nextTyCard()">
+      <div class="card-inner-border"></div>
+      <div class="card-texture"></div>
+      <div class="card-top">
+        <div class="card-main-title" id="ty-card-title">ONE ELECTRIC APPLIANCE</div>
+        <div class="card-sub-title" id="ty-card-subtitle">YOU ARE THANKFUL FOR</div>
+      </div>
+      <div class="card-illustration">
+        <div class="card-big-icon" id="ty-card-icon">⚡</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-category" id="ty-card-cat">Everyday Things</div>
+      </div>
+    </div>
+  </div>
+  <div class="g-actions">
+    <button class="btn-next" onclick="nextTyCard()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">Next Card →</button>
+    <button class="btn-shuffle" onclick="reshuffleTyDeck()">🔀</button>
+  </div>
+  <div id="ty-end-screen">
+    <div class="end-icon">🙏</div>
+    <div class="end-title" style="color:#4ADE80;">All Done!</div>
+    <div class="end-sub">You've gone through all 44 cards!<br>Ready for another round?</div>
+    <button class="btn-play-again" onclick="reshuffleTyDeck()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">🔀 &nbsp; Play Again</button>
+  </div>
+</div>
+
+<!-- TY HOW TO PLAY OVERLAY -->
+<div id="ty-how-overlay" onclick="closeTyHow(event)">
+  <div class="how-sheet">
+    <div class="how-handle"></div>
+    <div class="how-header">
+      <div class="how-title" style="color:#4ADE80;">How to Play</div>
+      <button class="how-close" onclick="closeTyHow()">✕</button>
+    </div>
+    <div class="how-steps">
+      <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">1</div><div class="step-body"><div class="step-title">Gather Players</div><div class="step-desc">Minimum 2 players. The more the merrier!</div></div></div>
+      <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">2</div><div class="step-body"><div class="step-title">Open a Card</div><div class="step-desc">A category appears — like "One Teacher" or "One Food Item".</div><div class="step-example">Example: Name one teacher you are thankful for.</div></div></div>
+      <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">3</div><div class="step-body"><div class="step-title">Everyone Shares</div><div class="step-desc">Each player names something from that category they are grateful for.</div></div></div>
+      <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">4</div><div class="step-body"><div class="step-title">Tell the Story</div><div class="step-desc">Share why you are thankful — a memory, a reason, a feeling.</div></div></div>
+      <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">5</div><div class="step-body"><div class="step-title">Next Card</div><div class="step-desc">Tap Next Card and keep the gratitude going!</div></div></div>
+    </div>
+    <div class="how-goal" style="background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);">
+      <div class="how-goal-title" style="color:#4ADE80;">🙏 Goal of the Game</div>
+      <div class="how-goal-text">Pause, reflect, and share what you are truly grateful for. A beautiful way to connect and appreciate life together.</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
