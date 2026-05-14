@@ -340,7 +340,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
         <div class="splash-card-bg" style="background:var(--col-ty4)"></div>
         <div class="splash-card-bg" style="background:var(--col-ty5)"></div>
         <div class="splash-card-front" style="background:var(--col-ty1)">
-          <div class="cf-icon">🙏</div>
+          <div class="cf-icon">😇</div>
           <div class="cf-title">Thank You!</div>
         </div>
       </div>
@@ -389,7 +389,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 <div id="game">
   <div class="g-header">
     <div class="g-logo">FIRST<span>!</span></div>
-    <div class="g-counter" id="g-counter">1 / 50</div>
+    <div class="g-counter" id="g-counter">1 / 51</div>
     <button class="g-back" id="g-back" onclick="exitGame()">✕ Exit</button>
   </div>
   <div class="g-progress">
@@ -420,7 +420,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   <div id="end-screen">
     <div class="end-icon">🎉</div>
     <div class="end-title" id="end-title">All Done!</div>
-    <div class="end-sub" id="end-sub">You've gone through all 50 cards!<br>Ready for another round?</div>
+    <div class="end-sub" id="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
     <button class="btn-play-again" id="btn-again" onclick="reshuffleDeck()">🔀 &nbsp; Play Again</button>
   </div>
 </div>
@@ -448,7 +448,7 @@ const T = {
     tagline:"The Icebreaker Card Game", startBtn:"▶  Start Game",
     howLink:"How to Play", countLabel:"50 cards · 5 categories · Shuffled every game",
     backBtn:"✕ Exit", swipeHint:"Tap card or swipe to flip", nextBtn:"Next Card →",
-    endTitle:"All Done!", endSub:"You've gone through all 50 cards!\nReady for another round?",
+    endTitle:"All Done!", endSub:"You've gone through all 51 cards!\nReady for another round?",
     playAgain:"🔀  Play Again", howTitle:"How to Play",
     goalTitle:"🎯 Goal of the Game",
     goalText:"A fun way to break the ice, share memories, and get to know each other better.",
@@ -466,7 +466,7 @@ const T = {
     tagline:"Ice-Breaker Card Game", startBtn:"▶  खेल शुरू करें",
     howLink:"कैसे खेलें", countLabel:"50 कार्ड · 5 श्रेणियाँ · हर बार अलग क्रम",
     backBtn:"✕ Exit", swipeHint:"कार्ड दबाएं या स्वाइप करें", nextBtn:"अगला कार्ड →",
-    endTitle:"शाबाश!", endSub:"सभी 50 कार्ड देख लिए!\nएक और राउंड खेलें?",
+    endTitle:"शाबाश!", endSub:"सभी 51 कार्ड देख लिए!\nएक और राउंड खेलें?",
     playAgain:"🔀  फिर खेलें", howTitle:"कैसे खेलें",
     goalTitle:"🎯 खेल का मकसद",
     goalText:"एक-दूसरे को जानने का, यादें साझा करने का और मौज करने का मज़ेदार तरीका।",
@@ -483,56 +483,62 @@ const T = {
 };
 
 const CARDS = [
-  {titleEn:"FIRST MOVIE",subEn:"YOU WATCHED IN A THEATER",titleHi:"पहली फ़िल्म",subHi:"जो थिएटर में देखी",icon:"🎬",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST SONG",subEn:"YOU MEMORIZED",titleHi:"पहला गाना",subHi:"जो आपको याद हुआ",icon:"🎵",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST CELEBRITY",subEn:"CRUSH YOU HAD",titleHi:"पहला सेलिब्रिटी क्रश",subHi:"जो आपको पसंद था",icon:"⭐",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST CONCERT",subEn:"YOU ATTENDED",titleHi:"पहला कॉन्सर्ट",subHi:"जो आपने अटेंड किया",icon:"🎤",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST TV SHOW",subEn:"YOU WERE OBSESSED WITH",titleHi:"पहला TV शो",subHi:"जिसका आप दीवाने थे",icon:"📺",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST VIDEO GAME",subEn:"YOU EVER PLAYED",titleHi:"पहला वीडियो गेम",subHi:"जो आपने खेला",icon:"🕹️",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST BOOK",subEn:"YOU TRULY LOVED",titleHi:"पहली किताब",subHi:"जो आपको दिल से पसंद आई",icon:"📖",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST CARTOON",subEn:"YOU COULDN'T MISS",titleHi:"पहला कार्टून",subHi:"जो आप कभी नहीं छोड़ते थे",icon:"📽️",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST MUSIC ALBUM",subEn:"YOU OWNED",titleHi:"पहला म्यूज़िक एल्बम",subHi:"जो आपके पास था",icon:"💿",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST REALITY SHOW",subEn:"YOU FOLLOWED",titleHi:"पहला रियलिटी शो",subHi:"जो आप देखते थे",icon:"🎥",catKey:"ent",cls:"c-ent"},
-  {titleEn:"FIRST TRIP",subEn:"WITH FRIENDS",titleHi:"पहली ट्रिप",subHi:"दोस्तों के साथ",icon:"✈️",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST SOLO TRIP",subEn:"YOU TOOK ALONE",titleHi:"पहली अकेली यात्रा",subHi:"जो आपने अकेले की",icon:"🎒",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST FLIGHT",subEn:"EXPERIENCE YOU HAD",titleHi:"पहली उड़ान",subHi:"जब आप पहली बार उड़े",icon:"🛫",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST TIME",subEn:"YOU SAW THE SEA",titleHi:"पहली बार समुद्र",subHi:"जब आपने समुद्र देखा",icon:"🌊",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST HOTEL",subEn:"YOU STAYED IN",titleHi:"पहला होटल",subHi:"जहाँ आप रुके",icon:"🏨",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST TIME CAMPING",subEn:"IN THE OUTDOORS",titleHi:"पहली बार कैंपिंग",subHi:"जब आप जंगल में रुके",icon:"⛺",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST TIME ABROAD",subEn:"COUNTRY YOU VISITED",titleHi:"पहली विदेश यात्रा",subHi:"जो देश आपने पहले देखा",icon:"🌍",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST AMUSEMENT RIDE",subEn:"THAT THRILLED YOU",titleHi:"पहली एडवेंचर राइड",subHi:"जिसने रोमांचित किया",icon:"🎡",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST ADVENTURE SPORT",subEn:"YOU EVER TRIED",titleHi:"पहला एडवेंचर स्पोर्ट",subHi:"जो आपने आज़माया",icon:"🪂",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST FESTIVAL",subEn:"YOU ATTENDED",titleHi:"पहला त्योहार",subHi:"जो आपने मनाया",icon:"🎊",catKey:"adv",cls:"c-adv"},
-  {titleEn:"FIRST CRUSH",subEn:"YOU EVER HAD",titleHi:"पहला क्रश",subHi:"जो आपके दिल में था",icon:"💘",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST LOVE",subEn:"OF YOUR LIFE",titleHi:"पहला प्यार",subHi:"जो आपकी ज़िंदगी में आया",icon:"❤️",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST BREAKUP",subEn:"YOU WENT THROUGH",titleHi:"पहला ब्रेकअप",subHi:"जिससे आप गुज़रे",icon:"💔",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST KISS",subEn:"YOU REMEMBER",titleHi:"पहला किस",subHi:"जो आपको याद है",icon:"💋",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST PROPOSAL",subEn:"MADE OR RECEIVED",titleHi:"पहला प्रपोज़ल",subHi:"किया या मिला",icon:"💍",catKey:"rel",cls:"c-rel"},
+  // Entertainment & Pop Culture
+  {titleEn:"FIRST MOVIE",subEn:"YOU WATCHED IN A THEATRE",titleHi:"पहली फ़िल्म",subHi:"जो थिएटर में देखी",icon:"🎬",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST TV SHOW",subEn:"YOU REALLY LIKED",titleHi:"पहला TV शो",subHi:"जो आपको सच में पसंद आया",icon:"📺",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST FAMOUS PERSON",subEn:"YOU LIKED THE MOST",titleHi:"पहला मशहूर इंसान",subHi:"जो आपको सबसे ज़्यादा पसंद था",icon:"⭐",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST SAD SONG",subEn:"YOU REALLY LIKED",titleHi:"पहला दर्द भरा गाना",subHi:"जो आपको सच में पसंद आया",icon:"🎵",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST SONG",subEn:"YOU HEARD ON REPEAT",titleHi:"पहला गाना",subHi:"जो आपने बार-बार सुना",icon:"🔁",catKey:"ent",cls:"c-ent"},
+  {titleEn:"FIRST DANCE SONG",subEn:"YOU REMEMBER LIKING A LOT",titleHi:"पहला डांस सॉन्ग",subHi:"जो आपको बहुत पसंद था",icon:"🕺",catKey:"ent",cls:"c-ent"},
+  // Experiences & Adventures
+  {titleEn:"FIRST TRAVEL",subEn:"OUTSIDE YOUR CITY",titleHi:"पहली यात्रा",subHi:"जो शहर से बाहर की थी",icon:"✈️",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST FAMILY HOLIDAY",subEn:"YOU REMEMBER",titleHi:"पहली फैमिली छुट्टी",subHi:"जो आपको याद है",icon:"🏖️",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST TIME",subEn:"YOU WENT SOMEWHERE ALONE",titleHi:"पहली बार अकेले",subHi:"जब आप कहीं अकेले गए",icon:"🎒",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST FAMILY WEDDING",subEn:"YOU REMEMBER ATTENDING",titleHi:"पहली फैमिली शादी",subHi:"जो आपको याद है",icon:"💒",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST CARNIVAL OR MELA",subEn:"YOU REMEMBER ATTENDING",titleHi:"पहला मेला",subHi:"जो आपको याद है",icon:"🎡",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST AMUSEMENT RIDE",subEn:"YOU EVER TOOK",titleHi:"पहली राइड",subHi:"जो आपने ली",icon:"🎢",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST FUN OR ADVENTURE",subEn:"ACTIVITY YOU TRIED",titleHi:"पहली एडवेंचर एक्टिविटी",subHi:"जो आपने आज़माई",icon:"🪂",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST RESTAURANT",subEn:"YOU REMEMBER VISITING REGULARLY",titleHi:"पहला रेस्टोरेंट",subHi:"जहाँ आप अक्सर जाते थे",icon:"🍽️",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST CITY",subEn:"YOU LIVED IN APART FROM HOMETOWN",titleHi:"पहला शहर",subHi:"जहाँ आप घर से बाहर रहे",icon:"🏙️",catKey:"adv",cls:"c-adv"},
+  {titleEn:"FIRST COUNTRY",subEn:"YOU LEARNED ABOUT APART FROM YOUR OWN",titleHi:"पहला देश",subHi:"जो आपने अपने देश के अलावा जाना",icon:"🌍",catKey:"adv",cls:"c-adv"},
+  // Relationships & Emotions
+  {titleEn:"FIRST TIME",subEn:"YOU HELD A BABY",titleHi:"पहली बार",subHi:"जब आपने बच्चे को गोद लिया",icon:"👶",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST TEACHER",subEn:"YOU LIKED",titleHi:"पहले टीचर",subHi:"जो आपको पसंद थे",icon:"👩‍🏫",catKey:"rel",cls:"c-rel"},
   {titleEn:"FIRST BEST FRIEND",subEn:"YOU EVER HAD",titleHi:"पहला पक्का दोस्त",subHi:"जो सच्चा यार था",icon:"🤝",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST FIGHT",subEn:"WITH A FRIEND",titleHi:"पहली लड़ाई",subHi:"किसी दोस्त से",icon:"😤",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST HEARTBREAK SONG",subEn:"YOU REMEMBER",titleHi:"पहला दर्द भरा गाना",subHi:"जो दिल को छू गया",icon:"🎶",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST COMPLIMENT",subEn:"YOU STILL REMEMBER",titleHi:"पहली तारीफ़",subHi:"जो आज भी याद है",icon:"🌸",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST INSPIRATION",subEn:"PERSON WHO INSPIRED YOU",titleHi:"पहली प्रेरणा",subHi:"जिसने आपको प्रेरित किया",icon:"🌟",catKey:"rel",cls:"c-rel"},
-  {titleEn:"FIRST JOB",subEn:"OR INTERNSHIP",titleHi:"पहली नौकरी",subHi:"या इंटर्नशिप",icon:"💼",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST SALARY",subEn:"YOU EVER EARNED",titleHi:"पहली तनख्वाह",subHi:"जो आपने कमाई",icon:"💰",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST PET",subEn:"YOU EVER HAD",titleHi:"पहला पालतू जानवर",subHi:"जो आपके घर में था",icon:"🐾",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST CAR",subEn:"OR BIKE YOU OWNED",titleHi:"पहली गाड़ी",subHi:"या बाइक जो आपकी थी",icon:"🚗",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST HOME",subEn:"YOU LIVED IN AS AN ADULT",titleHi:"पहला घर",subHi:"जहाँ आप बड़े होकर रहे",icon:"🏠",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST MEAL",subEn:"YOU COOKED YOURSELF",titleHi:"पहला खाना",subHi:"जो आपने खुद बनाया",icon:"👨‍🍳",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST GADGET",subEn:"YOU BOUGHT YOURSELF",titleHi:"पहला गैजेट",subHi:"जो आपने खुद खरीदा",icon:"📱",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST RISHTA TALK",subEn:"OR TALKS OF PAIRING UP",titleHi:"पहली रिश्ते की बात",subHi:"या मेल-मिलाप की बात",icon:"💍",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST COMPLIMENT",subEn:"YOU REMEMBER CLEARLY",titleHi:"पहली तारीफ़",subHi:"जो आपको अच्छे से याद है",icon:"🌸",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST TIME",subEn:"YOU FELT SPECIAL WITH YOUR PARTNER",titleHi:"पहली बार",subHi:"जब पार्टनर के साथ खास लगा",icon:"💑",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST SPECIAL GIFT",subEn:"YOU REMEMBER RECEIVING",titleHi:"पहला खास तोहफ़ा",subHi:"जो आपको मिला",icon:"🎁",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST GIFT",subEn:"YOU BOUGHT FOR SOMEONE ELSE",titleHi:"पहला तोहफ़ा",subHi:"जो आपने किसी को दिया",icon:"🛍️",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST ANIMAL FRIEND",subEn:"OR ANIMAL YOU CARED FOR",titleHi:"पहला जानवर दोस्त",subHi:"जिसकी आपने देखभाल की",icon:"🐾",catKey:"rel",cls:"c-rel"},
+  {titleEn:"FIRST TIME",subEn:"YOU CRIED A LOT AS AN ADULT",titleHi:"पहली बार",subHi:"जब बड़े होकर खूब रोए",icon:"😢",catKey:"rel",cls:"c-rel"},
+  // Personal Milestones
+  {titleEn:"FIRST EARNING",subEn:"YOU EVER MADE",titleHi:"पहली कमाई",subHi:"जो आपने की",icon:"💰",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST HOUSE",subEn:"YOU EVER LIVED IN",titleHi:"पहला घर",subHi:"जहाँ आप रहे",icon:"🏠",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST PHONE",subEn:"YOU EVER OWNED",titleHi:"पहला फ़ोन",subHi:"जो आपके पास था",icon:"📱",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST JOB",subEn:"OR WORK YOU GOT PAID FOR",titleHi:"पहली नौकरी",subHi:"या काम जिसका पैसा मिला",icon:"💼",catKey:"mil",cls:"c-mil"},
   {titleEn:"FIRST BILL",subEn:"YOU PAID YOURSELF",titleHi:"पहला बिल",subHi:"जो आपने खुद भरा",icon:"📄",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST CITY MOVE",subEn:"WHEN YOU SHIFTED",titleHi:"पहली बार शहर बदला",subHi:"जब आपने नया शहर चुना",icon:"🏙️",catKey:"mil",cls:"c-mil"},
-  {titleEn:"FIRST TIME ALONE",subEn:"LIVING BY YOURSELF",titleHi:"पहली बार अकेले रहे",subHi:"जब आप खुद रहने लगे",icon:"🚪",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST BANK VISIT",subEn:"YOU REMEMBER",titleHi:"पहली बैंक विज़िट",subHi:"जो आपको याद है",icon:"🏦",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST MEAL",subEn:"YOU COOKED YOURSELF",titleHi:"पहला खाना",subHi:"जो आपने खुद बनाया",icon:"👨‍🍳",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST CITY",subEn:"YOU EVER LIVED IN",titleHi:"पहला शहर",subHi:"जहाँ आप रहे",icon:"🌆",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST TIME",subEn:"YOU STEPPED OUT OF YOUR PARENTS' HOME",titleHi:"पहली बार",subHi:"जब माता-पिता का घर छोड़ा",icon:"🚪",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST VEHICLE",subEn:"YOU OWNED PERSONALLY OR AS A FAMILY",titleHi:"पहला वाहन",subHi:"जो आपका या परिवार का था",icon:"🚗",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST THING",subEn:"YOU BOUGHT WITH YOUR OWN MONEY",titleHi:"पहली चीज़",subHi:"जो अपने पैसों से खरीदी",icon:"🛒",catKey:"mil",cls:"c-mil"},
+  {titleEn:"FIRST JEWELLERY",subEn:"OR ACCESSORY YOU OWNED",titleHi:"पहला ज़ेवर",subHi:"या एक्सेसरी जो आपके पास थी",icon:"💎",catKey:"mil",cls:"c-mil"},
+  // School & Growing Up
   {titleEn:"FIRST SCHOOL",subEn:"YOU EVER ATTENDED",titleHi:"पहला स्कूल",subHi:"जहाँ आप पढ़े",icon:"🏫",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST TEACHER",subEn:"YOU LIKED",titleHi:"पहले टीचर",subHi:"जो आपको पसंद थे",icon:"👩‍🏫",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST SCHOOL TRIP",subEn:"YOU WENT ON",titleHi:"पहली स्कूल ट्रिप",subHi:"जो आप कभी नहीं भूले",icon:"🚌",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST COMPETITION",subEn:"YOU WON",titleHi:"पहली जीत",subHi:"जो प्रतियोगिता में मिली",icon:"🏆",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST SUBJECT",subEn:"YOU TRULY LOVED",titleHi:"पहला पसंदीदा विषय",subHi:"जो आपको दिल से भाया",icon:"📐",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST NICKNAME",subEn:"YOU WERE GIVEN",titleHi:"पहला उपनाम",subHi:"जो आपको मिला",icon:"😄",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST PUNISHMENT",subEn:"YOU GOT IN SCHOOL",titleHi:"पहली सज़ा",subHi:"जो स्कूल में मिली",icon:"😬",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST DREAM JOB",subEn:"AS A CHILD",titleHi:"बचपन का पहला सपना",subHi:"जो बनना चाहते थे",icon:"🚀",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST TOY",subEn:"YOU WERE OBSESSED WITH",titleHi:"पहला खिलौना",subHi:"जो आपको सबसे प्यारा था",icon:"🧸",catKey:"sch",cls:"c-sch"},
-  {titleEn:"FIRST TIME BUNKING",subEn:"A CLASS",titleHi:"पहली बार बंकी",subHi:"जब आपने क्लास छोड़ी",icon:"😈",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST FESTIVAL",subEn:"YOU ENJOYED AS A CHILD",titleHi:"पहला त्योहार",subHi:"जो बचपन में मनाया",icon:"🎊",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST SUBJECT",subEn:"YOU SCORED HIGHEST MARKS IN",titleHi:"पहला विषय",subHi:"जिसमें सबसे ज़्यादा नंबर आए",icon:"🏆",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST TOY",subEn:"YOU WERE OBSESSED WITH AS A CHILD",titleHi:"पहला खिलौना",subHi:"जिसका आप दीवाने थे",icon:"🧸",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST SUBJECT",subEn:"YOU FAILED IN",titleHi:"पहला विषय",subHi:"जिसमें फेल हुए",icon:"😬",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST TIME",subEn:"YOU BUNKED A CLASS",titleHi:"पहली बार बंकी",subHi:"जब क्लास छोड़ी",icon:"😈",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST LIE",subEn:"YOU TOLD AS A CHILD TO HIDE A MISTAKE",titleHi:"पहला झूठ",subHi:"जो बचपन में गलती छुपाने को बोला",icon:"🤥",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST TIME",subEn:"YOU GOT INTO TROUBLE FOR SOMETHING NAUGHTY",titleHi:"पहली बार शरारत में",subHi:"जब पकड़े गए",icon:"😅",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST CHILDHOOD GAME",subEn:"YOU ENJOYED PLAYING",titleHi:"पहला बचपन का खेल",subHi:"जो आपको बहुत पसंद था",icon:"🎮",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST NICKNAME",subEn:"YOU EVER HAD",titleHi:"पहला उपनाम",subHi:"जो आपको मिला",icon:"😄",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST FOOD",subEn:"YOU ENJOYED EATING THE MOST",titleHi:"पहला खाना",subHi:"जो आपको सबसे पसंद था",icon:"🍲",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST DESSERT",subEn:"YOU ENJOYED EATING THE MOST",titleHi:"पहली मिठाई",subHi:"जो आपको सबसे पसंद थी",icon:"🍮",catKey:"sch",cls:"c-sch"},
+  {titleEn:"FIRST CHILDHOOD INJURY",subEn:"YOU REMEMBER",titleHi:"पहली चोट",subHi:"जो बचपन में लगी थी",icon:"🤕",catKey:"sch",cls:"c-sch"},
 ];
 
 // ── CAROUSEL ──
@@ -545,26 +551,57 @@ const SLIDE_BG = [
   'linear-gradient(160deg,#0A2A1E 0%,#0D4A34 55%,#0A3028 100%)',
   'linear-gradient(160deg,#1A0A2E 0%,#3D1270 50%,#280A3D 100%)'
 ];
-function goToSlide(n) {
+function goToSlide(n, skipHistory) {
   currentSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, n));
   const carousel = document.getElementById('carousel');
-  // Re-enable transition for snap
   carousel.style.transition = 'transform .3s cubic-bezier(.25,1,.5,1)';
   carousel.style.transform = `translateX(-${currentSlide * 100}vw)`;
   document.getElementById('launcher').style.background = SLIDE_BG[currentSlide];
   for (let i = 0; i < TOTAL_SLIDES; i++) {
     document.getElementById(`dot-${i}`).classList.toggle('active', i === currentSlide);
   }
-  // Update desktop arrows
   const al = document.getElementById('arrow-left');
   const ar = document.getElementById('arrow-right');
   if (al && ar) {
     al.classList.toggle('hidden-arrow', currentSlide === 0);
     ar.classList.toggle('hidden-arrow', currentSlide === TOTAL_SLIDES - 1);
   }
+  if (!skipHistory) {
+    history.pushState({ view: 'launcher', slide: currentSlide }, '');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Set initial history state so first back press goes here
+  history.replaceState({ view: 'launcher', slide: 0 }, '');
+
+  // Handle Android/browser back button
+  window.addEventListener('popstate', function(e) {
+    const state = e.state;
+    if (!state) return;
+
+    // If a game is open, close it back to launcher
+    const gameActive = document.getElementById('game').classList.contains('active');
+    const tyGameActive = document.getElementById('ty-game').classList.contains('active');
+
+    if (gameActive) {
+      document.getElementById('end-screen').classList.remove('show');
+      document.getElementById('game').classList.remove('active');
+      document.getElementById('launcher').classList.remove('hidden');
+      return;
+    }
+    if (tyGameActive) {
+      document.getElementById('ty-end-screen').classList.remove('show');
+      document.getElementById('ty-game').classList.remove('active');
+      document.getElementById('launcher').classList.remove('hidden');
+      return;
+    }
+    // If on launcher, handle slide navigation via back
+    if (state.view === 'launcher' && typeof state.slide === 'number') {
+      goToSlide(state.slide, true); // skipHistory=true to avoid loop
+    }
+  });
+
   const carousel = document.getElementById('carousel');
   if (!carousel) return;
 
@@ -658,6 +695,7 @@ function startGame() {
   renderCard(idx, false);
   document.getElementById('launcher').classList.add('hidden');
   document.getElementById('game').classList.add('active');
+  history.pushState({ view: 'first-game' }, '');
 }
 
 function exitGame() {
@@ -773,6 +811,13 @@ const TY_CARDS = [
   {title:"ONE PHOTO OR VIDEO",sub:"PRIVATE & PERSONAL, YOU TREASURE",icon:"📸",cat:"Memories",cls:"c-ty5"},
   {title:"ONE FUN MEMORY WITH FRIENDS",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🎉",cat:"Memories",cls:"c-ty4"},
   {title:"ONE PERSONAL ACHIEVEMENT",sub:"YOU ARE THANKFUL FOR",icon:"🏆",cat:"Growth",cls:"c-ty6"},
+  {title:"A TRAIT IN YOUR MOTHER",sub:"YOU ARE THANKFUL FOR",icon:"👩",cat:"Family",cls:"c-ty1"},
+  {title:"A TRAIT IN YOUR FATHER",sub:"YOU ARE THANKFUL FOR",icon:"👨",cat:"Family",cls:"c-ty6"},
+  {title:"A TRAIT IN YOUR BEST FRIEND",sub:"YOU ARE GRATEFUL FOR",icon:"🤝",cat:"People",cls:"c-ty4"},
+  {title:"ONE MODERN FACILITY",sub:"ELECTRICITY, GAS, INTERNET & WHY",icon:"💡",cat:"Everyday Things",cls:"c-ty2"},
+  {title:"ONE SELF CARE ROUTINE",sub:"OR PRODUCT YOU DISCOVERED",icon:"🧖",cat:"Lifestyle",cls:"c-ty5"},
+  {title:"ONE HABIT",sub:"YOU FIND TRULY USEFUL",icon:"✅",cat:"Growth",cls:"c-ty3"},
+  {title:"ONE LUXURY",sub:"YOU ARE GLAD YOU CAN AFFORD",icon:"✨",cat:"Reflection",cls:"c-ty6"},
 ];
 
 let tyDeck=[], tyIdx=0, tyAnimating=false;
@@ -784,6 +829,7 @@ function startTyGame(){
   applyTyCard(tyDeck[0], false);
   document.getElementById('launcher').classList.add('hidden');
   document.getElementById('ty-game').classList.add('active');
+  history.pushState({ view: 'ty-game' }, '');
 }
 
 function exitTyGame(){
@@ -861,12 +907,12 @@ if ('serviceWorker' in navigator) {
 <div id="ty-game">
   <div class="g-header">
     <div class="g-logo" style="font-size:17px;">THANK <span>YOU!</span></div>
-    <div class="g-counter" id="ty-counter">1 / 44</div>
+    <div class="g-counter" id="ty-counter">1 / 51</div>
     <button class="g-back" onclick="exitTyGame()">✕ Exit</button>
   </div>
   <div class="g-progress">
     <div class="prog-bar"><div class="prog-bar-fill" id="ty-prog-fill" style="width:2%"></div></div>
-    <div class="prog-num" id="ty-prog-num">1/44</div>
+    <div class="prog-num" id="ty-prog-num">1/51</div>
   </div>
   <div class="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="card-stage" id="ty-card-stage">
@@ -890,9 +936,9 @@ if ('serviceWorker' in navigator) {
     <button class="btn-shuffle" onclick="reshuffleTyDeck()">🔀</button>
   </div>
   <div id="ty-end-screen">
-    <div class="end-icon">🙏</div>
+    <div class="end-icon">😇</div>
     <div class="end-title" style="color:#4ADE80;">All Done!</div>
-    <div class="end-sub">You've gone through all 44 cards!<br>Ready for another round?</div>
+    <div class="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
     <button class="btn-play-again" onclick="reshuffleTyDeck()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">🔀 &nbsp; Play Again</button>
   </div>
 </div>
@@ -913,7 +959,7 @@ if ('serviceWorker' in navigator) {
       <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">5</div><div class="step-body"><div class="step-title">Next Card</div><div class="step-desc">Tap Next Card and keep the gratitude going!</div></div></div>
     </div>
     <div class="how-goal" style="background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);">
-      <div class="how-goal-title" style="color:#4ADE80;">🙏 Goal of the Game</div>
+      <div class="how-goal-title" style="color:#4ADE80;">😇 Goal of the Game</div>
       <div class="how-goal-text">Pause, reflect, and share what you are truly grateful for. A beautiful way to connect and appreciate life together.</div>
     </div>
   </div>
