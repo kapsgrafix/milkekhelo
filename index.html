@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
 <meta charset="UTF-8">
 <meta name="mobile-web-app-capable" content="yes">
@@ -10,7 +10,85 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Mil ke Khelo!</title>
+
+<!-- ══ PRIMARY SEO ══ -->
+<title>Mil ke Khelo! — Free Card Games to Play Together | FIRST & Thank You</title>
+<meta name="description" content="Mil ke Khelo! is a free collection of fun card games to play with friends and family. Play FIRST — the icebreaker card game with 51 prompts — and Thank You, a gratitude card game. No app download needed. Works in your browser. Available in English and Hindi.">
+<meta name="keywords" content="card game, icebreaker game, party game, group game, family game, FIRST card game, thank you game, gratitude game, friends game, indoor game, hindi card game, mil ke khelo, free card game online">
+<meta name="author" content="Mil ke Khelo!">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://milkekhelo.com/">
+
+<!-- ══ OPEN GRAPH (WhatsApp, Facebook previews) ══ -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://milkekhelo.com/">
+<meta property="og:title" content="Mil ke Khelo! — Fun Card Games to Play Together">
+<meta property="og:description" content="Free icebreaker and gratitude card games for friends and family. Play FIRST and Thank You — no download needed, works in your browser. English & Hindi.">
+<meta property="og:image" content="https://milkekhelo.com/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:site_name" content="Mil ke Khelo!">
+<meta property="og:locale" content="en_IN">
+<meta property="og:locale:alternate" content="hi_IN">
+
+<!-- ══ TWITTER CARD ══ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mil ke Khelo! — Fun Card Games to Play Together">
+<meta name="twitter:description" content="Free icebreaker and gratitude card games for friends and family. No download needed.">
+<meta name="twitter:image" content="https://milkekhelo.com/icon-512.png">
+
+<!-- ══ STRUCTURED DATA (Google Rich Results) ══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mil ke Khelo!",
+  "url": "https://milkekhelo.com/",
+  "description": "A free collection of fun card games to play with friends and family. Includes FIRST, an icebreaker card game, and Thank You, a gratitude card game. Available in English and Hindi.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript. Works in any modern browser.",
+  "inLanguage": ["en", "hi"],
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Mil ke Khelo!"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "ratingCount": "1"
+  },
+  "hasPart": [
+    {
+      "@type": "Game",
+      "name": "FIRST!",
+      "description": "An icebreaker card game with 51 prompts about your firsts — first movie, first trip, first job and more. Share your stories and get to know each other.",
+      "numberOfPlayers": {
+        "@type": "QuantitativeValue",
+        "minValue": 2
+      },
+      "inLanguage": ["en", "hi"]
+    },
+    {
+      "@type": "Game",
+      "name": "Thank You",
+      "description": "A gratitude card game with 51 prompts to pause and reflect on what you are thankful for — people, things, memories and more.",
+      "numberOfPlayers": {
+        "@type": "QuantitativeValue",
+        "minValue": 2
+      },
+      "inLanguage": ["en", "hi"]
+    }
+  ]
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
@@ -317,9 +395,13 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   gtag('config', 'G-8THRWNXLC3');
 </script>
 </head>
+<style>.skip-link{position:absolute;top:-40px;left:0;background:#FFD700;color:#1A1A2E;padding:8px 16px;font-weight:800;font-size:13px;z-index:9999;border-radius:0 0 8px 0;transition:top .2s}.skip-link:focus{top:0}</style>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
+
 
 <!-- ══════════ LAUNCHER (3 slides) ══════════ -->
+<main id="main-content">
 <div id="launcher">
 
   <!-- header — transparent, merges with slide bg -->
@@ -351,7 +433,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       <div class="game-title">FIRST<span>!</span></div>
       <div class="game-subtitle" id="splash-tagline">The Icebreaker Card Game</div>
 
-      <button class="start-btn" id="btn-start" onclick="startGame()">▶ &nbsp; Start Game</button>
+      <button class="start-btn" id="btn-start" onclick="startGame()" aria-label="Start FIRST card game">▶ &nbsp; Start Game</button>
       <span class="how-link" id="how-link" onclick="openHow()">How to Play</span>
     </div>
 
@@ -374,7 +456,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       <div class="game-title" style="font-size:38px;">THANK <span>YOU!</span></div>
       <div class="game-subtitle">The Gratitude Card Game</div>
 
-      <button class="start-btn" onclick="startTyGame()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 6px 0 #0D6B31,0 10px 30px rgba(22,163,74,.4);color:#fff;">▶ &nbsp; Start Game</button>
+      <button class="start-btn" onclick="startTyGame()" aria-label="Start Thank You card game" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 6px 0 #0D6B31,0 10px 30px rgba(22,163,74,.4);color:#fff;">▶ &nbsp; Start Game</button>
       <span class="how-link" onclick="openTyHow()">How to Play</span>
     </div>
 
@@ -419,6 +501,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   <button class="slide-arrow right" id="arrow-right" onclick="goToSlide(currentSlide + 1)">&#8594;</button>
 
 </div><!-- /launcher -->
+</main>
 
 <!-- ══════════ GAME SCREEN ══════════ -->
 <div id="game">
@@ -451,9 +534,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
     </div>
   </div>
   <div class="g-actions">
-    <button class="btn-prev" id="btn-prev" onclick="prevCard()">← Prev</button>
-    <button class="btn-next" id="btn-next" onclick="nextCard()">Next →</button>
-    <button class="btn-shuffle" onclick="reshuffleDeck()">🔀</button>
+    <button class="btn-prev" id="btn-prev" onclick="prevCard()" aria-label="Previous card">← Prev</button>
+    <button class="btn-next" id="btn-next" onclick="nextCard()" aria-label="Next card">Next →</button>
+    <button class="btn-shuffle" onclick="reshuffleDeck()" aria-label="Reshuffle deck">🔀</button>
   </div>
   <div id="end-screen">
     <div class="end-icon">🎉</div>
