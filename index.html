@@ -60,16 +60,28 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   background:transparent;
 }
 
-/* bottom nav — dots + swipe hint */
+/* bottom tab nav */
 .bottom-nav {
   flex-shrink:0; position:relative; z-index:10;
-  display:flex; flex-direction:column; align-items:center;
-  padding:10px 0 30px; gap:6px; background:transparent;
+  display:flex; align-items:stretch;
+  background:rgba(10,8,28,0.75); backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.1);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
 }
-.dot-row { display:flex; align-items:center; justify-content:center; gap:7px; }
-.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.25); transition:all .3s; }
-.dot.active { width:22px; border-radius:4px; background:#FFD700; }
-.swipe-nav-hint { font-size:11px; font-weight:700; color:rgba(255,255,255,.22); letter-spacing:1px; }
+.nav-tab {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:10px 4px 12px; cursor:pointer; gap:4px;
+  transition:opacity .15s;
+  border:none; background:transparent;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-tab:active { opacity:.6; }
+.nav-tab-icon { font-size:22px; line-height:1; transition:transform .2s; }
+.nav-tab-label { font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:rgba(255,255,255,.35); transition:color .2s; font-family:'Nunito Sans',sans-serif; }
+.nav-tab.active .nav-tab-label { color:#FFD700; }
+.nav-tab.active .nav-tab-icon { transform:scale(1.15); }
+.nav-tab-dot { width:4px; height:4px; border-radius:50%; background:#FFD700; margin-top:2px; opacity:0; transition:opacity .2s; }
+.nav-tab.active .nav-tab-dot { opacity:1; }
 
 /* stars bg */
 .slide-stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
@@ -183,6 +195,13 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 #ty-end-screen { position:absolute; inset:0; background:rgba(5,20,15,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
 #ty-end-screen.show { display:flex; animation:fadeIn .4s ease; }
 
+
+/* card tap zones — left = prev, right = next */
+.card-tap-prev, .card-tap-next {
+  position:absolute; top:0; bottom:0; width:50%; z-index:20; cursor:pointer;
+}
+.card-tap-prev { left:0; }
+.card-tap-next { right:0; }
 /* ══ GAME SCREEN ══ */
 #game {
   position:fixed; inset:0; background:#1A1A2E;
@@ -214,24 +233,31 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .card-texture { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px); background-size:20px 20px; pointer-events:none; z-index:1; }
 .card-top { padding:22px 20px 10px; position:relative; z-index:5; flex-shrink:0; }
 .card-main-title { font-family:'Montserrat',sans-serif; font-size:clamp(18px,5.5vw,26px); font-weight:900; color:#fff; line-height:1.1; text-transform:uppercase; text-shadow:0 2px 6px rgba(0,0,0,.25); letter-spacing:.5px; }
-.card-sub-title { font-family:'Montserrat',sans-serif; font-size:clamp(9px,2.8vw,12px); font-weight:700; color:rgba(255,255,255,.72); text-transform:uppercase; letter-spacing:1.5px; margin-top:5px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
+.card-sub-title { font-family:'Montserrat',sans-serif; font-size:clamp(12px,3.5vw,15px); font-weight:700; color:rgba(255,255,255,.72); text-transform:uppercase; letter-spacing:1.5px; margin-top:5px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
 .card-illustration { flex:1; display:flex; align-items:center; justify-content:center; position:relative; z-index:5; padding:0 20px; }
 .card-big-icon { font-size:clamp(72px,20vw,110px); line-height:1; filter:drop-shadow(0 8px 16px rgba(0,0,0,.3)); animation:iconFloat 3s ease-in-out infinite; }
 @keyframes iconFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 .card-bottom { padding:12px 20px 20px; position:relative; z-index:5; flex-shrink:0; border-top:1px solid rgba(255,255,255,.15); }
-.card-category { font-family:'Montserrat',sans-serif; font-size:clamp(9px,2.8vw,12px); font-weight:700; color:rgba(255,255,255,.78); text-transform:uppercase; letter-spacing:2px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
+.card-category { font-family:'Montserrat',sans-serif; font-size:clamp(12px,3.5vw,15px); font-weight:700; color:rgba(255,255,255,.78); text-transform:uppercase; letter-spacing:2px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
 .c-mil .card-main-title,.c-mil .card-sub-title { color:#1A1A2E; text-shadow:none; }
 .c-mil .card-category { color:rgba(26,26,46,.6); text-shadow:none; }
 .c-mil .card-bottom { border-top-color:rgba(0,0,0,.12); }
 .c-mil .card-inner-border { border-color:rgba(0,0,0,.12); }
 .card-flip-out { animation:flipOut .2s ease-in forwards; }
 .card-flip-in  { animation:flipIn  .25s ease-out forwards; }
-@keyframes flipOut { 0%{transform:rotateY(0) scale(1)} 100%{transform:rotateY(90deg) scale(.9)} }
-@keyframes flipIn  { 0%{transform:rotateY(-90deg) scale(.9)} 100%{transform:rotateY(0) scale(1)} }
+.card-flip-right-out { animation:flipRightOut .2s ease-in forwards; }
+.card-flip-right-in  { animation:flipRightIn  .25s ease-out forwards; }
+@keyframes flipOut      { 0%{transform:rotateY(0) scale(1)} 100%{transform:rotateY(90deg) scale(.9)} }
+@keyframes flipIn       { 0%{transform:rotateY(-90deg) scale(.9)} 100%{transform:rotateY(0) scale(1)} }
+@keyframes flipRightOut { 0%{transform:rotateY(0) scale(1)} 100%{transform:rotateY(-90deg) scale(.9)} }
+@keyframes flipRightIn  { 0%{transform:rotateY(90deg) scale(.9)} 100%{transform:rotateY(0) scale(1)} }
 
 .g-actions { padding:10px 16px 18px; display:flex; gap:10px; flex-shrink:0; }
 .btn-next { flex:1; background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%); border:none; border-radius:16px; padding:15px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:#1A1A2E; cursor:pointer; letter-spacing:.5px; box-shadow:0 5px 0 #B85C00; transition:transform .1s, box-shadow .1s; text-transform:uppercase; }
 .btn-next:active { transform:translateY(4px); box-shadow:0 1px 0 #B85C00; }
+.btn-prev { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); border-radius:16px; padding:11px 18px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:800; color:rgba(255,255,255,.55); cursor:pointer; transition:transform .1s, background .1s; white-space:nowrap; }
+.btn-prev:active { transform:scale(.95); background:rgba(255,255,255,.14); }
+
 .btn-shuffle { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:15px 17px; font-size:19px; cursor:pointer; transition:transform .1s, background .1s; }
 .btn-shuffle:active { transform:scale(.93); background:rgba(255,255,255,.15); }
 
@@ -368,14 +394,23 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
   </div><!-- /carousel -->
 
-  <!-- bottom nav — dots + hint -->
-  <div class="bottom-nav">
-    <div class="dot-row">
-      <div class="dot active" id="dot-0"></div>
-      <div class="dot" id="dot-1"></div>
-      <div class="dot" id="dot-2"></div>
-    </div>
-    <div class="swipe-nav-hint" id="nav-hint">← swipe to explore games →</div>
+  <!-- bottom tab nav -->
+  <div class="bottom-nav" id="bottom-nav">
+    <button class="nav-tab active" id="nav-tab-0" onclick="goToSlide(0)">
+      <div class="nav-tab-icon">🃏</div>
+      <div class="nav-tab-label">First!</div>
+      <div class="nav-tab-dot"></div>
+    </button>
+    <button class="nav-tab" id="nav-tab-1" onclick="goToSlide(1)">
+      <div class="nav-tab-icon">😇</div>
+      <div class="nav-tab-label">Thank You</div>
+      <div class="nav-tab-dot"></div>
+    </button>
+    <button class="nav-tab" id="nav-tab-2" onclick="goToSlide(2)">
+      <div class="nav-tab-icon">✨</div>
+      <div class="nav-tab-label">Your 3</div>
+      <div class="nav-tab-dot"></div>
+    </button>
   </div>
 
 
@@ -398,7 +433,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   </div>
   <div class="card-swipe-hint" id="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="card-stage" id="card-stage">
-    <div class="playing-card c-ent" id="playing-card" onclick="nextCard()">
+    <div class="playing-card c-ent" id="playing-card">
+      <div class="card-tap-prev" onclick="prevCard()"></div>
+      <div class="card-tap-next" onclick="nextCard()"></div>
       <div class="card-inner-border"></div>
       <div class="card-texture"></div>
       <div class="card-top">
@@ -414,7 +451,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
     </div>
   </div>
   <div class="g-actions">
-    <button class="btn-next" id="btn-next" onclick="nextCard()">Next Card →</button>
+    <button class="btn-prev" id="btn-prev" onclick="prevCard()">← Prev</button>
+    <button class="btn-next" id="btn-next" onclick="nextCard()">Next →</button>
     <button class="btn-shuffle" onclick="reshuffleDeck()">🔀</button>
   </div>
   <div id="end-screen">
@@ -557,9 +595,12 @@ function goToSlide(n, skipHistory) {
   carousel.style.transition = 'transform .3s cubic-bezier(.25,1,.5,1)';
   carousel.style.transform = `translateX(-${currentSlide * 100}vw)`;
   document.getElementById('launcher').style.background = SLIDE_BG[currentSlide];
+  // Update tab nav
   for (let i = 0; i < TOTAL_SLIDES; i++) {
-    document.getElementById(`dot-${i}`).classList.toggle('active', i === currentSlide);
+    const tab = document.getElementById(`nav-tab-${i}`);
+    if (tab) tab.classList.toggle('active', i === currentSlide);
   }
+  // Update desktop arrows
   const al = document.getElementById('arrow-left');
   const ar = document.getElementById('arrow-right');
   if (al && ar) {
@@ -656,7 +697,6 @@ function setLang(l) {
   document.getElementById('splash-tagline').textContent = t.tagline;
   document.getElementById('btn-start').textContent = t.startBtn;
   document.getElementById('how-link').textContent = t.howLink;
-  document.getElementById('nav-hint').textContent = t.navHint;
   if (document.getElementById('how-overlay').classList.contains('open')) renderHow();
 }
 
@@ -704,12 +744,14 @@ function exitGame() {
   document.getElementById('launcher').classList.remove('hidden');
 }
 
-function renderCard(i, animate) {
+function renderCard(i, animate, dir) {
   const c=deck[i], total=deck.length;
   if (animate) {
     const card=document.getElementById('playing-card');
-    card.classList.add('card-flip-out');
-    setTimeout(()=>{applyCard(c);card.classList.remove('card-flip-out');card.classList.add('card-flip-in');setTimeout(()=>card.classList.remove('card-flip-in'),250);},200);
+    const outCls = dir==='prev' ? 'card-flip-right-out' : 'card-flip-out';
+    const inCls  = dir==='prev' ? 'card-flip-right-in'  : 'card-flip-in';
+    card.classList.add(outCls);
+    setTimeout(()=>{applyCard(c);card.classList.remove(outCls);card.classList.add(inCls);setTimeout(()=>card.classList.remove(inCls),250);},200);
   } else { applyCard(c); }
   document.getElementById('g-counter').textContent=`${i+1} / ${total}`;
   document.getElementById('prog-num').textContent=`${i+1}/${total}`;
@@ -729,7 +771,13 @@ function nextCard() {
   if(isAnimating)return;
   if(idx>=deck.length-1){document.getElementById('end-screen').classList.add('show');return;}
   isAnimating=true; idx++;
-  renderCard(idx,true);
+  renderCard(idx,true,'next');
+  setTimeout(()=>isAnimating=false,450);
+}
+function prevCard() {
+  if(isAnimating||idx<=0)return;
+  isAnimating=true; idx--;
+  renderCard(idx,true,'prev');
   setTimeout(()=>isAnimating=false,450);
 }
 function reshuffleDeck() {
@@ -743,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const cardStage = document.getElementById('card-stage');
   if(cardStage){
     cardStage.addEventListener('touchstart',e=>{cx=e.touches[0].clientX;cy=e.touches[0].clientY;},{passive:true});
-    cardStage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-cx,dy=e.changedTouches[0].clientY-cy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))nextCard();},{passive:true});
+    cardStage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-cx,dy=e.changedTouches[0].clientY-cy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){if(dx<0)nextCard();else prevCard();}},{passive:true});
   }
   const tyCardStage = document.getElementById('ty-card-stage');
   if(tyCardStage){
@@ -767,57 +815,57 @@ function makeStars(id) {
 
 // ══ THANK YOU GAME ══════════════════════════════════════════
 const TY_CARDS = [
-  {title:"ONE ELECTRIC APPLIANCE",sub:"YOU ARE THANKFUL FOR",icon:"⚡",cat:"Everyday Things",cls:"c-ty1"},
-  {title:"ONE WEATHER OR SEASON",sub:"YOU ARE GRATEFUL FOR",icon:"🌤️",cat:"Nature",cls:"c-ty2"},
-  {title:"AN ORGAN IN YOUR BODY",sub:"YOU ARE THANKFUL FOR",icon:"❤️",cat:"Your Body",cls:"c-ty6"},
-  {title:"ONE FRIEND",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🤝",cat:"People",cls:"c-ty4"},
-  {title:"ONE TEACHER",sub:"YOU ARE THANKFUL FOR",icon:"👩‍🏫",cat:"People",cls:"c-ty5"},
-  {title:"ONE RELATIVE OR FAMILY MEMBER",sub:"YOU ARE GRATEFUL FOR",icon:"👨‍👩‍👧",cat:"Family",cls:"c-ty1"},
-  {title:"ONE PIECE OF CLOTHING",sub:"YOU ARE THANKFUL FOR",icon:"👕",cat:"Everyday Things",cls:"c-ty3"},
-  {title:"ONE BEVERAGE",sub:"YOU ARE GRATEFUL FOR",icon:"☕",cat:"Food & Drink",cls:"c-ty2"},
-  {title:"ONE FOOD ITEM",sub:"YOU ARE THANKFUL FOR",icon:"🍲",cat:"Food & Drink",cls:"c-ty3"},
-  {title:"ONE MOVIE",sub:"YOU ARE GRATEFUL FOR",icon:"🎬",cat:"Arts & Culture",cls:"c-ty1"},
-  {title:"ONE SONG",sub:"YOU ARE THANKFUL FOR",icon:"🎵",cat:"Arts & Culture",cls:"c-ty4"},
-  {title:"ONE ARTIST",sub:"ALIVE OR NOT, YOU ARE GRATEFUL FOR",icon:"🎨",cat:"Arts & Culture",cls:"c-ty5"},
-  {title:"ONE LEADER",sub:"ALIVE OR NOT, YOU ARE THANKFUL FOR",icon:"👑",cat:"Society",cls:"c-ty6"},
-  {title:"ONE SPORT",sub:"YOU ARE GRATEFUL FOR",icon:"⚽",cat:"Lifestyle",cls:"c-ty2"},
-  {title:"ONE DAILY ROUTINE",sub:"YOU ARE THANKFUL FOR",icon:"🌅",cat:"Lifestyle",cls:"c-ty1"},
-  {title:"ONE CHILDHOOD MEMORY",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🧸",cat:"Memories",cls:"c-ty3"},
-  {title:"ONE SCHOOL SUBJECT",sub:"YOU ARE THANKFUL FOR",icon:"📐",cat:"Learning",cls:"c-ty5"},
-  {title:"ONE BOOK",sub:"YOU ARE GRATEFUL FOR",icon:"📖",cat:"Learning",cls:"c-ty2"},
-  {title:"ONE LIFE LESSON",sub:"YOU ARE THANKFUL FOR",icon:"💡",cat:"Wisdom",cls:"c-ty4"},
-  {title:"ONE PIECE OF FURNITURE",sub:"YOU ARE GRATEFUL FOR",icon:"🛋️",cat:"Home",cls:"c-ty3"},
-  {title:"ONE HOLIDAY",sub:"YOU ARE THANKFUL FOR",icon:"🏖️",cat:"Experiences",cls:"c-ty1"},
-  {title:"ONE FAMILY TRADITION",sub:"YOU ARE GRATEFUL FOR",icon:"🏡",cat:"Family",cls:"c-ty6"},
-  {title:"ONE FESTIVAL",sub:"YOU ARE THANKFUL FOR",icon:"🎊",cat:"Culture",cls:"c-ty2"},
-  {title:"ONE TRAIT IN YOUR PARTNER",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"💑",cat:"Relationships",cls:"c-ty4"},
-  {title:"ONE TRAIT IN YOURSELF",sub:"YOU ARE THANKFUL FOR",icon:"🌟",cat:"Self",cls:"c-ty5"},
-  {title:"ONE TRAIT IN YOUR CHILD",sub:"YOU ARE GRATEFUL FOR",icon:"👶",cat:"Family",cls:"c-ty1"},
-  {title:"ONE TRAIT IN YOUR BROTHER",sub:"YOU ARE THANKFUL FOR",icon:"🧑",cat:"Family",cls:"c-ty3"},
-  {title:"ONE TRAIT IN YOUR SISTER",sub:"YOU ARE GRATEFUL FOR",icon:"👧",cat:"Family",cls:"c-ty6"},
-  {title:"ONE FLOWER",sub:"YOU ARE THANKFUL FOR",icon:"🌸",cat:"Nature",cls:"c-ty4"},
-  {title:"ONE NATURAL FORCE",sub:"WIND, WATER, SOIL OR SUNRAYS",icon:"🌊",cat:"Nature",cls:"c-ty2"},
-  {title:"ONE SOCIAL MEDIA PLATFORM",sub:"YOU ARE GRATEFUL FOR",icon:"📱",cat:"Technology",cls:"c-ty5"},
-  {title:"ONE MEDICAL INVENTION",sub:"YOU ARE THANKFUL FOR",icon:"💊",cat:"Health",cls:"c-ty6"},
-  {title:"ONE CULTURAL REFORM",sub:"YOU ARE GRATEFUL FOR",icon:"✊",cat:"Society",cls:"c-ty1"},
-  {title:"ONE ACCESSORY YOU OWN",sub:"YOU ARE THANKFUL FOR",icon:"💍",cat:"Everyday Things",cls:"c-ty3"},
-  {title:"ONE VEHICLE",sub:"YOU ARE GRATEFUL FOR",icon:"🚗",cat:"Everyday Things",cls:"c-ty2"},
-  {title:"ONE PROFESSIONAL MENTOR",sub:"YOU ARE THANKFUL FOR",icon:"🧑‍💼",cat:"People",cls:"c-ty5"},
-  {title:"ONE HOBBY OR SKILL",sub:"YOU ARE GRATEFUL FOR",icon:"🎯",cat:"Lifestyle",cls:"c-ty4"},
-  {title:"ONE PRIVILEGE YOU HAVE",sub:"NOT EVERYONE GETS",icon:"🙌",cat:"Reflection",cls:"c-ty6"},
-  {title:"ONE THING ABOUT YOUR COUNTRY",sub:"YOU ARE THANKFUL FOR",icon:"🗺️",cat:"Identity",cls:"c-ty1"},
-  {title:"ONE THING ABOUT YOUR CULTURE",sub:"YOU ARE GRATEFUL FOR",icon:"🎭",cat:"Identity",cls:"c-ty3"},
-  {title:"ONE UTENSIL",sub:"YOU ARE THANKFUL FOR",icon:"🥄",cat:"Home",cls:"c-ty2"},
-  {title:"ONE PHOTO OR VIDEO",sub:"PRIVATE & PERSONAL, YOU TREASURE",icon:"📸",cat:"Memories",cls:"c-ty5"},
-  {title:"ONE FUN MEMORY WITH FRIENDS",sub:"YOU ARE DEEPLY GRATEFUL FOR",icon:"🎉",cat:"Memories",cls:"c-ty4"},
-  {title:"ONE PERSONAL ACHIEVEMENT",sub:"YOU ARE THANKFUL FOR",icon:"🏆",cat:"Growth",cls:"c-ty6"},
-  {title:"A TRAIT IN YOUR MOTHER",sub:"YOU ARE THANKFUL FOR",icon:"👩",cat:"Family",cls:"c-ty1"},
-  {title:"A TRAIT IN YOUR FATHER",sub:"YOU ARE THANKFUL FOR",icon:"👨",cat:"Family",cls:"c-ty6"},
-  {title:"A TRAIT IN YOUR BEST FRIEND",sub:"YOU ARE GRATEFUL FOR",icon:"🤝",cat:"People",cls:"c-ty4"},
-  {title:"ONE MODERN FACILITY",sub:"ELECTRICITY, GAS, INTERNET & WHY",icon:"💡",cat:"Everyday Things",cls:"c-ty2"},
-  {title:"ONE SELF CARE ROUTINE",sub:"OR PRODUCT YOU DISCOVERED",icon:"🧖",cat:"Lifestyle",cls:"c-ty5"},
-  {title:"ONE HABIT",sub:"YOU FIND TRULY USEFUL",icon:"✅",cat:"Growth",cls:"c-ty3"},
-  {title:"ONE LUXURY",sub:"YOU ARE GLAD YOU CAN AFFORD",icon:"✨",cat:"Reflection",cls:"c-ty6"},
+  {title:"ONE ELECTRIC APPLIANCE",titleHi:"एक बिजली का उपकरण",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"⚡",cat:"Everyday Things",cls:"c-ty1"},
+  {title:"ONE WEATHER OR SEASON",titleHi:"एक मौसम",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🌤️",cat:"Nature",cls:"c-ty2"},
+  {title:"AN ORGAN IN YOUR BODY",titleHi:"एक अंग",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"❤️",cat:"Your Body",cls:"c-ty6"},
+  {title:"ONE FRIEND",titleHi:"एक दोस्त",sub:"YOU ARE DEEPLY GRATEFUL FOR",subHi:"जिनके लिए आप गहरे आभारी हैं",icon:"🤝",cat:"People",cls:"c-ty4"},
+  {title:"ONE TEACHER",titleHi:"एक टीचर",sub:"YOU ARE THANKFUL FOR",subHi:"जिनके लिए आप शुक्रगुज़ार हैं",icon:"👩‍🏫",cat:"People",cls:"c-ty5"},
+  {title:"ONE RELATIVE OR FAMILY MEMBER",titleHi:"एक रिश्तेदार या परिवार का सदस्य",sub:"YOU ARE GRATEFUL FOR",subHi:"जिनके लिए आप आभारी हैं",icon:"👨‍👩‍👧",cat:"Family",cls:"c-ty1"},
+  {title:"ONE PIECE OF CLOTHING",titleHi:"कपड़े का एक टुकड़ा",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"👕",cat:"Everyday Things",cls:"c-ty3"},
+  {title:"ONE BEVERAGE",titleHi:"एक पेय पदार्थ",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"☕",cat:"Food & Drink",cls:"c-ty2"},
+  {title:"ONE FOOD ITEM",titleHi:"एक खाने की चीज़",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🍲",cat:"Food & Drink",cls:"c-ty3"},
+  {title:"ONE MOVIE",titleHi:"एक फ़िल्म",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🎬",cat:"Arts & Culture",cls:"c-ty1"},
+  {title:"ONE SONG",titleHi:"एक गाना",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🎵",cat:"Arts & Culture",cls:"c-ty4"},
+  {title:"ONE ARTIST",titleHi:"एक कलाकार",sub:"ALIVE OR NOT, YOU ARE GRATEFUL FOR",subHi:"जीवित हो या न हो, आभारी हैं",icon:"🎨",cat:"Arts & Culture",cls:"c-ty5"},
+  {title:"ONE LEADER",titleHi:"एक नेता",sub:"ALIVE OR NOT, YOU ARE THANKFUL FOR",subHi:"जीवित हो या न हो, आभारी हैं",icon:"👑",cat:"Society",cls:"c-ty6"},
+  {title:"ONE SPORT",titleHi:"एक खेल",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"⚽",cat:"Lifestyle",cls:"c-ty2"},
+  {title:"ONE DAILY ROUTINE",titleHi:"एक रोज़ाना की दिनचर्या",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🌅",cat:"Lifestyle",cls:"c-ty1"},
+  {title:"ONE CHILDHOOD MEMORY",titleHi:"एक बचपन की याद",sub:"YOU ARE DEEPLY GRATEFUL FOR",subHi:"जिसके लिए आप गहरे आभारी हैं",icon:"🧸",cat:"Memories",cls:"c-ty3"},
+  {title:"ONE SCHOOL SUBJECT",titleHi:"एक स्कूल का विषय",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"📐",cat:"Learning",cls:"c-ty5"},
+  {title:"ONE BOOK",titleHi:"एक किताब",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"📖",cat:"Learning",cls:"c-ty2"},
+  {title:"ONE LIFE LESSON",titleHi:"एक जीवन की सीख",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"💡",cat:"Wisdom",cls:"c-ty4"},
+  {title:"ONE PIECE OF FURNITURE",titleHi:"फ़र्नीचर का एक टुकड़ा",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🛋️",cat:"Home",cls:"c-ty3"},
+  {title:"ONE HOLIDAY",titleHi:"एक छुट्टी",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🏖️",cat:"Experiences",cls:"c-ty1"},
+  {title:"ONE FAMILY TRADITION",titleHi:"एक पारिवारिक परंपरा",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🏡",cat:"Family",cls:"c-ty6"},
+  {title:"ONE FESTIVAL",titleHi:"एक त्योहार",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🎊",cat:"Culture",cls:"c-ty2"},
+  {title:"ONE TRAIT IN YOUR PARTNER",titleHi:"पार्टनर की एक खूबी",sub:"YOU ARE DEEPLY GRATEFUL FOR",subHi:"जिसके लिए आप गहरे आभारी हैं",icon:"💑",cat:"Relationships",cls:"c-ty4"},
+  {title:"ONE TRAIT IN YOURSELF",titleHi:"अपने आप की एक खूबी",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🌟",cat:"Self",cls:"c-ty5"},
+  {title:"ONE TRAIT IN YOUR CHILD",titleHi:"बच्चे की एक खूबी",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"👶",cat:"Family",cls:"c-ty1"},
+  {title:"ONE TRAIT IN YOUR BROTHER",titleHi:"भाई की एक खूबी",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🧑",cat:"Family",cls:"c-ty3"},
+  {title:"ONE TRAIT IN YOUR SISTER",titleHi:"बहन की एक खूबी",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"👧",cat:"Family",cls:"c-ty6"},
+  {title:"ONE FLOWER",titleHi:"एक फूल",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🌸",cat:"Nature",cls:"c-ty4"},
+  {title:"ONE NATURAL FORCE",titleHi:"एक प्राकृतिक शक्ति",sub:"WIND, WATER, SOIL OR SUNRAYS",subHi:"हवा, पानी, मिट्टी या धूप",icon:"🌊",cat:"Nature",cls:"c-ty2"},
+  {title:"ONE SOCIAL MEDIA PLATFORM",titleHi:"एक सोशल मीडिया प्लेटफ़ॉर्म",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"📱",cat:"Technology",cls:"c-ty5"},
+  {title:"ONE MEDICAL INVENTION",titleHi:"एक चिकित्सा आविष्कार",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"💊",cat:"Health",cls:"c-ty6"},
+  {title:"ONE CULTURAL REFORM",titleHi:"एक सांस्कृतिक सुधार",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"✊",cat:"Society",cls:"c-ty1"},
+  {title:"ONE ACCESSORY YOU OWN",titleHi:"एक एक्सेसरी",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"💍",cat:"Everyday Things",cls:"c-ty3"},
+  {title:"ONE VEHICLE",titleHi:"एक वाहन",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🚗",cat:"Everyday Things",cls:"c-ty2"},
+  {title:"ONE PROFESSIONAL MENTOR",titleHi:"एक पेशेवर मेंटर",sub:"YOU ARE THANKFUL FOR",subHi:"जिनके लिए आप शुक्रगुज़ार हैं",icon:"🧑‍💼",cat:"People",cls:"c-ty5"},
+  {title:"ONE HOBBY OR SKILL",titleHi:"एक शौक या हुनर",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🎯",cat:"Lifestyle",cls:"c-ty4"},
+  {title:"ONE PRIVILEGE YOU HAVE",titleHi:"एक सुविधा जो आपके पास है",sub:"NOT EVERYONE GETS",subHi:"जो सबको नहीं मिलती",icon:"🙌",cat:"Reflection",cls:"c-ty6"},
+  {title:"ONE THING ABOUT YOUR COUNTRY",titleHi:"अपने देश की एक बात",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🗺️",cat:"Identity",cls:"c-ty1"},
+  {title:"ONE THING ABOUT YOUR CULTURE",titleHi:"अपनी संस्कृति की एक बात",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"🎭",cat:"Identity",cls:"c-ty3"},
+  {title:"ONE UTENSIL",titleHi:"एक बर्तन",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🥄",cat:"Home",cls:"c-ty2"},
+  {title:"ONE PHOTO OR VIDEO",titleHi:"एक फ़ोटो या वीडियो",sub:"PRIVATE & PERSONAL, YOU TREASURE",subHi:"जो निजी और खास है",icon:"📸",cat:"Memories",cls:"c-ty5"},
+  {title:"ONE FUN MEMORY WITH FRIENDS",titleHi:"दोस्तों के साथ एक मज़ेदार याद",sub:"YOU ARE DEEPLY GRATEFUL FOR",subHi:"जिसके लिए आप गहरे आभारी हैं",icon:"🎉",cat:"Memories",cls:"c-ty4"},
+  {title:"ONE PERSONAL ACHIEVEMENT",titleHi:"एक निजी उपलब्धि",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🏆",cat:"Growth",cls:"c-ty6"},
+  {title:"A TRAIT IN YOUR MOTHER",titleHi:"माँ की एक खूबी",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"👩",cat:"Family",cls:"c-ty1"},
+  {title:"A TRAIT IN YOUR FATHER",titleHi:"पिता की एक खूबी",sub:"YOU ARE THANKFUL FOR",subHi:"जिसके लिए आप आभारी हैं",icon:"👨",cat:"Family",cls:"c-ty6"},
+  {title:"A TRAIT IN YOUR BEST FRIEND",titleHi:"सबसे अच्छे दोस्त की एक खूबी",sub:"YOU ARE GRATEFUL FOR",subHi:"जिसके लिए आप शुक्रगुज़ार हैं",icon:"🤝",cat:"People",cls:"c-ty4"},
+  {title:"ONE MODERN FACILITY",titleHi:"एक आधुनिक सुविधा",sub:"ELECTRICITY, GAS, INTERNET & WHY",subHi:"बिजली, गैस, इंटरनेट और क्यों",icon:"💡",cat:"Everyday Things",cls:"c-ty2"},
+  {title:"ONE SELF CARE ROUTINE",titleHi:"एक सेल्फ केयर रूटीन",sub:"OR PRODUCT YOU DISCOVERED",subHi:"या प्रोडक्ट जो आपने खोजा",icon:"🧖",cat:"Lifestyle",cls:"c-ty5"},
+  {title:"ONE HABIT",titleHi:"एक आदत",sub:"YOU FIND TRULY USEFUL",subHi:"जो आपको बहुत उपयोगी लगती है",icon:"✅",cat:"Growth",cls:"c-ty3"},
+  {title:"ONE LUXURY",titleHi:"एक ऐलिश चीज़",sub:"YOU ARE GLAD YOU CAN AFFORD",subHi:"जो आप अफ़ोर्ड कर पाते हैं",icon:"✨",cat:"Reflection",cls:"c-ty6"},
 ];
 
 let tyDeck=[], tyIdx=0, tyAnimating=false;
@@ -838,16 +886,18 @@ function exitTyGame(){
   document.getElementById('launcher').classList.remove('hidden');
 }
 
-function applyTyCard(c, animate){
+function applyTyCard(c, animate, dir){
   const card=document.getElementById('ty-playing-card');
   const total=tyDeck.length;
   if(animate){
-    card.classList.add('card-flip-out');
+    const outCls = dir==='prev' ? 'card-flip-right-out' : 'card-flip-out';
+    const inCls  = dir==='prev' ? 'card-flip-right-in'  : 'card-flip-in';
+    card.classList.add(outCls);
     setTimeout(()=>{
       setTyCard(c);
-      card.classList.remove('card-flip-out');
-      card.classList.add('card-flip-in');
-      setTimeout(()=>card.classList.remove('card-flip-in'),250);
+      card.classList.remove(outCls);
+      card.classList.add(inCls);
+      setTimeout(()=>card.classList.remove(inCls),250);
     },200);
   } else { setTyCard(c); }
   document.getElementById('ty-counter').textContent=`${tyIdx+1} / ${total}`;
@@ -858,8 +908,8 @@ function applyTyCard(c, animate){
 function setTyCard(c){
   const card=document.getElementById('ty-playing-card');
   card.className='playing-card '+c.cls;
-  document.getElementById('ty-card-title').textContent=c.title;
-  document.getElementById('ty-card-subtitle').textContent=c.sub;
+  document.getElementById('ty-card-title').textContent=(lang==='hi'&&c.titleHi)?c.titleHi:c.title;
+  document.getElementById('ty-card-subtitle').textContent=(lang==='hi'&&c.subHi)?c.subHi:c.sub;
   document.getElementById('ty-card-icon').textContent=c.icon;
   document.getElementById('ty-card-cat').textContent=c.cat;
 }
@@ -868,7 +918,13 @@ function nextTyCard(){
   if(tyAnimating)return;
   if(tyIdx>=tyDeck.length-1){document.getElementById('ty-end-screen').classList.add('show');return;}
   tyAnimating=true; tyIdx++;
-  applyTyCard(tyDeck[tyIdx],true);
+  applyTyCard(tyDeck[tyIdx],true,'next');
+  setTimeout(()=>tyAnimating=false,450);
+}
+function prevTyCard(){
+  if(tyAnimating||tyIdx<=0)return;
+  tyAnimating=true; tyIdx--;
+  applyTyCard(tyDeck[tyIdx],true,'prev');
   setTimeout(()=>tyAnimating=false,450);
 }
 
@@ -916,7 +972,9 @@ if ('serviceWorker' in navigator) {
   </div>
   <div class="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="card-stage" id="ty-card-stage">
-    <div class="playing-card c-ty1" id="ty-playing-card" onclick="nextTyCard()">
+    <div class="playing-card c-ty1" id="ty-playing-card">
+      <div class="card-tap-prev" onclick="prevTyCard()"></div>
+      <div class="card-tap-next" onclick="nextTyCard()"></div>
       <div class="card-inner-border"></div>
       <div class="card-texture"></div>
       <div class="card-top">
@@ -932,7 +990,8 @@ if ('serviceWorker' in navigator) {
     </div>
   </div>
   <div class="g-actions">
-    <button class="btn-next" onclick="nextTyCard()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">Next Card →</button>
+    <button class="btn-prev" id="ty-btn-prev" onclick="prevTyCard()">← Prev</button>
+    <button class="btn-next" onclick="nextTyCard()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">Next →</button>
     <button class="btn-shuffle" onclick="reshuffleTyDeck()">🔀</button>
   </div>
   <div id="ty-end-screen">
