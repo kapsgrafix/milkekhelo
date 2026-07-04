@@ -482,6 +482,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   line-height:1;
 }
 .snl-dice:active { transform:translateY(4px); box-shadow:0 1px 0 #a3a3a3; }
+.snl-dice.turn-yellow { background:linear-gradient(145deg,#fde68a,#f59e0b); box-shadow:0 5px 0 #b45309, 0 8px 20px rgba(245,158,11,.4); }
+.snl-dice.turn-yellow:active { box-shadow:0 1px 0 #b45309; }
+.snl-dice.turn-red { background:linear-gradient(145deg,#fca5a5,#dc2626); box-shadow:0 5px 0 #991b1b, 0 8px 20px rgba(220,38,38,.4); }
+.snl-dice.turn-red:active { box-shadow:0 1px 0 #991b1b; }
 .snl-dice.rolling { animation:diceShake .5s ease infinite; }
 @keyframes diceShake {
   0%,100%{transform:rotate(0)} 25%{transform:rotate(-12deg) scale(1.06)} 75%{transform:rotate(12deg) scale(1.06)}
@@ -584,6 +588,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   line-height:1;
 }
 .snl-dice:active { transform:translateY(4px); box-shadow:0 1px 0 #a3a3a3; }
+.snl-dice.turn-yellow { background:linear-gradient(145deg,#fde68a,#f59e0b); box-shadow:0 5px 0 #b45309, 0 8px 20px rgba(245,158,11,.4); }
+.snl-dice.turn-yellow:active { box-shadow:0 1px 0 #b45309; }
+.snl-dice.turn-red { background:linear-gradient(145deg,#fca5a5,#dc2626); box-shadow:0 5px 0 #991b1b, 0 8px 20px rgba(220,38,38,.4); }
+.snl-dice.turn-red:active { box-shadow:0 1px 0 #991b1b; }
 .snl-dice.rolling { animation:diceShake .5s ease infinite; }
 @keyframes diceShake {
   0%,100%{transform:rotate(0)} 25%{transform:rotate(-12deg) scale(1.06)} 75%{transform:rotate(12deg) scale(1.06)}
@@ -1319,23 +1327,24 @@ function closeTyHow(e){
 // Board mapping studied from the reference image:
 // Snakes (head → tail)
 const SNL_SNAKES = {
-  99: 41,  // pink snake — head top row, long slide to 41
-  89: 53,  // red snake top-right — down to 53
-  76: 58,  // green snake middle — down to 58
-  66: 45,  // purple snake — down to 45
-  54: 31,  // blue snake — down to 31
-  43: 18,  // green snake lower-left — down to 18
-  40: 3,   // orange snake — long slide down to 3
-  27: 5    // striped snake — down to 5
+  99: 41,
+  89: 53,
+  76: 58,
+  66: 45,
+  54: 31,
+  43: 18,
+  40: 3,
+  27: 5
 };
 // Ladders (bottom → top)
 const SNL_LADDERS = {
-  4: 16,   // small ladder bottom
-  13: 33,  // ladder to 33
-  32: 51,  // ladder to 51
-  38: 59,  // ladder to 59
-  62: 81,  // ladder to 81
-  73: 92   // ladder top-right to 92
+  4: 25,
+  13: 46,
+  33: 49,
+  42: 63,
+  50: 69,
+  62: 81,
+  74: 92
 };
 
 const SNL_CELL_COLORS = ['#0ea5e9','#f97316','#e11d90','#8b5cf6','#22c55e','#eab308'];
@@ -1439,20 +1448,29 @@ function placeGoti(color, n, instant) {
   if (!goti) return;
   let xPct, yPct;
   if (n === 0) {
-    // Off-board start — below cell 1 area (bottom-left)
     xPct = color === 'yellow' ? 2 : 8;
     yPct = 97;
   } else {
     const c = snlCellPct(n);
-    // offset the two gotis slightly so both are visible on same cell
-    const off = color === 'yellow' ? -2.2 : 2.2;
-    xPct = c.xPct + off;
-    yPct = c.yPct - 1;
+    xPct = c.xPct;
+    yPct = c.yPct;
+    // Only offset when BOTH coins share the same cell
+    const other = color === 'yellow' ? 'red' : 'yellow';
+    if (snlPos[other] === n && n !== 0) {
+      const off = color === 'yellow' ? -2.6 : 2.6;
+      xPct = c.xPct + off;
+    }
   }
   if (instant) goti.style.transition = 'none';
   goti.style.left = xPct + '%';
   goti.style.top  = yPct + '%';
   if (instant) { void goti.offsetWidth; goti.style.transition = ''; }
+}
+
+function refreshGotiPositions() {
+  // Re-place both so overlap offset is applied correctly
+  placeGoti('yellow', snlPos.yellow);
+  placeGoti('red', snlPos.red);
 }
 
 function updateSnlScores() {
@@ -1466,6 +1484,10 @@ function updateSnlTurnUI() {
   document.getElementById('snl-p-red').classList.toggle('active-turn', snlTurn === 'red');
   const name = snlTurn === 'yellow' ? t.yellow : t.red;
   document.getElementById('snl-msg').textContent = t.turnMsg(name);
+  // Dice colour follows the turn
+  const dice = document.getElementById('snl-dice');
+  dice.classList.toggle('turn-yellow', snlTurn === 'yellow');
+  dice.classList.toggle('turn-red', snlTurn === 'red');
 }
 
 function startSnlGame(isRestart) {
@@ -1492,7 +1514,7 @@ function startSnlGame(isRestart) {
   if (againBtn) againBtn.textContent = t.playAgain;
 
   document.getElementById('snl-dice').disabled = false;
-  document.getElementById('snl-dice').textContent = '🎲';
+  const _d = document.getElementById('snl-dice'); _d.textContent = '🎲'; _d.classList.remove('turn-red'); _d.classList.add('turn-yellow');
   document.getElementById('snl-timer').textContent = '2:00';
   document.getElementById('snl-timer').classList.remove('urgent');
 
@@ -1527,18 +1549,22 @@ function endSnlGame(winner100) {
   document.getElementById('snl-dice').disabled = true;
   const t = SNL_T[lang] || SNL_T.en;
   const yp = snlPos.yellow * 2, rp = snlPos.red * 2;
-  let title, icon = '🏆';
+  let title, icon = '🏆', winnerColor = '#4ade80';
   if (winner100) {
-    title = t.wins(winner100 === 'yellow' ? t.yellow : t.red);
+    const isYellow = winner100 === 'yellow';
+    title = t.wins(isYellow ? t.yellow : t.red);
+    winnerColor = isYellow ? '#fbbf24' : '#ef4444';
   } else if (yp > rp) {
-    title = t.wins(t.yellow);
+    title = t.wins(t.yellow); winnerColor = '#fbbf24';
   } else if (rp > yp) {
-    title = t.wins(t.red);
+    title = t.wins(t.red); winnerColor = '#ef4444';
   } else {
-    title = t.draw; icon = '🤝';
+    title = t.draw; icon = '🤝'; winnerColor = '#a3a3a3';
   }
   document.getElementById('snl-end-icon').textContent = icon;
-  document.getElementById('snl-end-title').textContent = title;
+  const titleEl = document.getElementById('snl-end-title');
+  titleEl.textContent = title;
+  titleEl.style.color = winnerColor;
   document.getElementById('snl-end-sub').textContent = t.endSub(yp, rp);
   setTimeout(() => document.getElementById('snl-end-screen').classList.add('show'), 800);
 }
@@ -1622,6 +1648,7 @@ function moveSnlGoti(steps) {
 
 function finishSnlTurn() {
   if (snlGameOver) return;
+  refreshGotiPositions();
   snlTurn = snlTurn === 'yellow' ? 'red' : 'yellow';
   snlBusy = false;
   updateSnlTurnUI();
