@@ -385,6 +385,123 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   .slide-arrow.hidden-arrow { opacity: 0.2; pointer-events: none; }
 }
 
+
+
+
+
+
+
+
+
+/* ══ SNAKES & LADDERS ══ */
+.snl-slide { background: transparent; }
+
+#snl-game {
+  position:fixed; inset:0;
+  background:linear-gradient(160deg,#052e16 0%,#14532d 55%,#052e16 100%);
+  display:none; flex-direction:column;
+}
+#snl-game.active { display:flex; }
+
+.snl-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px 6px; flex-shrink:0;
+}
+.snl-timer {
+  font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900;
+  color:#4ade80; letter-spacing:2px;
+  background:rgba(74,222,128,.12); border:1px solid rgba(74,222,128,.3);
+  border-radius:50px; padding:4px 20px;
+  text-shadow:0 0 12px rgba(74,222,128,.4);
+}
+.snl-timer.urgent { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
+
+.snl-scores {
+  display:flex; gap:10px; padding:6px 16px 8px; flex-shrink:0;
+}
+.snl-player {
+  flex:1; display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,.06); border:2px solid transparent;
+  border-radius:14px; padding:8px 12px; transition:all .3s;
+}
+.snl-player.active-turn {
+  border-color:#4ade80; background:rgba(74,222,128,.1);
+  box-shadow:0 0 16px rgba(74,222,128,.25);
+}
+.snl-goti-icon {
+  width:26px; height:26px; border-radius:50%;
+  border:3px solid rgba(255,255,255,.85);
+  box-shadow:0 2px 6px rgba(0,0,0,.4); flex-shrink:0;
+}
+.snl-p-name { font-size:12px; font-weight:800; color:rgba(255,255,255,.7); }
+.snl-p-pts { font-family:'Montserrat',sans-serif; font-size:17px; font-weight:900; color:#fff; line-height:1.1; }
+.snl-pts-lbl { font-size:10px; font-weight:700; color:rgba(255,255,255,.4); }
+
+.snl-board-wrap {
+  flex:1; position:relative; margin:4px 12px;
+  display:flex; align-items:center; justify-content:center;
+  min-height:0;
+}
+.snl-board-inner {
+  position:relative;
+  width:min(96vw, 100%, calc(100vh - 320px));
+  aspect-ratio:1/1;
+  max-height:100%;
+}
+.snl-board-img {
+  width:100%; height:100%; display:block;
+  border-radius:10px;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+  user-select:none; -webkit-user-drag:none;
+}
+.snl-goti {
+  position:absolute; width:7%; height:7%; border-radius:50%;
+  border:3px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.6);
+  transition:left .3s cubic-bezier(.34,1.3,.64,1), top .3s cubic-bezier(.34,1.3,.64,1);
+  z-index:10; pointer-events:none;
+  transform:translate(-50%,-50%);
+}
+#snl-goti-yellow { background:radial-gradient(circle at 35% 30%, #fde68a, #f59e0b); }
+#snl-goti-red { background:radial-gradient(circle at 35% 30%, #fca5a5, #dc2626); }
+
+.snl-dice-row {
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center;
+  gap:6px; padding:6px 16px 16px;
+}
+.snl-msg {
+  font-size:13px; font-weight:800; color:rgba(255,255,255,.75);
+  letter-spacing:.3px; min-height:18px; text-align:center;
+}
+.snl-dice {
+  width:64px; height:64px; border-radius:16px;
+  background:linear-gradient(145deg,#fff,#e5e5e5);
+  border:none; font-size:38px; cursor:pointer;
+  box-shadow:0 5px 0 #a3a3a3, 0 8px 20px rgba(0,0,0,.4);
+  transition:transform .1s, box-shadow .1s;
+  display:flex; align-items:center; justify-content:center;
+  line-height:1;
+}
+.snl-dice:active { transform:translateY(4px); box-shadow:0 1px 0 #a3a3a3; }
+.snl-dice.rolling { animation:diceShake .5s ease infinite; }
+@keyframes diceShake {
+  0%,100%{transform:rotate(0)} 25%{transform:rotate(-12deg) scale(1.06)} 75%{transform:rotate(12deg) scale(1.06)}
+}
+.snl-dice:disabled { opacity:.5; cursor:not-allowed; }
+
+#snl-end-screen {
+  position:absolute; inset:0; background:rgba(5,46,22,.97);
+  display:none; flex-direction:column; align-items:center;
+  justify-content:center; z-index:50; padding:32px; text-align:center;
+}
+#snl-end-screen.show { display:flex; animation:fadeIn .4s ease; }
+
+#snl-how-overlay {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(5,25,15,.88); backdrop-filter:blur(8px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+#snl-how-overlay.open { display:flex; animation:slideUp .35s cubic-bezier(.34,1.56,.64,1); }
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8THRWNXLC3"></script>
@@ -395,7 +512,99 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   gtag('config', 'G-8THRWNXLC3');
 </script>
 </head>
-<style>.skip-link{position:absolute;top:-40px;left:0;background:#FFD700;color:#1A1A2E;padding:8px 16px;font-weight:800;font-size:13px;z-index:9999;border-radius:0 0 8px 0;transition:top .2s}.skip-link:focus{top:0}</style>
+<style>.skip-link{position:absolute;top:-40px;left:0;background:#FFD700;color:#1A1A2E;padding:8px 16px;font-weight:800;font-size:13px;z-index:9999;border-radius:0 0 8px 0;transition:top .2s}.skip-link:focus{top:0}
+
+
+
+
+
+
+
+/* ══ SNAKES & LADDERS ══ */
+.snl-slide { background: transparent; }
+
+#snl-game {
+  position:fixed; inset:0;
+  background:linear-gradient(160deg,#052e16 0%,#14532d 55%,#052e16 100%);
+  display:none; flex-direction:column;
+}
+#snl-game.active { display:flex; }
+
+.snl-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px 6px; flex-shrink:0;
+}
+.snl-timer {
+  font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900;
+  color:#4ade80; letter-spacing:2px;
+  background:rgba(74,222,128,.12); border:1px solid rgba(74,222,128,.3);
+  border-radius:50px; padding:4px 20px;
+  text-shadow:0 0 12px rgba(74,222,128,.4);
+}
+.snl-timer.urgent { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
+
+.snl-scores {
+  display:flex; gap:10px; padding:6px 16px 8px; flex-shrink:0;
+}
+.snl-player {
+  flex:1; display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,.06); border:2px solid transparent;
+  border-radius:14px; padding:8px 12px; transition:all .3s;
+}
+.snl-player.active-turn {
+  border-color:#4ade80; background:rgba(74,222,128,.1);
+  box-shadow:0 0 16px rgba(74,222,128,.25);
+}
+.snl-goti-icon {
+  width:26px; height:26px; border-radius:50%;
+  border:3px solid rgba(255,255,255,.85);
+  box-shadow:0 2px 6px rgba(0,0,0,.4); flex-shrink:0;
+}
+.snl-p-name { font-size:12px; font-weight:800; color:rgba(255,255,255,.7); }
+.snl-p-pts { font-family:'Montserrat',sans-serif; font-size:17px; font-weight:900; color:#fff; line-height:1.1; }
+.snl-pts-lbl { font-size:10px; font-weight:700; color:rgba(255,255,255,.4); }
+
+
+
+.snl-dice-row {
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center;
+  gap:6px; padding:6px 16px 16px;
+}
+.snl-msg {
+  font-size:13px; font-weight:800; color:rgba(255,255,255,.75);
+  letter-spacing:.3px; min-height:18px; text-align:center;
+}
+.snl-dice {
+  width:64px; height:64px; border-radius:16px;
+  background:linear-gradient(145deg,#fff,#e5e5e5);
+  border:none; font-size:38px; cursor:pointer;
+  box-shadow:0 5px 0 #a3a3a3, 0 8px 20px rgba(0,0,0,.4);
+  transition:transform .1s, box-shadow .1s;
+  display:flex; align-items:center; justify-content:center;
+  line-height:1;
+}
+.snl-dice:active { transform:translateY(4px); box-shadow:0 1px 0 #a3a3a3; }
+.snl-dice.rolling { animation:diceShake .5s ease infinite; }
+@keyframes diceShake {
+  0%,100%{transform:rotate(0)} 25%{transform:rotate(-12deg) scale(1.06)} 75%{transform:rotate(12deg) scale(1.06)}
+}
+.snl-dice:disabled { opacity:.5; cursor:not-allowed; }
+
+#snl-end-screen {
+  position:absolute; inset:0; background:rgba(5,46,22,.97);
+  display:none; flex-direction:column; align-items:center;
+  justify-content:center; z-index:50; padding:32px; text-align:center;
+}
+#snl-end-screen.show { display:flex; animation:fadeIn .4s ease; }
+
+#snl-how-overlay {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(5,25,15,.88); backdrop-filter:blur(8px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+#snl-how-overlay.open { display:flex; animation:slideUp .35s cubic-bezier(.34,1.56,.64,1); }
+
+</style>
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
 
@@ -454,27 +663,35 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       </div>
 
       <div class="game-title" style="font-size:38px;">THANK <span>YOU!</span></div>
-      <div class="game-subtitle">The Gratitude Card Game</div>
+      <div class="game-subtitle" id="ty-tagline">The Gratitude Card Game</div>
 
-      <button class="start-btn" onclick="startTyGame()" aria-label="Start Thank You card game" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 6px 0 #0D6B31,0 10px 30px rgba(22,163,74,.4);color:#fff;">▶ &nbsp; Start Game</button>
-      <span class="how-link" onclick="openTyHow()">How to Play</span>
+      <button class="start-btn" id="ty-start-btn" onclick="startTyGame()" aria-label="Start Thank You card game" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 6px 0 #0D6B31,0 10px 30px rgba(22,163,74,.4);color:#fff;">▶ &nbsp; Start Game</button>
+      <span class="how-link" id="ty-how-lbl" onclick="openTyHow()">How to Play</span>
     </div>
 
-    <!-- SLIDE 2 — YOUR 3 -->
-    <div class="slide coming-slide your3-slide">
+    <!-- SLIDE 2 — SNAKES & LADDERS -->
+    <div class="slide y3-splash-slide snl-slide">
       <div class="slide-stars" id="stars-2"></div>
-      <div class="cs-inner">
-        <div class="cs-icon-wrap">
-          <div class="cs-icon-ring"></div>
-          <div class="cs-icon">✨</div>
-        </div>
-        <div class="cs-ribbon"><span class="cs-ribbon-txt">👑 Coming Soon 👑</span></div>
-        <div class="cs-title">Your 3</div>
-        <div class="cs-sub">Share your top 3 on anything.<br>Coming very soon! 🎯</div>
-      </div>
-    </div>
 
-  </div><!-- /carousel -->
+      <div class="splash-deck">
+        <div class="splash-card-bg" style="background:#166534"></div>
+        <div class="splash-card-bg" style="background:#a16207"></div>
+        <div class="splash-card-bg" style="background:#9d174d"></div>
+        <div class="splash-card-bg" style="background:#1e40af"></div>
+        <div class="splash-card-bg" style="background:#15803d"></div>
+        <div class="splash-card-front" style="background:#15803d">
+          <div class="cf-icon">🐍</div>
+          <div class="cf-title">Snakes!</div>
+        </div>
+      </div>
+
+      <div class="game-title" style="font-size:36px;">SNAKES <span>&amp; LADDERS</span></div>
+      <div class="game-subtitle" id="snl-tagline">Race the clock, climb to victory</div>
+
+      <button class="start-btn" id="snl-start-btn" onclick="startSnlGame()" style="background:linear-gradient(180deg,#4ade80 0%,#15803d 100%);box-shadow:0 6px 0 #14532d,0 10px 30px rgba(21,128,61,.4);color:#fff;" aria-label="Start Snakes and Ladders">▶ &nbsp; Start Game</button>
+      <span class="how-link" id="snl-how-link" onclick="openSnlHow()">How to Play</span>
+    </div>
+    </div><!-- /carousel -->
 
   <!-- bottom tab nav -->
   <div class="bottom-nav" id="bottom-nav">
@@ -489,8 +706,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       <div class="nav-tab-dot"></div>
     </button>
     <button class="nav-tab" id="nav-tab-2" onclick="goToSlide(2)">
-      <div class="nav-tab-icon">✨</div>
-      <div class="nav-tab-label">Your 3</div>
+      <div class="nav-tab-icon">🐍</div>
+      <div class="nav-tab-label">Snakes</div>
       <div class="nav-tab-dot"></div>
     </button>
   </div>
@@ -665,12 +882,12 @@ const CARDS = [
 // ── CAROUSEL ──
 const TOTAL_SLIDES = 3;
 let currentSlide = 0;
-let carouselStartX = 0, carouselDragging = false, carouselCurrentX = 0;
+let carouselStartX = 0, _carouselStartY = 0, carouselDragging = false, carouselCurrentX = 0;
 
 const SLIDE_BG = [
   'linear-gradient(160deg,#1A1A2E 0%,#2D1B4E 55%,#1A2E4E 100%)',
   'linear-gradient(160deg,#0A2A1E 0%,#0D4A34 55%,#0A3028 100%)',
-  'linear-gradient(160deg,#1A0A2E 0%,#3D1270 50%,#280A3D 100%)'
+  'linear-gradient(160deg,#052e16 0%,#14532d 55%,#052e16 100%)'
 ];
 function goToSlide(n, skipHistory) {
   currentSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, n));
@@ -730,57 +947,67 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!carousel) return;
 
   carousel.addEventListener('touchstart', e => {
-    carouselStartX = e.touches[0].clientX;
-    carouselCurrentX = 0;
-    carouselDragging = true;
-    // Kill transition so drag is instant
-    carousel.style.transition = 'none';
-  }, { passive: true });
+      carouselStartX = e.touches[0].clientX;
+      _carouselStartY = e.touches[0].clientY;
+      carouselCurrentX = 0;
+      carouselDragging = false;
+    }, { passive: true });
 
-  carousel.addEventListener('touchmove', e => {
-    if (!carouselDragging) return;
-    const dx = e.touches[0].clientX - carouselStartX;
-    carouselCurrentX = dx;
-    // Resist dragging past first/last slide
-    let resistance = 1;
-    if ((currentSlide === 0 && dx > 0) || (currentSlide === TOTAL_SLIDES - 1 && dx < 0)) {
-      resistance = 0.18;
-    }
-    const base = -currentSlide * window.innerWidth;
-    carousel.style.transform = `translateX(${base + dx * resistance}px)`;
-  }, { passive: true });
+    carousel.addEventListener('touchmove', e => {
+      const dx = e.touches[0].clientX - carouselStartX;
+      const dy = e.touches[0].clientY - _carouselStartY;
+      if (!carouselDragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+        carouselDragging = true;
+        carousel.style.transition = 'none';
+      }
+      if (!carouselDragging) return;
+      carouselCurrentX = dx;
+      let resistance = 1;
+      if ((currentSlide === 0 && dx > 0) || (currentSlide === TOTAL_SLIDES - 1 && dx < 0)) {
+        resistance = 0.18;
+      }
+      const base = -currentSlide * window.innerWidth;
+      carousel.style.transform = `translateX(${base + dx * resistance}px)`;
+    }, { passive: true });
 
-  carousel.addEventListener('touchend', e => {
-    if (!carouselDragging) return;
-    carouselDragging = false;
-    const dx = carouselCurrentX;
-    const threshold = window.innerWidth * 0.22; // 22% of screen width
-    const velocity = Math.abs(dx) > 30; // quick flick
-    if ((Math.abs(dx) > threshold || velocity) && Math.abs(dx) > 20) {
-      goToSlide(currentSlide + (dx < 0 ? 1 : -1));
-    } else {
-      // Snap back to current slide
+    carousel.addEventListener('touchend', e => {
+      if (!carouselDragging) return;
+      carouselDragging = false;
+      const dx = carouselCurrentX;
+      const threshold = window.innerWidth * 0.22;
+      if (Math.abs(dx) > threshold || Math.abs(dx) > 40) {
+        goToSlide(currentSlide + (dx < 0 ? 1 : -1));
+      } else {
+        goToSlide(currentSlide);
+      }
+    }, { passive: true });
+
+    carousel.addEventListener('touchcancel', () => {
+      carouselDragging = false;
       goToSlide(currentSlide);
-    }
-  }, { passive: true });
-
-  carousel.addEventListener('touchcancel', () => {
-    carouselDragging = false;
-    goToSlide(currentSlide);
-  }, { passive: true });
+    }, { passive: true });
 });
 
 // ── LANGUAGE ──
 let lang = 'en';
 function setLang(l) {
   lang = l;
-  document.getElementById('btn-en').classList.toggle('active', l === 'en');
-  document.getElementById('btn-hi').classList.toggle('active', l === 'hi');
+  document.getElementById('btn-en').classList.toggle('active', l==='en');
+  document.getElementById('btn-hi').classList.toggle('active', l==='hi');
   const t = T[l];
-  document.getElementById('splash-tagline').textContent = t.tagline;
-  document.getElementById('btn-start').textContent = t.startBtn;
-  document.getElementById('how-link').textContent = t.howLink;
-  if (document.getElementById('how-overlay').classList.contains('open')) renderHow();
+  const _el = id => document.getElementById(id);
+  // FIRST splash
+  if(_el('splash-tagline')) _el('splash-tagline').textContent = t.tagline;
+  if(_el('btn-start'))      _el('btn-start').innerHTML        = t.startBtn;
+  if(_el('how-link'))       _el('how-link').textContent       = t.howLink;
+  if(_el('how-overlay') && _el('how-overlay').classList.contains('open')) renderHow();
+  // TY splash
+  const tyHi = (l === 'hi');
+  if(_el('ty-tagline'))  _el('ty-tagline').textContent  = tyHi ? 'आभार का कार्ड गेम' : 'The Gratitude Card Game';
+  if(_el('ty-how-lbl'))  _el('ty-how-lbl').textContent  = tyHi ? 'कैसे खेलें' : 'How to Play';
+  if(_el('ty-start-btn')) _el('ty-start-btn').innerHTML = tyHi ? '▶ &nbsp; खेल शुरू करें' : '▶ &nbsp; Start Game';
+  // Y3 splash (guard in case script not yet loaded)
+  if (typeof applySnlLang === 'function') applySnlLang();
 }
 
 // ── HOW TO PLAY ──
@@ -815,6 +1042,8 @@ function startGame() {
   document.getElementById('end-title').textContent = t.endTitle;
   document.getElementById('end-sub').innerHTML = t.endSub.replace('\n','<br>');
   document.getElementById('btn-again').textContent = t.playAgain;
+  const fPrev = document.getElementById('btn-prev');
+  if (fPrev) fPrev.textContent = lang==='hi' ? '← पिछला' : '← Prev';
   renderCard(idx, false);
   document.getElementById('launcher').classList.add('hidden');
   document.getElementById('game').classList.add('active');
@@ -961,6 +1190,23 @@ function startTyGame(){
   document.getElementById('launcher').classList.add('hidden');
   document.getElementById('ty-game').classList.add('active');
   history.pushState({ view: 'ty-game' }, '');
+  // Localise TY game UI
+  const hi = (lang === 'hi');
+  const tyGame = document.getElementById('ty-game');
+  const exitBtn = tyGame.querySelector('.g-back');
+  if (exitBtn) exitBtn.textContent = hi ? '✕ बाहर' : '✕ Exit';
+  const hint = tyGame.querySelector('.card-swipe-hint');
+  if (hint) hint.textContent = hi ? 'कार्ड दबाएं या स्वाइप करें' : 'Tap card or swipe to flip';
+  const nextBtn = tyGame.querySelector('.btn-next');
+  if (nextBtn) nextBtn.textContent = hi ? 'अगला →' : 'Next →';
+  const prevBtn = tyGame.querySelector('.btn-prev');
+  if (prevBtn) prevBtn.textContent = hi ? '← पिछला' : '← Prev';
+  const endTitle = tyGame.querySelector('.end-title');
+  if (endTitle) endTitle.textContent = hi ? 'शाबाश!' : 'All Done!';
+  const endSub = tyGame.querySelector('.end-sub');
+  if (endSub) endSub.innerHTML = hi ? 'सभी 51 कार्ड देख लिए!<br>एक और राउंड खेलें?' : "You've gone through all 51 cards!<br>Ready for another round?";
+  const againBtn = tyGame.querySelector('.btn-play-again');
+  if (againBtn) againBtn.innerHTML = hi ? '🔀 &nbsp; फिर खेलें' : '🔀 &nbsp; Play Again';
 }
 
 function exitTyGame(){
@@ -1021,7 +1267,40 @@ function reshuffleTyDeck(){
 
 // TY How to Play overlay
 function openTyHow(){
-  const o=document.getElementById('ty-how-overlay');
+  const hi = (lang === 'hi');
+  const o = document.getElementById('ty-how-overlay');
+  // Update sheet text per language
+  const sheet = o.querySelector('.how-sheet');
+  sheet.querySelector('.how-title').textContent = hi ? 'कैसे खेलें' : 'How to Play';
+  const goalTitle = sheet.querySelector('.how-goal-title');
+  if (goalTitle) goalTitle.textContent = hi ? '😇 खेल का मकसद' : '😇 Goal of the Game';
+  const goalText = sheet.querySelector('.how-goal-text');
+  if (goalText) goalText.textContent = hi
+    ? 'रुकें, सोचें और बताएं कि आप किन चीज़ों के लिए सच में आभारी हैं। साथ जुड़ने और जीवन की कद्र करने का खूबसूरत तरीका।'
+    : 'Pause, reflect, and share what you are truly grateful for. A beautiful way to connect and appreciate life together.';
+  const steps = hi ? [
+    ['खिलाड़ी जुटाएं','कम से कम 2 खिलाड़ी। जितने ज़्यादा, उतना मज़ा!',''],
+    ['कार्ड खोलें','एक श्रेणी दिखेगी — जैसे "एक टीचर" या "एक खाने की चीज़"।','उदाहरण: एक टीचर बताएं जिनके लिए आप आभारी हैं।'],
+    ['सब बताएं','हर खिलाड़ी उस श्रेणी से कुछ बताए जिसके लिए वो शुक्रगुज़ार है।',''],
+    ['किस्सा सुनाएं','क्यों आभारी हैं — कोई याद, वजह या एहसास।',''],
+    ['अगला कार्ड','Next दबाएं और आभार जारी रखें!',''],
+  ] : [
+    ['Gather Players','Minimum 2 players. The more the merrier!',''],
+    ['Open a Card','A category appears — like "One Teacher" or "One Food Item".','Example: Name one teacher you are thankful for.'],
+    ['Everyone Shares','Each player names something from that category they are grateful for.',''],
+    ['Tell the Story','Share why you are thankful — a memory, a reason, a feeling.',''],
+    ['Next Card','Tap Next Card and keep the gratitude going!',''],
+  ];
+  const stepsEl = sheet.querySelector('.how-steps');
+  stepsEl.innerHTML = steps.map((s,i) => `
+    <div class="how-step">
+      <div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">${i+1}</div>
+      <div class="step-body">
+        <div class="step-title">${s[0]}</div>
+        <div class="step-desc">${s[1]}</div>
+        ${s[2] ? `<div class="step-example">${s[2]}</div>` : ''}
+      </div>
+    </div>`).join('');
   o.style.display='flex'; requestAnimationFrame(()=>o.classList.add('open'));
 }
 function closeTyHow(e){
@@ -1029,6 +1308,373 @@ function closeTyHow(e){
   const o=document.getElementById('ty-how-overlay');
   o.classList.remove('open'); setTimeout(()=>o.style.display='none',350);
 }
+
+
+
+</script>
+
+<script>
+// ══ SNAKES & LADDERS GAME ══════════════════════════════════════════════
+
+// Board mapping studied from the reference image:
+// Snakes (head → tail)
+const SNL_SNAKES = {
+  99: 41,  // pink snake — head top row, long slide to 41
+  89: 53,  // red snake top-right — down to 53
+  76: 58,  // green snake middle — down to 58
+  66: 45,  // purple snake — down to 45
+  54: 31,  // blue snake — down to 31
+  43: 18,  // green snake lower-left — down to 18
+  40: 3,   // orange snake — long slide down to 3
+  27: 5    // striped snake — down to 5
+};
+// Ladders (bottom → top)
+const SNL_LADDERS = {
+  4: 16,   // small ladder bottom
+  13: 33,  // ladder to 33
+  32: 51,  // ladder to 51
+  38: 59,  // ladder to 59
+  62: 81,  // ladder to 81
+  73: 92   // ladder top-right to 92
+};
+
+const SNL_CELL_COLORS = ['#0ea5e9','#f97316','#e11d90','#8b5cf6','#22c55e','#eab308'];
+
+const SNL_T = {
+  en: {
+    tagline: "Race the clock, climb to victory",
+    startBtn: "▶ &nbsp; Start Game",
+    howLink: "How to Play",
+    turnMsg: n => n + "'s turn — tap dice!",
+    rolled: (n,v) => n + " rolled " + v + "!",
+    snakeBite: "🐍 Snake bite! Sliding down...",
+    ladderUp: "🪜 Ladder! Climbing up...",
+    reached100: n => "🎉 " + n + " reached 100!",
+    wins: n => n + " Wins!",
+    draw: "It's a Draw!",
+    endSub: (yp, rp) => `Yellow: ${yp} pts · Red: ${rp} pts`,
+    playAgain: "🔄 Play Again",
+    yellow: "Yellow", red: "Red", pts: "pts",
+    howTitle: "How to Play",
+    goalTitle: "🎯 Goal of the Game",
+    goalText: "Score the most points before the 2-minute timer runs out. Each square = 2 points!",
+    steps: [
+      ["Two Players","Yellow and Red take turns. The highlighted player rolls."],
+      ["Tap the Dice","Tap the dice to roll. Your goti moves that many squares."],
+      ["Ladders Up 🪜","Land at a ladder's base and climb straight up!"],
+      ["Snakes Down 🐍","Land on a snake's head and slide down to its tail."],
+      ["Score Points","Your square × 2 = your points. Square 40 = 80 points."],
+      ["Beat the Clock","2-minute timer! Highest points when time ends wins. Reaching 100 = instant win!"]
+    ]
+  },
+  hi: {
+    tagline: "समय से दौड़, जीत की चढ़ाई",
+    startBtn: "▶ &nbsp; खेल शुरू करें",
+    howLink: "कैसे खेलें",
+    turnMsg: n => n + " की बारी — पासा दबाएं!",
+    rolled: (n,v) => n + " ने " + v + " फेंका!",
+    snakeBite: "🐍 साँप ने काटा! नीचे...",
+    ladderUp: "🪜 सीढ़ी! ऊपर चढ़ो...",
+    reached100: n => "🎉 " + n + " 100 पर पहुंचा!",
+    wins: n => n + " जीता!",
+    draw: "बराबरी!",
+    endSub: (yp, rp) => `पीला: ${yp} अंक · लाल: ${rp} अंक`,
+    playAgain: "🔄 फिर खेलें",
+    yellow: "पीला", red: "लाल", pts: "अंक",
+    howTitle: "कैसे खेलें",
+    goalTitle: "🎯 खेल का मकसद",
+    goalText: "2 मिनट में सबसे ज़्यादा अंक बनाओ। हर खाना = 2 अंक!",
+    steps: [
+      ["दो खिलाड़ी","पीला और लाल बारी-बारी खेलें। हाईलाइट खिलाड़ी पासा फेंके।"],
+      ["पासा दबाएं","पासा दबाओ, गोटी उतने खाने आगे बढ़ेगी।"],
+      ["सीढ़ी ऊपर 🪜","सीढ़ी के नीचे पहुंचो और सीधे ऊपर चढ़ो!"],
+      ["साँप नीचे 🐍","साँप के मुंह पर पहुंचे तो पूंछ तक नीचे।"],
+      ["अंक कमाओ","आपका खाना × 2 = आपके अंक। खाना 40 = 80 अंक।"],
+      ["समय से जीतो","2 मिनट का टाइमर! समय खत्म होने पर ज़्यादा अंक वाला जीतेगा। 100 पहुंचे तो तुरंत जीत!"]
+    ]
+  }
+};
+
+let snlPos = { yellow: 0, red: 0 };
+let snlTurn = 'yellow';
+let snlRolling = false, snlBusy = false;
+let snlTimeLeft = 120, snlTimerInt = null, snlGameOver = false;
+const SNL_DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+function snlCellNum(row, col) {
+  // row 0 = top (91-100), row 9 = bottom (1-10), boustrophedon
+  const rowFromBottom = 9 - row;
+  const base = rowFromBottom * 10;
+  const leftToRight = (rowFromBottom % 2 === 0);
+  return leftToRight ? base + col + 1 : base + (10 - col);
+}
+
+function buildSnlBoard() {
+  // Board is now a static image — nothing to build.
+  // Cell positions computed as percentages in snlCellPct().
+}
+
+function snlCellPct(n) {
+  // Returns {xPct, yPct} — center of cell n as % of board (0-100)
+  // Board: 10x10, cell = 10% each. n from 1..100.
+  // Row from bottom: 0 = bottom (1-10), 9 = top (91-100)
+  // Boustrophedon: even rows L→R, odd rows R→L
+  const idx = n - 1;
+  const rowFromBottom = Math.floor(idx / 10);
+  const posInRow = idx % 10;
+  const leftToRight = (rowFromBottom % 2 === 0);
+  const col = leftToRight ? posInRow : (9 - posInRow);
+  const rowFromTop = 9 - rowFromBottom;
+  const xPct = col * 10 + 5;      // center of cell
+  const yPct = rowFromTop * 10 + 5;
+  return { xPct, yPct };
+}
+
+function drawSnlOverlay() {
+  // Snakes and ladders are part of the board image — no drawing needed.
+}
+
+function placeGoti(color, n, instant) {
+  const goti = document.getElementById('snl-goti-' + color);
+  if (!goti) return;
+  let xPct, yPct;
+  if (n === 0) {
+    // Off-board start — below cell 1 area (bottom-left)
+    xPct = color === 'yellow' ? 2 : 8;
+    yPct = 97;
+  } else {
+    const c = snlCellPct(n);
+    // offset the two gotis slightly so both are visible on same cell
+    const off = color === 'yellow' ? -2.2 : 2.2;
+    xPct = c.xPct + off;
+    yPct = c.yPct - 1;
+  }
+  if (instant) goti.style.transition = 'none';
+  goti.style.left = xPct + '%';
+  goti.style.top  = yPct + '%';
+  if (instant) { void goti.offsetWidth; goti.style.transition = ''; }
+}
+
+function updateSnlScores() {
+  document.getElementById('snl-pts-yellow').textContent = snlPos.yellow * 2;
+  document.getElementById('snl-pts-red').textContent = snlPos.red * 2;
+}
+
+function updateSnlTurnUI() {
+  const t = SNL_T[lang] || SNL_T.en;
+  document.getElementById('snl-p-yellow').classList.toggle('active-turn', snlTurn === 'yellow');
+  document.getElementById('snl-p-red').classList.toggle('active-turn', snlTurn === 'red');
+  const name = snlTurn === 'yellow' ? t.yellow : t.red;
+  document.getElementById('snl-msg').textContent = t.turnMsg(name);
+}
+
+function startSnlGame(isRestart) {
+  const t = SNL_T[lang] || SNL_T.en;
+  snlPos = { yellow: 0, red: 0 };
+  snlTurn = 'yellow';
+  snlRolling = false; snlBusy = false; snlGameOver = false;
+  snlTimeLeft = 120;
+  clearInterval(snlTimerInt);
+
+  document.getElementById('snl-end-screen').classList.remove('show');
+  document.getElementById('launcher').classList.add('hidden');
+  document.getElementById('snl-game').classList.add('active');
+  if (!isRestart) history.pushState({ view: 'snl-game' }, '');
+
+  // Localise UI
+  document.getElementById('snl-p-yellow-name').textContent = t.yellow;
+  document.getElementById('snl-p-red-name').textContent = t.red;
+  document.getElementById('snl-pts-lbl-y').textContent = t.pts;
+  document.getElementById('snl-pts-lbl-r').textContent = t.pts;
+  const exitBtn = document.querySelector('#snl-game .g-back');
+  if (exitBtn) exitBtn.textContent = lang==='hi' ? '✕ बाहर' : '✕ Exit';
+  const againBtn = document.querySelector('#snl-end-screen .btn-play-again');
+  if (againBtn) againBtn.textContent = t.playAgain;
+
+  document.getElementById('snl-dice').disabled = false;
+  document.getElementById('snl-dice').textContent = '🎲';
+  document.getElementById('snl-timer').textContent = '2:00';
+  document.getElementById('snl-timer').classList.remove('urgent');
+
+  setTimeout(() => {
+    buildSnlBoard();
+    placeGoti('yellow', 0, true);
+    placeGoti('red', 0, true);
+    updateSnlScores();
+    updateSnlTurnUI();
+    startSnlTimer();
+  }, 100);
+}
+
+function startSnlTimer() {
+  snlTimerInt = setInterval(() => {
+    snlTimeLeft--;
+    const m = Math.floor(snlTimeLeft / 60);
+    const s = snlTimeLeft % 60;
+    const timerEl = document.getElementById('snl-timer');
+    timerEl.textContent = m + ':' + String(s).padStart(2, '0');
+    if (snlTimeLeft <= 20) timerEl.classList.add('urgent');
+    if (snlTimeLeft <= 0) {
+      clearInterval(snlTimerInt);
+      endSnlGame();
+    }
+  }, 1000);
+}
+
+function endSnlGame(winner100) {
+  snlGameOver = true;
+  clearInterval(snlTimerInt);
+  document.getElementById('snl-dice').disabled = true;
+  const t = SNL_T[lang] || SNL_T.en;
+  const yp = snlPos.yellow * 2, rp = snlPos.red * 2;
+  let title, icon = '🏆';
+  if (winner100) {
+    title = t.wins(winner100 === 'yellow' ? t.yellow : t.red);
+  } else if (yp > rp) {
+    title = t.wins(t.yellow);
+  } else if (rp > yp) {
+    title = t.wins(t.red);
+  } else {
+    title = t.draw; icon = '🤝';
+  }
+  document.getElementById('snl-end-icon').textContent = icon;
+  document.getElementById('snl-end-title').textContent = title;
+  document.getElementById('snl-end-sub').textContent = t.endSub(yp, rp);
+  setTimeout(() => document.getElementById('snl-end-screen').classList.add('show'), 800);
+}
+
+function exitSnlGame() {
+  clearInterval(snlTimerInt);
+  document.getElementById('snl-game').classList.remove('active');
+  document.getElementById('snl-end-screen').classList.remove('show');
+  document.getElementById('launcher').classList.remove('hidden');
+}
+
+function rollSnlDice() {
+  if (snlRolling || snlBusy || snlGameOver) return;
+  snlRolling = true; snlBusy = true;
+  const t = SNL_T[lang] || SNL_T.en;
+  const dice = document.getElementById('snl-dice');
+  dice.classList.add('rolling');
+
+  // Roll animation — cycle faces
+  let ticks = 0;
+  const rollInt = setInterval(() => {
+    dice.textContent = SNL_DICE_FACES[Math.floor(Math.random() * 6)];
+    ticks++;
+    if (ticks >= 8) {
+      clearInterval(rollInt);
+      const value = Math.floor(Math.random() * 6) + 1;
+      dice.textContent = SNL_DICE_FACES[value - 1];
+      dice.classList.remove('rolling');
+      snlRolling = false;
+      const name = snlTurn === 'yellow' ? t.yellow : t.red;
+      document.getElementById('snl-msg').textContent = t.rolled(name, value);
+      setTimeout(() => moveSnlGoti(value), 500);
+    }
+  }, 80);
+}
+
+function moveSnlGoti(steps) {
+  const t = SNL_T[lang] || SNL_T.en;
+  const color = snlTurn;
+  let target = snlPos[color] + steps;
+  if (target > 100) target = snlPos[color]; // overshoot: stay
+
+  // Step-by-step hop animation
+  let current = snlPos[color];
+  const hop = () => {
+    if (current < target) {
+      current++;
+      placeGoti(color, current);
+      setTimeout(hop, 200);
+    } else {
+      snlPos[color] = current;
+      updateSnlScores();
+      // Check snake / ladder
+      if (SNL_SNAKES[current]) {
+        document.getElementById('snl-msg').textContent = t.snakeBite;
+        setTimeout(() => {
+          snlPos[color] = SNL_SNAKES[current];
+          placeGoti(color, snlPos[color]);
+          updateSnlScores();
+          finishSnlTurn();
+        }, 700);
+      } else if (SNL_LADDERS[current]) {
+        document.getElementById('snl-msg').textContent = t.ladderUp;
+        setTimeout(() => {
+          snlPos[color] = SNL_LADDERS[current];
+          placeGoti(color, snlPos[color]);
+          updateSnlScores();
+          finishSnlTurn();
+        }, 700);
+      } else if (current === 100) {
+        document.getElementById('snl-msg').textContent = t.reached100(color === 'yellow' ? t.yellow : t.red);
+        setTimeout(() => endSnlGame(color), 600);
+      } else {
+        finishSnlTurn();
+      }
+    }
+  };
+  if (target === snlPos[color]) { finishSnlTurn(); return; } // overshoot, no move
+  hop();
+}
+
+function finishSnlTurn() {
+  if (snlGameOver) return;
+  snlTurn = snlTurn === 'yellow' ? 'red' : 'yellow';
+  snlBusy = false;
+  updateSnlTurnUI();
+}
+
+function openSnlHow() {
+  const t = SNL_T[lang] || SNL_T.en;
+  document.getElementById('snl-how-title').textContent = t.howTitle;
+  document.getElementById('snl-goal-title').textContent = t.goalTitle;
+  document.getElementById('snl-goal-text').textContent = t.goalText;
+  document.getElementById('snl-how-steps').innerHTML = t.steps.map((s,i) => `
+    <div class="how-step">
+      <div class="step-num" style="background:linear-gradient(135deg,#4ade80,#15803d);color:#fff;">${i+1}</div>
+      <div class="step-body">
+        <div class="step-title">${s[0]}</div>
+        <div class="step-desc">${s[1]}</div>
+      </div>
+    </div>`).join('');
+  const o = document.getElementById('snl-how-overlay');
+  o.style.display = 'flex';
+  requestAnimationFrame(() => o.classList.add('open'));
+}
+function closeSnlHow(e) {
+  if (e && e.target !== document.getElementById('snl-how-overlay')) return;
+  const o = document.getElementById('snl-how-overlay');
+  o.classList.remove('open');
+  setTimeout(() => o.style.display = 'none', 350);
+}
+
+function applySnlLang() {
+  const t = SNL_T[lang] || SNL_T.en;
+  const el = id => document.getElementById(id);
+  if (el('snl-tagline'))   el('snl-tagline').textContent = t.tagline;
+  if (el('snl-start-btn')) el('snl-start-btn').innerHTML = t.startBtn;
+  if (el('snl-how-link'))  el('snl-how-link').textContent = t.howLink;
+}
+
+// Handle back button for SNL game
+window.addEventListener('popstate', function(e) {
+  const state = e.state;
+  if (!state) return;
+  if (document.getElementById('snl-game').classList.contains('active')) {
+    exitSnlGame();
+  }
+});
+
+// Redraw overlay on resize
+window.addEventListener('resize', () => {
+  if (document.getElementById('snl-game').classList.contains('active')) {
+    placeGoti('yellow', snlPos.yellow, true);
+    placeGoti('red', snlPos.red, true);
+  }
+});
 
 </script>
 
@@ -1103,6 +1749,74 @@ if ('serviceWorker' in navigator) {
     <div class="how-goal" style="background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);">
       <div class="how-goal-title" style="color:#4ADE80;">😇 Goal of the Game</div>
       <div class="how-goal-text">Pause, reflect, and share what you are truly grateful for. A beautiful way to connect and appreciate life together.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ SNAKES & LADDERS GAME SCREEN ══════════ -->
+<div id="snl-game">
+  <div class="snl-topbar">
+    <button class="g-back" onclick="exitSnlGame()">✕ Exit</button>
+    <div class="snl-timer" id="snl-timer">2:00</div>
+    <div style="width:70px"></div>
+  </div>
+
+  <!-- Player scores -->
+  <div class="snl-scores">
+    <div class="snl-player" id="snl-p-yellow">
+      <div class="snl-goti-icon" style="background:#fbbf24;"></div>
+      <div>
+        <div class="snl-p-name" id="snl-p-yellow-name">Yellow</div>
+        <div class="snl-p-pts"><span id="snl-pts-yellow">0</span> <span class="snl-pts-lbl" id="snl-pts-lbl-y">pts</span></div>
+      </div>
+    </div>
+    <div class="snl-player" id="snl-p-red">
+      <div class="snl-goti-icon" style="background:#ef4444;"></div>
+      <div>
+        <div class="snl-p-name" id="snl-p-red-name">Red</div>
+        <div class="snl-p-pts"><span id="snl-pts-red">0</span> <span class="snl-pts-lbl" id="snl-pts-lbl-r">pts</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Board -->
+  <div class="snl-board-wrap">
+    <div class="snl-board-inner" id="snl-board-inner">
+      <img src="board.png" class="snl-board-img" id="snl-board-img" alt="Snakes and Ladders board" draggable="false">
+      <div class="snl-goti" id="snl-goti-yellow"></div>
+      <div class="snl-goti" id="snl-goti-red"></div>
+    </div>
+  </div>
+
+  <!-- Dice -->
+  <div class="snl-dice-row">
+    <div class="snl-msg" id="snl-msg">Yellow's turn — tap dice!</div>
+    <button class="snl-dice" id="snl-dice" onclick="rollSnlDice()">🎲</button>
+  </div>
+
+  <!-- End screen -->
+  <div id="snl-end-screen">
+    <div class="end-icon" id="snl-end-icon">🏆</div>
+    <div class="end-title" style="color:#4ade80;" id="snl-end-title">Yellow Wins!</div>
+    <div class="end-sub" id="snl-end-sub"></div>
+    <button class="btn-play-again" onclick="startSnlGame(true)" style="background:linear-gradient(180deg,#4ade80 0%,#15803d 100%);box-shadow:0 5px 0 #14532d;color:#fff;">🔄 Play Again</button>
+  </div>
+</div>
+
+
+<!-- SNL HOW TO PLAY -->
+<div id="snl-how-overlay" onclick="closeSnlHow(event)">
+  <div class="how-sheet">
+    <div class="how-handle"></div>
+    <div class="how-header">
+      <div class="how-title" style="color:#4ade80;" id="snl-how-title">How to Play</div>
+      <button class="how-close" onclick="closeSnlHow()">✕</button>
+    </div>
+    <div class="how-steps" id="snl-how-steps"></div>
+    <div class="how-goal" style="background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);">
+      <div class="how-goal-title" style="color:#4ade80;" id="snl-goal-title">🎯 Goal of the Game</div>
+      <div class="how-goal-text" id="snl-goal-text">Score the most points before the 2-minute timer runs out. Each square = 2 points!</div>
     </div>
   </div>
 </div>
