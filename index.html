@@ -899,11 +899,11 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       <div class="gc-thumb gc-thumb-first">
           <div class="mini-card">
             <div class="mini-card-icon">🎬</div>
-            <div class="mini-card-label">FIRST!</div>
+            <div class="mini-card-label" id="mini-label-first">FIRST!</div>
           </div>
         </div>
       <div class="gc-text">
-        <div class="gc-name">First</div>
+        <div class="gc-name" id="gc-name-first">First</div>
         <div class="gc-desc" id="gc-desc-first">The icebreaker card game</div>
       </div>
     </div>
@@ -912,14 +912,14 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
     <div class="gc-row">
       <div class="game-card gc-small gc-snl" onclick="startSnlGame()">
         <div class="gc-small-icon">🎲</div>
-        <div class="gc-small-name">Steps<br>&amp; Slides</div>
+        <div class="gc-small-name" id="gc-name-snl">Steps<br>&amp; Slides</div>
       </div>
 
       <div class="game-card gc-small gc-ty" onclick="startTyGame()">
         <div class="gc-mini-card gc-mini-ty">
           <div class="gc-mini-emoji">😇</div>
         </div>
-        <div class="gc-small-name">Thank<br>You</div>
+        <div class="gc-small-name" id="gc-name-ty">Thank<br>You</div>
       </div>
     </div>
 
@@ -935,7 +935,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       <button class="g-back" id="g-back" onclick="exitGame()">✕ Exit</button>
     </div>
     <div class="hdr-center">
-      <div class="g-logo">FIRST<span>!</span></div>
+      <div class="g-logo" id="g-logo-first">FIRST<span>!</span></div>
     </div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
@@ -1154,10 +1154,49 @@ function setLang(l) {
   document.getElementById('btn-hi').classList.toggle('active', l==='hi');
   const hi = (l === 'hi');
   const _el = id => document.getElementById(id);
-  // Home card descriptions (game names stay English)
+
+  // ── HOME: game names transliterated to Devanagari (same sound) ──
+  if (_el('gc-name-first')) _el('gc-name-first').textContent = hi ? 'फर्स्ट' : 'First';
   if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
-  // Refresh open How-to-Play sheets
+  if (_el('gc-name-snl'))   _el('gc-name-snl').innerHTML     = hi ? 'स्टेप्स<br>एंड स्लाइड्स' : 'Steps<br>&amp; Slides';
+  if (_el('gc-name-ty'))    _el('gc-name-ty').innerHTML      = hi ? 'थैंक<br>यू' : 'Thank<br>You';
+
+  // ── In-game headers (transliterated names) ──
+  if (_el('g-logo-first')) _el('g-logo-first').innerHTML = hi ? 'फर्स्ट<span>!</span>' : 'FIRST<span>!</span>';
+  if (_el('g-logo-ty'))    _el('g-logo-ty').innerHTML    = hi ? 'थैंक <span>यू!</span>' : 'THANK <span>YOU!</span>';
+  if (_el('mini-label-first')) _el('mini-label-first').textContent = hi ? 'फर्स्ट!' : 'FIRST!';
+
+  // ── FIRST game UI ──
+  const t = T[l];
+  if (_el('g-back'))           _el('g-back').textContent           = t.backBtn;
+  if (_el('card-swipe-hint'))  _el('card-swipe-hint').textContent  = t.swipeHint;
+  if (_el('btn-next'))         _el('btn-next').textContent         = t.nextBtn;
+  if (_el('btn-prev'))         _el('btn-prev').textContent         = hi ? '← पिछला' : '← Prev';
+  if (_el('end-title'))        _el('end-title').textContent        = t.endTitle;
+  if (_el('end-sub'))          _el('end-sub').innerHTML            = t.endSub.replace('\n','<br>');
+  if (_el('btn-again'))        _el('btn-again').innerHTML          = t.playAgain;
+  if (_el('fh-back-home'))     _el('fh-back-home').textContent     = hi ? '🏠 होम पर जाएं' : '🏠 Back to Home';
   if (_el('how-overlay') && _el('how-overlay').classList.contains('open')) renderHow();
+  // re-render current FIRST card in new language
+  if (typeof deck !== 'undefined' && deck.length && typeof idx === 'number') applyCard(deck[idx]);
+
+  // ── THANK YOU game UI ──
+  const tyGame = _el('ty-game');
+  if (tyGame) {
+    const ex = tyGame.querySelector('.g-back');       if (ex) ex.textContent = hi ? '✕ बाहर' : '✕ Exit';
+    const hn = tyGame.querySelector('.card-swipe-hint'); if (hn) hn.textContent = hi ? 'कार्ड दबाएं या स्वाइप करें' : 'Tap card or swipe to flip';
+    const nx = tyGame.querySelector('.btn-next');     if (nx) nx.textContent = hi ? 'अगला →' : 'Next →';
+    const pv = tyGame.querySelector('.btn-prev');     if (pv) pv.textContent = hi ? '← पिछला' : '← Prev';
+    const et = tyGame.querySelector('.end-title');    if (et) et.textContent = hi ? 'शाबाश!' : 'All Done!';
+    const es = tyGame.querySelector('.end-sub');      if (es) es.innerHTML = hi ? 'सभी 51 कार्ड देख लिए!<br>एक और राउंड खेलें?' : "You've gone through all 51 cards!<br>Ready for another round?";
+    const ag = tyGame.querySelector('.btn-play-again'); if (ag) ag.innerHTML = hi ? '🔀 &nbsp; फिर खेलें' : '🔀 &nbsp; Play Again';
+  }
+  if (_el('ty-back-home')) _el('ty-back-home').textContent = hi ? '🏠 होम पर जाएं' : '🏠 Back to Home';
+  // re-render current TY card
+  if (typeof tyDeck !== 'undefined' && tyDeck.length && typeof tyIdx === 'number') setTyCard(tyDeck[tyIdx]);
+
+  // ── STEPS & SLIDES UI ──
+  if (typeof applySnlLangFull === 'function') applySnlLangFull();
 }
 
 // ── HOW TO PLAY ──
@@ -1815,6 +1854,32 @@ function closeSnlHow(e) {
 }
 
 
+
+function applySnlLangFull() {
+  const t = SNL_T[lang] || SNL_T.en;
+  const hi = (lang === 'hi');
+  const _el = id => document.getElementById(id);
+  // Player names + points label
+  if (_el('snl-p-yellow-name')) _el('snl-p-yellow-name').textContent = t.yellow;
+  if (_el('snl-p-red-name'))    _el('snl-p-red-name').textContent    = t.red;
+  if (_el('snl-pts-lbl-y'))     _el('snl-pts-lbl-y').textContent     = t.pts;
+  if (_el('snl-pts-lbl-r'))     _el('snl-pts-lbl-r').textContent     = t.pts;
+  // Exit
+  const ex = document.querySelector('#snl-game .g-back');
+  if (ex) ex.textContent = hi ? '✕ बाहर' : '✕ Exit';
+  // Play again + back home
+  const ag = document.querySelector('#snl-end-screen .btn-play-again');
+  if (ag) ag.innerHTML = hi ? '🔄 &nbsp; फिर खेलें' : '🔄 &nbsp; Play Again';
+  if (_el('snl-back-home')) _el('snl-back-home').textContent = hi ? '🏠 होम पर जाएं' : '🏠 Back to Home';
+  // Turn message (only if game is live)
+  if (_el('snl-game') && _el('snl-game').classList.contains('active') && !snlGameOver && !snlBusy) {
+    updateSnlTurnUI();
+  }
+  // Refresh open how-to-play
+  const howOv = _el('snl-how-overlay');
+  if (howOv && howOv.classList.contains('open')) openSnlHow();
+}
+
 // Handle back button for SNL game
 window.addEventListener('popstate', function(e) {
   const state = e.state;
@@ -1851,7 +1916,7 @@ if ('serviceWorker' in navigator) {
       <button class="g-back" onclick="exitTyGame()">✕ Exit</button>
     </div>
     <div class="hdr-center">
-      <div class="g-logo" style="font-size:18px;">THANK <span>YOU!</span></div>
+      <div class="g-logo" id="g-logo-ty" style="font-size:18px;">THANK <span>YOU!</span></div>
     </div>
     <div class="hdr-right">
       <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
