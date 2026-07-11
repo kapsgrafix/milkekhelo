@@ -89,7 +89,7 @@
 }
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 :root {
@@ -123,43 +123,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .lang-btn { padding:5px 13px; font-size:11px; font-weight:800; letter-spacing:.8px; color:rgba(255,255,255,.45); cursor:pointer; background:transparent; border:none; font-family:'Nunito Sans',sans-serif; transition:all .2s; }
 .lang-btn.active { background:#FFD700; color:#1A1A2E; border-radius:50px; }
 
-/* carousel fills space between header and bottom nav */
-.carousel-track {
-  flex:1; display:flex; align-items:stretch;
-  transition:transform .3s cubic-bezier(.25,1,.5,1);
-  will-change:transform;
-}
 
 /* each slide — transparent so #launcher bg shows */
-.slide {
-  min-width:100vw; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding:10px 24px 0; position:relative; overflow:hidden;
-  background:transparent;
-}
 
-/* bottom tab nav */
-.bottom-nav {
-  flex-shrink:0; position:relative; z-index:10;
-  display:flex; align-items:stretch;
-  background:rgba(10,8,28,0.75); backdrop-filter:blur(16px);
-  border-top:1px solid rgba(255,255,255,.1);
-  padding-bottom:env(safe-area-inset-bottom, 0px);
-}
-.nav-tab {
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:10px 4px 12px; cursor:pointer; gap:4px;
-  transition:opacity .15s;
-  border:none; background:transparent;
-  -webkit-tap-highlight-color:transparent;
-}
-.nav-tab:active { opacity:.6; }
-.nav-tab-icon { font-size:22px; line-height:1; transition:transform .2s; }
-.nav-tab-label { font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:rgba(255,255,255,.35); transition:color .2s; font-family:'Nunito Sans',sans-serif; }
-.nav-tab.active .nav-tab-label { color:#FFD700; }
-.nav-tab.active .nav-tab-icon { transform:scale(1.15); }
-.nav-tab-dot { width:4px; height:4px; border-radius:50%; background:#FFD700; margin-top:2px; opacity:0; transition:opacity .2s; }
-.nav-tab.active .nav-tab-dot { opacity:1; }
 
 /* stars bg */
 .slide-stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
@@ -349,41 +315,16 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .btn-play-again { background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%); border:none; border-radius:50px; padding:15px 40px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:#1A1A2E; cursor:pointer; box-shadow:0 5px 0 #B85C00; text-transform:uppercase; }
 .btn-play-again:active { transform:translateY(4px); box-shadow:0 1px 0 #B85C00; }
 
-/* ── Desktop nav arrows (hidden on mobile) ── */
-.slide-arrow {
-  display: none;
+.btn-back-home {
+  display:inline-block; margin-top:18px;
+  font-size:13px; font-weight:800; color:rgba(255,255,255,.55);
+  letter-spacing:.5px; cursor:pointer; text-decoration:none;
+  border-bottom:1px dashed rgba(255,255,255,.3); padding-bottom:2px;
+  transition:color .15s;
 }
-@media (hover: hover) and (pointer: fine) {
-  .slide-arrow {
-    display: flex;
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 20;
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    border: 1.5px solid rgba(255,255,255,0.25);
-    color: #fff;
-    font-size: 20px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    backdrop-filter: blur(6px);
-    user-select: none;
-  }
-  .slide-arrow:hover {
-    background: rgba(255,255,255,0.22);
-    transform: translateY(-50%) scale(1.08);
-  }
-  .slide-arrow:active {
-    transform: translateY(-50%) scale(0.95);
-  }
-  .slide-arrow.left  { left: 20px; }
-  .slide-arrow.right { right: 20px; }
-  .slide-arrow.hidden-arrow { opacity: 0.2; pointer-events: none; }
-}
+.btn-back-home:active { color:rgba(255,255,255,.9); }
+
+
 
 
 
@@ -398,7 +339,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 #snl-game {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#052e16 0%,#14532d 55%,#052e16 100%);
+  background:linear-gradient(160deg,#3d1a02 0%,#7c3a06 55%,#3d1a02 100%);
   display:none; flex-direction:column;
 }
 #snl-game.active { display:flex; }
@@ -409,10 +350,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .snl-timer {
   font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900;
-  color:#4ade80; letter-spacing:2px;
-  background:rgba(74,222,128,.12); border:1px solid rgba(74,222,128,.3);
+  color:#fb923c; letter-spacing:2px;
+  background:rgba(251,146,60,.12); border:1px solid rgba(251,146,60,.35);
   border-radius:50px; padding:4px 20px;
-  text-shadow:0 0 12px rgba(74,222,128,.4);
+  text-shadow:0 0 12px rgba(251,146,60,.4);
 }
 .snl-timer.urgent { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
 
@@ -425,8 +366,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   border-radius:14px; padding:8px 12px; transition:all .3s;
 }
 .snl-player.active-turn {
-  border-color:#4ade80; background:rgba(74,222,128,.1);
-  box-shadow:0 0 16px rgba(74,222,128,.25);
+  border-color:#fb923c; background:rgba(251,146,60,.1);
+  box-shadow:0 0 16px rgba(251,146,60,.25);
 }
 .snl-goti-icon {
   width:26px; height:26px; border-radius:50%;
@@ -493,7 +434,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .snl-dice:disabled { opacity:.5; cursor:not-allowed; }
 
 #snl-end-screen {
-  position:absolute; inset:0; background:rgba(5,46,22,.97);
+  position:absolute; inset:0; background:rgba(61,26,2,.97);
   display:none; flex-direction:column; align-items:center;
   justify-content:center; z-index:50; padding:32px; text-align:center;
 }
@@ -501,10 +442,151 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 #snl-how-overlay {
   position:fixed; inset:0; z-index:300;
-  background:rgba(5,25,15,.88); backdrop-filter:blur(8px);
+  background:rgba(40,18,2,.88); backdrop-filter:blur(8px);
   display:none; align-items:flex-end; justify-content:center;
 }
 #snl-how-overlay.open { display:flex; animation:slideUp .35s cubic-bezier(.34,1.56,.64,1); }
+
+
+/* ══ HOME SCREEN (card grid) ══ */
+#launcher {
+  position:fixed; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center;
+  background:linear-gradient(180deg,#050a1a 0%,#0a1836 40%,#123a7a 100%);
+  overflow-y:auto; overflow-x:hidden;
+  padding:0 20px 40px;
+}
+#launcher.hidden { display:none; }
+
+.home-lang-row {
+  width:100%; display:flex; justify-content:center;
+  padding:22px 0 0; flex-shrink:0;
+}
+
+.home-logo {
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(30px,9vw,42px); font-weight:900;
+  letter-spacing:-1px; margin:48px 0 40px;
+  text-align:center; flex-shrink:0;
+  line-height:1;
+}
+.lg-mil   { color:#ffffff; }
+.lg-ke    { color:#2dd4bf; }
+.lg-khelo { color:#f97316; }
+.lg-com   { color:#ffffff; font-size:.42em; letter-spacing:0; }
+
+.home-cards {
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; gap:14px;
+  flex-shrink:0;
+}
+
+.game-card {
+  cursor:pointer; border-radius:24px;
+  transition:transform .12s, box-shadow .12s;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.game-card:active { transform:scale(.97); }
+
+/* Hero card — First */
+.gc-hero {
+  background:linear-gradient(135deg,#a855f7 0%,#7B3FA0 45%,#6A2C8F 100%);
+  display:flex; align-items:center; gap:18px;
+  padding:20px 22px;
+  box-shadow:0 8px 24px rgba(123,63,160,.35);
+}
+.gc-thumb {
+  width:82px; height:82px; flex-shrink:0;
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(255,255,255,.4));
+  display:flex; align-items:center; justify-content:center;
+  font-size:38px;
+}
+.gc-text { flex:1; min-width:0; }
+.gc-name {
+  font-family:'Baloo 2',cursive;
+  font-size:34px; font-weight:900; color:#fff;
+  line-height:1.05; margin-bottom:6px;
+}
+.gc-desc {
+  font-family:'Baloo 2',cursive;
+  font-size:16px; font-weight:600; color:rgba(255,255,255,.92);
+  line-height:1.3;
+}
+
+/* Small cards row */
+.gc-row { display:flex; gap:14px; }
+.gc-small {
+  flex:1; aspect-ratio:1/1.05;
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:flex-end;
+  padding:18px 16px;
+  position:relative;
+}
+.gc-small-icon {
+  position:absolute; top:16px; left:16px;
+  font-size:30px; opacity:.9;
+}
+.gc-small-name {
+  font-family:'Baloo 2',cursive;
+  font-size:23px; font-weight:900; color:#fff;
+  line-height:1.15;
+}
+.gc-snl { background:linear-gradient(135deg,#fb923c 0%,#f97316 50%,#ea580c 100%); box-shadow:0 8px 24px rgba(249,115,22,.32); }
+.gc-ty  { background:linear-gradient(135deg,#4ade80 0%,#16a34a 50%,#15803d 100%); box-shadow:0 8px 24px rgba(22,163,74,.32); }
+
+
+.g-help {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.75); font-family:'Montserrat',sans-serif;
+  font-size:15px; font-weight:900; cursor:pointer; flex-shrink:0;
+  transition:background .15s;
+}
+.g-help:active { background:rgba(255,255,255,.22); }
+
+
+/* Mini FIRST card thumbnail */
+.gc-thumb-first { background:transparent !important; padding:0; }
+.mini-card {
+  width:100%; height:100%;
+  background:linear-gradient(160deg,#8B4BB0 0%,#7B3FA0 55%,#6A3390 100%);
+  border-radius:14px;
+  border:2.5px solid rgba(255,255,255,.35);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:4px;
+  box-shadow:0 4px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.2);
+  position:relative;
+}
+.mini-card::before {
+  content:''; position:absolute; inset:5px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:8px; pointer-events:none;
+}
+.mini-card-icon { font-size:26px; line-height:1; }
+.mini-card-label {
+  font-family:'Montserrat',sans-serif;
+  font-size:9px; font-weight:900; color:#fff;
+  letter-spacing:1px; text-transform:uppercase;
+  text-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+
+
+/* ══ UNIFIED GAME HEADER ══ */
+.g-header, .snl-topbar {
+  display:grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items:center;
+  padding:14px 16px 8px;
+  flex-shrink:0;
+  gap:8px;
+}
+.hdr-left  { justify-self:start; }
+.hdr-center{ justify-self:center; text-align:center; }
+.hdr-right { justify-self:end; }
 
 </style>
 <!-- Google tag (gtag.js) -->
@@ -529,7 +611,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 #snl-game {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#052e16 0%,#14532d 55%,#052e16 100%);
+  background:linear-gradient(160deg,#3d1a02 0%,#7c3a06 55%,#3d1a02 100%);
   display:none; flex-direction:column;
 }
 #snl-game.active { display:flex; }
@@ -538,14 +620,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   display:flex; align-items:center; justify-content:space-between;
   padding:14px 16px 6px; flex-shrink:0;
 }
-.snl-timer {
-  font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900;
-  color:#4ade80; letter-spacing:2px;
-  background:rgba(74,222,128,.12); border:1px solid rgba(74,222,128,.3);
-  border-radius:50px; padding:4px 20px;
-  text-shadow:0 0 12px rgba(74,222,128,.4);
-}
-.snl-timer.urgent { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
+ color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
 
 .snl-scores {
   display:flex; gap:10px; padding:6px 16px 8px; flex-shrink:0;
@@ -556,8 +631,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   border-radius:14px; padding:8px 12px; transition:all .3s;
 }
 .snl-player.active-turn {
-  border-color:#4ade80; background:rgba(74,222,128,.1);
-  box-shadow:0 0 16px rgba(74,222,128,.25);
+  border-color:#fb923c; background:rgba(251,146,60,.1);
+  box-shadow:0 0 16px rgba(251,146,60,.25);
 }
 .snl-goti-icon {
   width:26px; height:26px; border-radius:50%;
@@ -599,7 +674,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .snl-dice:disabled { opacity:.5; cursor:not-allowed; }
 
 #snl-end-screen {
-  position:absolute; inset:0; background:rgba(5,46,22,.97);
+  position:absolute; inset:0; background:rgba(61,26,2,.97);
   display:none; flex-direction:column; align-items:center;
   justify-content:center; z-index:50; padding:32px; text-align:center;
 }
@@ -607,10 +682,144 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 #snl-how-overlay {
   position:fixed; inset:0; z-index:300;
-  background:rgba(5,25,15,.88); backdrop-filter:blur(8px);
+  background:rgba(40,18,2,.88); backdrop-filter:blur(8px);
   display:none; align-items:flex-end; justify-content:center;
 }
 #snl-how-overlay.open { display:flex; animation:slideUp .35s cubic-bezier(.34,1.56,.64,1); }
+
+
+/* ══ HOME SCREEN (card grid) ══ */
+#launcher {
+  position:fixed; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center;
+  background:linear-gradient(180deg,#050a1a 0%,#0a1836 40%,#123a7a 100%);
+  overflow-y:auto; overflow-x:hidden;
+  padding:0 20px 40px;
+}
+#launcher.hidden { display:none; }
+
+.home-lang-row {
+  width:100%; display:flex; justify-content:center;
+  padding:22px 0 0; flex-shrink:0;
+}
+
+.home-logo {
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(30px,9vw,42px); font-weight:900;
+  letter-spacing:-1px; margin:48px 0 40px;
+  text-align:center; flex-shrink:0;
+  line-height:1;
+}
+.lg-mil   { color:#ffffff; }
+.lg-ke    { color:#2dd4bf; }
+.lg-khelo { color:#f97316; }
+.lg-com   { color:#ffffff; font-size:.42em; letter-spacing:0; }
+
+.home-cards {
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; gap:14px;
+  flex-shrink:0;
+}
+
+.game-card {
+  cursor:pointer; border-radius:24px;
+  transition:transform .12s, box-shadow .12s;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.game-card:active { transform:scale(.97); }
+
+/* Hero card — First */
+.gc-hero {
+  background:linear-gradient(135deg,#a855f7 0%,#7B3FA0 45%,#6A2C8F 100%);
+  display:flex; align-items:center; gap:18px;
+  padding:20px 22px;
+  box-shadow:0 8px 24px rgba(123,63,160,.35);
+}
+.gc-thumb {
+  width:82px; height:82px; flex-shrink:0;
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(255,255,255,.4));
+  display:flex; align-items:center; justify-content:center;
+  font-size:38px;
+}
+.gc-text { flex:1; min-width:0; }
+.gc-name {
+  font-family:'Baloo 2',cursive;
+  font-size:34px; font-weight:900; color:#fff;
+  line-height:1.05; margin-bottom:6px;
+}
+.gc-desc {
+  font-family:'Baloo 2',cursive;
+  font-size:16px; font-weight:600; color:rgba(255,255,255,.92);
+  line-height:1.3;
+}
+
+/* Small cards row */
+.gc-row { display:flex; gap:14px; }
+.gc-small {
+  flex:1; aspect-ratio:1/1.05;
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:flex-end;
+  padding:18px 16px;
+  position:relative;
+}
+.gc-small-icon {
+  position:absolute; top:16px; left:16px;
+  font-size:30px; opacity:.9;
+}
+.gc-small-name {
+  font-family:'Baloo 2',cursive;
+  font-size:23px; font-weight:900; color:#fff;
+  line-height:1.15;
+}
+.gc-snl { background:linear-gradient(135deg,#fb923c 0%,#f97316 50%,#ea580c 100%); box-shadow:0 8px 24px rgba(249,115,22,.32); }
+.gc-ty  { background:linear-gradient(135deg,#4ade80 0%,#16a34a 50%,#15803d 100%); box-shadow:0 8px 24px rgba(22,163,74,.32); }
+
+
+
+
+
+/* Mini FIRST card thumbnail */
+.gc-thumb-first { background:transparent !important; padding:0; }
+.mini-card {
+  width:100%; height:100%;
+  background:linear-gradient(160deg,#8B4BB0 0%,#7B3FA0 55%,#6A3390 100%);
+  border-radius:14px;
+  border:2.5px solid rgba(255,255,255,.35);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:4px;
+  box-shadow:0 4px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.2);
+  position:relative;
+}
+.mini-card::before {
+  content:''; position:absolute; inset:5px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:8px; pointer-events:none;
+}
+.mini-card-icon { font-size:26px; line-height:1; }
+.mini-card-label {
+  font-family:'Montserrat',sans-serif;
+  font-size:9px; font-weight:900; color:#fff;
+  letter-spacing:1px; text-transform:uppercase;
+  text-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+
+
+/* ══ UNIFIED GAME HEADER ══ */
+.g-header, .snl-topbar {
+  display:grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items:center;
+  padding:14px 16px 8px;
+  flex-shrink:0;
+  gap:8px;
+}
+.hdr-left  { justify-self:start; }
+.hdr-center{ justify-self:center; text-align:center; }
+.hdr-right { justify-self:end; }
 
 </style>
 <body>
@@ -621,109 +830,50 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 <main id="main-content">
 <div id="launcher">
 
-  <!-- header — transparent, merges with slide bg -->
-  <div class="mkk-bar">
-    <div class="mkk-logo">Mil ke <span>Khelo!</span></div>
+  <!-- lang toggle centered at top -->
+  <div class="home-lang-row">
     <div class="lang-toggle">
       <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
     </div>
   </div>
 
-  <!-- carousel -->
-  <div class="carousel-track" id="carousel">
-
-    <!-- SLIDE 0 — FIRST -->
-    <div class="slide first-slide">
-      <div class="slide-stars" id="stars-0"></div>
-
-      <div class="splash-deck">
-        <div class="splash-card-bg"></div><div class="splash-card-bg"></div>
-        <div class="splash-card-bg"></div><div class="splash-card-bg"></div>
-        <div class="splash-card-bg"></div>
-        <div class="splash-card-front">
-          <div class="cf-icon">🎬</div>
-          <div class="cf-title">First!</div>
-        </div>
-      </div>
-
-      <div class="game-title">FIRST<span>!</span></div>
-      <div class="game-subtitle" id="splash-tagline">The Icebreaker Card Game</div>
-
-      <button class="start-btn" id="btn-start" onclick="startGame()" aria-label="Start FIRST card game">▶ &nbsp; Start Game</button>
-      <span class="how-link" id="how-link" onclick="openHow()">How to Play</span>
-    </div>
-
-    <!-- SLIDE 1 — THANK YOU -->
-    <div class="slide first-slide thankyou-slide">
-      <div class="slide-stars" id="stars-1"></div>
-
-      <div class="splash-deck">
-        <div class="splash-card-bg" style="background:var(--col-ty1)"></div>
-        <div class="splash-card-bg" style="background:var(--col-ty2)"></div>
-        <div class="splash-card-bg" style="background:var(--col-ty3)"></div>
-        <div class="splash-card-bg" style="background:var(--col-ty4)"></div>
-        <div class="splash-card-bg" style="background:var(--col-ty5)"></div>
-        <div class="splash-card-front" style="background:var(--col-ty1)">
-          <div class="cf-icon">😇</div>
-          <div class="cf-title">Thank You!</div>
-        </div>
-      </div>
-
-      <div class="game-title" style="font-size:38px;">THANK <span>YOU!</span></div>
-      <div class="game-subtitle" id="ty-tagline">The Gratitude Card Game</div>
-
-      <button class="start-btn" id="ty-start-btn" onclick="startTyGame()" aria-label="Start Thank You card game" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 6px 0 #0D6B31,0 10px 30px rgba(22,163,74,.4);color:#fff;">▶ &nbsp; Start Game</button>
-      <span class="how-link" id="ty-how-lbl" onclick="openTyHow()">How to Play</span>
-    </div>
-
-    <!-- SLIDE 2 — SNAKES & LADDERS -->
-    <div class="slide y3-splash-slide snl-slide">
-      <div class="slide-stars" id="stars-2"></div>
-
-      <div class="splash-deck">
-        <div class="splash-card-bg" style="background:#166534"></div>
-        <div class="splash-card-bg" style="background:#a16207"></div>
-        <div class="splash-card-bg" style="background:#9d174d"></div>
-        <div class="splash-card-bg" style="background:#1e40af"></div>
-        <div class="splash-card-bg" style="background:#15803d"></div>
-        <div class="splash-card-front" style="background:#15803d">
-          <div class="cf-icon">🐍</div>
-          <div class="cf-title">Snakes!</div>
-        </div>
-      </div>
-
-      <div class="game-title" style="font-size:36px;">SNAKES <span>&amp; LADDERS</span></div>
-      <div class="game-subtitle" id="snl-tagline">Race the clock, climb to victory</div>
-
-      <button class="start-btn" id="snl-start-btn" onclick="startSnlGame()" style="background:linear-gradient(180deg,#4ade80 0%,#15803d 100%);box-shadow:0 6px 0 #14532d,0 10px 30px rgba(21,128,61,.4);color:#fff;" aria-label="Start Snakes and Ladders">▶ &nbsp; Start Game</button>
-      <span class="how-link" id="snl-how-link" onclick="openSnlHow()">How to Play</span>
-    </div>
-    </div><!-- /carousel -->
-
-  <!-- bottom tab nav -->
-  <div class="bottom-nav" id="bottom-nav">
-    <button class="nav-tab active" id="nav-tab-0" onclick="goToSlide(0)">
-      <div class="nav-tab-icon">🃏</div>
-      <div class="nav-tab-label">First!</div>
-      <div class="nav-tab-dot"></div>
-    </button>
-    <button class="nav-tab" id="nav-tab-1" onclick="goToSlide(1)">
-      <div class="nav-tab-icon">😇</div>
-      <div class="nav-tab-label">Thank You</div>
-      <div class="nav-tab-dot"></div>
-    </button>
-    <button class="nav-tab" id="nav-tab-2" onclick="goToSlide(2)">
-      <div class="nav-tab-icon">🐍</div>
-      <div class="nav-tab-label">Snakes</div>
-      <div class="nav-tab-dot"></div>
-    </button>
+  <!-- logo -->
+  <div class="home-logo">
+    <span class="lg-mil">mil</span><span class="lg-ke">ke</span><span class="lg-khelo">khelo</span><span class="lg-com">.com</span>
   </div>
 
+  <!-- game cards -->
+  <div class="home-cards">
 
-  <!-- Desktop slide arrows -->
-  <button class="slide-arrow left hidden-arrow" id="arrow-left" onclick="goToSlide(currentSlide - 1)">&#8592;</button>
-  <button class="slide-arrow right" id="arrow-right" onclick="goToSlide(currentSlide + 1)">&#8594;</button>
+    <!-- FIRST — big hero card -->
+    <div class="game-card gc-hero" onclick="startGame()">
+      <div class="gc-thumb gc-thumb-first">
+          <div class="mini-card">
+            <div class="mini-card-icon">🎬</div>
+            <div class="mini-card-label">FIRST!</div>
+          </div>
+        </div>
+      <div class="gc-text">
+        <div class="gc-name">First</div>
+        <div class="gc-desc" id="gc-desc-first">The icebreaker card game</div>
+      </div>
+    </div>
+
+    <!-- Row: Steps & Slides + Thank You -->
+    <div class="gc-row">
+      <div class="game-card gc-small gc-snl" onclick="startSnlGame()">
+        <div class="gc-small-icon">🎲</div>
+        <div class="gc-small-name">Steps<br>&amp; Slides</div>
+      </div>
+
+      <div class="game-card gc-small gc-ty" onclick="startTyGame()">
+        <div class="gc-small-icon">😇</div>
+        <div class="gc-small-name">Thank<br>You</div>
+      </div>
+    </div>
+
+  </div>
 
 </div><!-- /launcher -->
 </main>
@@ -731,9 +881,15 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 <!-- ══════════ GAME SCREEN ══════════ -->
 <div id="game">
   <div class="g-header">
-    <div class="g-logo">FIRST<span>!</span></div>
-    <div class="g-counter" id="g-counter">1 / 51</div>
-    <button class="g-back" id="g-back" onclick="exitGame()">✕ Exit</button>
+    <div class="hdr-left">
+      <button class="g-back" id="g-back" onclick="exitGame()">✕ Exit</button>
+    </div>
+    <div class="hdr-center">
+      <div class="g-logo">FIRST<span>!</span></div>
+    </div>
+    <div class="hdr-right">
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
   </div>
   <div class="g-progress">
     <div class="prog-bar"><div class="prog-bar-fill" id="prog-fill" style="width:2%"></div></div>
@@ -768,6 +924,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
     <div class="end-title" id="end-title">All Done!</div>
     <div class="end-sub" id="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
     <button class="btn-play-again" id="btn-again" onclick="reshuffleDeck()">🔀 &nbsp; Play Again</button>
+    <div class="btn-back-home" id="fh-back-home" onclick="exitGame()">🏠 Back to Home</div>
   </div>
 </div>
 
@@ -888,112 +1045,55 @@ const CARDS = [
 ];
 
 // ── CAROUSEL ──
-const TOTAL_SLIDES = 3;
-let currentSlide = 0;
-let carouselStartX = 0, _carouselStartY = 0, carouselDragging = false, carouselCurrentX = 0;
 
-const SLIDE_BG = [
-  'linear-gradient(160deg,#1A1A2E 0%,#2D1B4E 55%,#1A2E4E 100%)',
-  'linear-gradient(160deg,#0A2A1E 0%,#0D4A34 55%,#0A3028 100%)',
-  'linear-gradient(160deg,#052e16 0%,#14532d 55%,#052e16 100%)'
-];
-function goToSlide(n, skipHistory) {
-  currentSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, n));
-  const carousel = document.getElementById('carousel');
-  carousel.style.transition = 'transform .3s cubic-bezier(.25,1,.5,1)';
-  carousel.style.transform = `translateX(-${currentSlide * 100}vw)`;
-  document.getElementById('launcher').style.background = SLIDE_BG[currentSlide];
-  // Update tab nav
-  for (let i = 0; i < TOTAL_SLIDES; i++) {
-    const tab = document.getElementById(`nav-tab-${i}`);
-    if (tab) tab.classList.toggle('active', i === currentSlide);
-  }
-  // Update desktop arrows
-  const al = document.getElementById('arrow-left');
-  const ar = document.getElementById('arrow-right');
-  if (al && ar) {
-    al.classList.toggle('hidden-arrow', currentSlide === 0);
-    ar.classList.toggle('hidden-arrow', currentSlide === TOTAL_SLIDES - 1);
-  }
-  if (!skipHistory) {
-    history.pushState({ view: 'launcher', slide: currentSlide }, '');
-  }
-}
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Set initial history state so first back press goes here
-  history.replaceState({ view: 'launcher', slide: 0 }, '');
+  history.replaceState({ view: 'home' }, '');
 
-  // Handle Android/browser back button
+  // Back button — close any open game
   window.addEventListener('popstate', function(e) {
-    const state = e.state;
-    if (!state) return;
-
-    // If a game is open, close it back to launcher
-    const gameActive = document.getElementById('game').classList.contains('active');
-    const tyGameActive = document.getElementById('ty-game').classList.contains('active');
-
-    if (gameActive) {
+    const g   = document.getElementById('game');
+    const ty  = document.getElementById('ty-game');
+    const snl = document.getElementById('snl-game');
+    if (g && g.classList.contains('active')) {
       document.getElementById('end-screen').classList.remove('show');
-      document.getElementById('game').classList.remove('active');
+      g.classList.remove('active');
       document.getElementById('launcher').classList.remove('hidden');
       return;
     }
-    if (tyGameActive) {
+    if (ty && ty.classList.contains('active')) {
       document.getElementById('ty-end-screen').classList.remove('show');
-      document.getElementById('ty-game').classList.remove('active');
+      ty.classList.remove('active');
       document.getElementById('launcher').classList.remove('hidden');
       return;
     }
-    // If on launcher, handle slide navigation via back
-    if (state.view === 'launcher' && typeof state.slide === 'number') {
-      goToSlide(state.slide, true); // skipHistory=true to avoid loop
+    if (snl && snl.classList.contains('active')) {
+      exitSnlGame();
+      return;
     }
   });
 
-  const carousel = document.getElementById('carousel');
-  if (!carousel) return;
-
-  carousel.addEventListener('touchstart', e => {
-      carouselStartX = e.touches[0].clientX;
-      _carouselStartY = e.touches[0].clientY;
-      carouselCurrentX = 0;
-      carouselDragging = false;
+  // FIRST card swipe
+  const cardStage = document.getElementById('card-stage');
+  if (cardStage) {
+    let cx = 0, cy = 0;
+    cardStage.addEventListener('touchstart', e => { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }, { passive: true });
+    cardStage.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - cx, dy = e.changedTouches[0].clientY - cy;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) nextCard(); else prevCard(); }
     }, { passive: true });
+  }
 
-    carousel.addEventListener('touchmove', e => {
-      const dx = e.touches[0].clientX - carouselStartX;
-      const dy = e.touches[0].clientY - _carouselStartY;
-      if (!carouselDragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
-        carouselDragging = true;
-        carousel.style.transition = 'none';
-      }
-      if (!carouselDragging) return;
-      carouselCurrentX = dx;
-      let resistance = 1;
-      if ((currentSlide === 0 && dx > 0) || (currentSlide === TOTAL_SLIDES - 1 && dx < 0)) {
-        resistance = 0.18;
-      }
-      const base = -currentSlide * window.innerWidth;
-      carousel.style.transform = `translateX(${base + dx * resistance}px)`;
+  // TY card swipe
+  const tyStage = document.getElementById('ty-card-stage');
+  if (tyStage) {
+    let tx = 0, tyy = 0;
+    tyStage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; tyy = e.touches[0].clientY; }, { passive: true });
+    tyStage.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - tyy;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) nextTyCard(); else prevTyCard(); }
     }, { passive: true });
-
-    carousel.addEventListener('touchend', e => {
-      if (!carouselDragging) return;
-      carouselDragging = false;
-      const dx = carouselCurrentX;
-      const threshold = window.innerWidth * 0.22;
-      if (Math.abs(dx) > threshold || Math.abs(dx) > 40) {
-        goToSlide(currentSlide + (dx < 0 ? 1 : -1));
-      } else {
-        goToSlide(currentSlide);
-      }
-    }, { passive: true });
-
-    carousel.addEventListener('touchcancel', () => {
-      carouselDragging = false;
-      goToSlide(currentSlide);
-    }, { passive: true });
+  }
 });
 
 // ── LANGUAGE ──
@@ -1002,20 +1102,12 @@ function setLang(l) {
   lang = l;
   document.getElementById('btn-en').classList.toggle('active', l==='en');
   document.getElementById('btn-hi').classList.toggle('active', l==='hi');
-  const t = T[l];
+  const hi = (l === 'hi');
   const _el = id => document.getElementById(id);
-  // FIRST splash
-  if(_el('splash-tagline')) _el('splash-tagline').textContent = t.tagline;
-  if(_el('btn-start'))      _el('btn-start').innerHTML        = t.startBtn;
-  if(_el('how-link'))       _el('how-link').textContent       = t.howLink;
-  if(_el('how-overlay') && _el('how-overlay').classList.contains('open')) renderHow();
-  // TY splash
-  const tyHi = (l === 'hi');
-  if(_el('ty-tagline'))  _el('ty-tagline').textContent  = tyHi ? 'आभार का कार्ड गेम' : 'The Gratitude Card Game';
-  if(_el('ty-how-lbl'))  _el('ty-how-lbl').textContent  = tyHi ? 'कैसे खेलें' : 'How to Play';
-  if(_el('ty-start-btn')) _el('ty-start-btn').innerHTML = tyHi ? '▶ &nbsp; खेल शुरू करें' : '▶ &nbsp; Start Game';
-  // Y3 splash (guard in case script not yet loaded)
-  if (typeof applySnlLang === 'function') applySnlLang();
+  // Home card descriptions (game names stay English)
+  if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
+  // Refresh open How-to-Play sheets
+  if (_el('how-overlay') && _el('how-overlay').classList.contains('open')) renderHow();
 }
 
 // ── HOW TO PLAY ──
@@ -1073,7 +1165,7 @@ function renderCard(i, animate, dir) {
     card.classList.add(outCls);
     setTimeout(()=>{applyCard(c);card.classList.remove(outCls);card.classList.add(inCls);setTimeout(()=>card.classList.remove(inCls),250);},200);
   } else { applyCard(c); }
-  document.getElementById('g-counter').textContent=`${i+1} / ${total}`;
+  const _gc = document.getElementById('g-counter'); if(_gc) _gc.textContent=`${i+1} / ${total}`;
   document.getElementById('prog-num').textContent=`${i+1}/${total}`;
   document.getElementById('prog-fill').style.width=Math.round((i+1)/total*100)+'%';
 }
@@ -1119,19 +1211,9 @@ document.addEventListener('DOMContentLoaded', function() {
     tyCardStage.addEventListener('touchstart',e=>{tyx=e.touches[0].clientX;tyy=e.touches[0].clientY;},{passive:true});
     tyCardStage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tyx,dy=e.changedTouches[0].clientY-tyy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))nextTyCard();},{passive:true});
   }
-  makeStars('stars-0'); makeStars('stars-1'); makeStars('stars-2');
 });
 
 // stars
-function makeStars(id) {
-  const c=document.getElementById(id); if(!c)return;
-  for(let i=0;i<22;i++){
-    const s=document.createElement('div'); s.className='sstar';
-    const sz=1+Math.random()*2.5;
-    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${1.5+Math.random()*2.5}s;--delay:${Math.random()*3}s;`;
-    c.appendChild(s);
-  }
-}
 
 // ══ THANK YOU GAME ══════════════════════════════════════════
 const TY_CARDS = [
@@ -1237,7 +1319,7 @@ function applyTyCard(c, animate, dir){
       setTimeout(()=>card.classList.remove(inCls),250);
     },200);
   } else { setTyCard(c); }
-  document.getElementById('ty-counter').textContent=`${tyIdx+1} / ${total}`;
+  const _tc = document.getElementById('ty-counter'); if(_tc) _tc.textContent=`${tyIdx+1} / ${total}`;
   document.getElementById('ty-prog-num').textContent=`${tyIdx+1}/${total}`;
   document.getElementById('ty-prog-fill').style.width=Math.round((tyIdx+1)/total*100)+'%';
 }
@@ -1346,6 +1428,8 @@ const SNL_LADDERS = {
   62: 81,
   74: 92
 };
+
+
 
 const SNL_CELL_COLORS = ['#0ea5e9','#f97316','#e11d90','#8b5cf6','#22c55e','#eab308'];
 
@@ -1549,7 +1633,7 @@ function endSnlGame(winner100) {
   document.getElementById('snl-dice').disabled = true;
   const t = SNL_T[lang] || SNL_T.en;
   const yp = snlPos.yellow * 2, rp = snlPos.red * 2;
-  let title, icon = '🏆', winnerColor = '#4ade80';
+  let title, icon = '🏆', winnerColor = '#fb923c';
   if (winner100) {
     const isYellow = winner100 === 'yellow';
     title = t.wins(isYellow ? t.yellow : t.red);
@@ -1600,6 +1684,8 @@ function rollSnlDice() {
     }
   }, 80);
 }
+
+
 
 function moveSnlGoti(steps) {
   const t = SNL_T[lang] || SNL_T.en;
@@ -1661,7 +1747,7 @@ function openSnlHow() {
   document.getElementById('snl-goal-text').textContent = t.goalText;
   document.getElementById('snl-how-steps').innerHTML = t.steps.map((s,i) => `
     <div class="how-step">
-      <div class="step-num" style="background:linear-gradient(135deg,#4ade80,#15803d);color:#fff;">${i+1}</div>
+      <div class="step-num" style="background:linear-gradient(135deg,#fb923c,#c2410c);color:#fff;">${i+1}</div>
       <div class="step-body">
         <div class="step-title">${s[0]}</div>
         <div class="step-desc">${s[1]}</div>
@@ -1678,13 +1764,6 @@ function closeSnlHow(e) {
   setTimeout(() => o.style.display = 'none', 350);
 }
 
-function applySnlLang() {
-  const t = SNL_T[lang] || SNL_T.en;
-  const el = id => document.getElementById(id);
-  if (el('snl-tagline'))   el('snl-tagline').textContent = t.tagline;
-  if (el('snl-start-btn')) el('snl-start-btn').innerHTML = t.startBtn;
-  if (el('snl-how-link'))  el('snl-how-link').textContent = t.howLink;
-}
 
 // Handle back button for SNL game
 window.addEventListener('popstate', function(e) {
@@ -1718,9 +1797,15 @@ if ('serviceWorker' in navigator) {
 <!-- ══════════ THANK YOU GAME SCREEN ══════════ -->
 <div id="ty-game">
   <div class="g-header">
-    <div class="g-logo" style="font-size:17px;">THANK <span>YOU!</span></div>
-    <div class="g-counter" id="ty-counter">1 / 51</div>
-    <button class="g-back" onclick="exitTyGame()">✕ Exit</button>
+    <div class="hdr-left">
+      <button class="g-back" onclick="exitTyGame()">✕ Exit</button>
+    </div>
+    <div class="hdr-center">
+      <div class="g-logo" style="font-size:18px;">THANK <span>YOU!</span></div>
+    </div>
+    <div class="hdr-right">
+      <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
+    </div>
   </div>
   <div class="g-progress">
     <div class="prog-bar"><div class="prog-bar-fill" id="ty-prog-fill" style="width:2%"></div></div>
@@ -1755,6 +1840,7 @@ if ('serviceWorker' in navigator) {
     <div class="end-title" style="color:#4ADE80;">All Done!</div>
     <div class="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
     <button class="btn-play-again" onclick="reshuffleTyDeck()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">🔀 &nbsp; Play Again</button>
+    <div class="btn-back-home" id="ty-back-home" onclick="exitTyGame()">🏠 Back to Home</div>
   </div>
 </div>
 
@@ -1784,9 +1870,15 @@ if ('serviceWorker' in navigator) {
 <!-- ══════════ SNAKES & LADDERS GAME SCREEN ══════════ -->
 <div id="snl-game">
   <div class="snl-topbar">
-    <button class="g-back" onclick="exitSnlGame()">✕ Exit</button>
-    <div class="snl-timer" id="snl-timer">2:00</div>
-    <div style="width:70px"></div>
+    <div class="hdr-left">
+      <button class="g-back" onclick="exitSnlGame()">✕ Exit</button>
+    </div>
+    <div class="hdr-center">
+      <div class="snl-timer" id="snl-timer">2:00</div>
+    </div>
+    <div class="hdr-right">
+      <button class="g-help" onclick="openSnlHow()" aria-label="How to play">?</button>
+    </div>
   </div>
 
   <!-- Player scores -->
@@ -1810,7 +1902,7 @@ if ('serviceWorker' in navigator) {
   <!-- Board -->
   <div class="snl-board-wrap">
     <div class="snl-board-inner" id="snl-board-inner">
-      <img src="board.png" class="snl-board-img" id="snl-board-img" alt="Snakes and Ladders board" draggable="false">
+      <img src="board.png" class="snl-board-img" id="snl-board-img" alt="Steps and Slides board" draggable="false">
       <div class="snl-goti" id="snl-goti-yellow"></div>
       <div class="snl-goti" id="snl-goti-red"></div>
     </div>
@@ -1825,9 +1917,10 @@ if ('serviceWorker' in navigator) {
   <!-- End screen -->
   <div id="snl-end-screen">
     <div class="end-icon" id="snl-end-icon">🏆</div>
-    <div class="end-title" style="color:#4ade80;" id="snl-end-title">Yellow Wins!</div>
+    <div class="end-title" style="color:#fb923c;" id="snl-end-title">Yellow Wins!</div>
     <div class="end-sub" id="snl-end-sub"></div>
-    <button class="btn-play-again" onclick="startSnlGame(true)" style="background:linear-gradient(180deg,#4ade80 0%,#15803d 100%);box-shadow:0 5px 0 #14532d;color:#fff;">🔄 Play Again</button>
+    <button class="btn-play-again" onclick="startSnlGame(true)">🔄 &nbsp; Play Again</button>
+    <div class="btn-back-home" id="snl-back-home" onclick="exitSnlGame()">🏠 Back to Home</div>
   </div>
 </div>
 
@@ -1837,12 +1930,12 @@ if ('serviceWorker' in navigator) {
   <div class="how-sheet">
     <div class="how-handle"></div>
     <div class="how-header">
-      <div class="how-title" style="color:#4ade80;" id="snl-how-title">How to Play</div>
+      <div class="how-title" style="color:#fb923c;" id="snl-how-title">How to Play</div>
       <button class="how-close" onclick="closeSnlHow()">✕</button>
     </div>
     <div class="how-steps" id="snl-how-steps"></div>
-    <div class="how-goal" style="background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);">
-      <div class="how-goal-title" style="color:#4ade80;" id="snl-goal-title">🎯 Goal of the Game</div>
+    <div class="how-goal" style="background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.25);">
+      <div class="how-goal-title" style="color:#fb923c;" id="snl-goal-title">🎯 Goal of the Game</div>
       <div class="how-goal-text" id="snl-goal-text">Score the most points before the 2-minute timer runs out. Each square = 2 points!</div>
     </div>
   </div>
