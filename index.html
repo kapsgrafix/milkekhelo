@@ -452,10 +452,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 #launcher {
   position:fixed; inset:0;
   display:flex; flex-direction:column;
-  align-items:center;
+  align-items:center; justify-content:flex-start;
   background:linear-gradient(180deg,#050a1a 0%,#0a1836 40%,#123a7a 100%);
   overflow-y:auto; overflow-x:hidden;
-  padding:0 20px 40px;
+  padding:0 20px 48px;
 }
 #launcher.hidden { display:none; }
 
@@ -466,10 +466,11 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 .home-logo {
   font-family:'Baloo 2',cursive;
-  font-size:clamp(30px,9vw,42px); font-weight:900;
-  letter-spacing:-1px; margin:48px 0 40px;
+  font-size:clamp(38px,12vw,55px); font-weight:900;
+  letter-spacing:-1px;
   text-align:center; flex-shrink:0;
   line-height:1;
+  margin:auto 0;
 }
 .lg-mil   { color:#ffffff; }
 .lg-ke    { color:#2dd4bf; }
@@ -480,6 +481,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   width:100%; max-width:440px;
   display:flex; flex-direction:column; gap:14px;
   flex-shrink:0;
+  padding-bottom:8px;
 }
 
 .game-card {
@@ -526,8 +528,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   position:relative;
 }
 .gc-small-icon {
-  position:absolute; top:16px; left:16px;
-  font-size:30px; opacity:.9;
+  position:absolute; top:14px; left:14px;
+  width:56px; height:74px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:52px; line-height:1; opacity:.95;
 }
 .gc-small-name {
   font-family:'Baloo 2',cursive;
@@ -587,6 +591,26 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .hdr-left  { justify-self:start; }
 .hdr-center{ justify-self:center; text-align:center; }
 .hdr-right { justify-self:end; }
+
+
+/* Thank You mini playing card */
+.gc-mini-card {
+  position:absolute; top:14px; left:14px;
+  width:56px; height:74px;
+  border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.25);
+  border:2px solid rgba(255,255,255,.45);
+}
+.gc-mini-card::before {
+  content:''; position:absolute; inset:4px;
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:5px; pointer-events:none;
+}
+.gc-mini-ty {
+  background:linear-gradient(160deg,#1A6B3C 0%,#14532d 100%);
+}
+.gc-mini-emoji { font-size:32px; line-height:1; }
 
 </style>
 <!-- Google tag (gtag.js) -->
@@ -692,10 +716,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 #launcher {
   position:fixed; inset:0;
   display:flex; flex-direction:column;
-  align-items:center;
+  align-items:center; justify-content:flex-start;
   background:linear-gradient(180deg,#050a1a 0%,#0a1836 40%,#123a7a 100%);
   overflow-y:auto; overflow-x:hidden;
-  padding:0 20px 40px;
+  padding:0 20px 48px;
 }
 #launcher.hidden { display:none; }
 
@@ -706,10 +730,11 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 .home-logo {
   font-family:'Baloo 2',cursive;
-  font-size:clamp(30px,9vw,42px); font-weight:900;
-  letter-spacing:-1px; margin:48px 0 40px;
+  font-size:clamp(38px,12vw,55px); font-weight:900;
+  letter-spacing:-1px;
   text-align:center; flex-shrink:0;
   line-height:1;
+  margin:auto 0;
 }
 .lg-mil   { color:#ffffff; }
 .lg-ke    { color:#2dd4bf; }
@@ -720,6 +745,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   width:100%; max-width:440px;
   display:flex; flex-direction:column; gap:14px;
   flex-shrink:0;
+  padding-bottom:8px;
 }
 
 .game-card {
@@ -766,8 +792,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   position:relative;
 }
 .gc-small-icon {
-  position:absolute; top:16px; left:16px;
-  font-size:30px; opacity:.9;
+  position:absolute; top:14px; left:14px;
+  width:56px; height:74px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:52px; line-height:1; opacity:.95;
 }
 .gc-small-name {
   font-family:'Baloo 2',cursive;
@@ -821,6 +849,26 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .hdr-center{ justify-self:center; text-align:center; }
 .hdr-right { justify-self:end; }
 
+
+/* Thank You mini playing card */
+.gc-mini-card {
+  position:absolute; top:14px; left:14px;
+  width:56px; height:74px;
+  border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.25);
+  border:2px solid rgba(255,255,255,.45);
+}
+.gc-mini-card::before {
+  content:''; position:absolute; inset:4px;
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:5px; pointer-events:none;
+}
+.gc-mini-ty {
+  background:linear-gradient(160deg,#1A6B3C 0%,#14532d 100%);
+}
+.gc-mini-emoji { font-size:32px; line-height:1; }
+
 </style>
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
@@ -868,7 +916,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
       </div>
 
       <div class="game-card gc-small gc-ty" onclick="startTyGame()">
-        <div class="gc-small-icon">😇</div>
+        <div class="gc-mini-card gc-mini-ty">
+          <div class="gc-mini-emoji">😇</div>
+        </div>
         <div class="gc-small-name">Thank<br>You</div>
       </div>
     </div>
