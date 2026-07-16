@@ -1618,17 +1618,17 @@ function placeGoti(color, n, instant) {
   if (!goti) return;
   let xPct, yPct;
   if (n === 0) {
-    xPct = color === 'yellow' ? 2 : 8;
-    yPct = 97;
+    // Off-board start — just below the board, side by side
+    xPct = color === 'yellow' ? 3 : 9;
+    yPct = 96;
   } else {
     const c = snlCellPct(n);
-    xPct = c.xPct;
-    yPct = c.yPct;
-    // Only offset when BOTH coins share the same cell
+    xPct = c.xPct;   // exact horizontal center of the cell
+    yPct = c.yPct;   // exact vertical center of the cell
+    // Split ONLY when both pawns occupy the same cell
     const other = color === 'yellow' ? 'red' : 'yellow';
-    if (snlPos[other] === n && n !== 0) {
-      const off = color === 'yellow' ? -2.6 : 2.6;
-      xPct = c.xPct + off;
+    if (snlPos[other] === n) {
+      xPct = c.xPct + (color === 'yellow' ? -2.4 : 2.4);
     }
   }
   if (instant) goti.style.transition = 'none';
@@ -1638,7 +1638,7 @@ function placeGoti(color, n, instant) {
 }
 
 function refreshGotiPositions() {
-  // Re-place both so overlap offset is applied correctly
+  // Re-place both so centering / overlap-split is correct
   placeGoti('yellow', snlPos.yellow);
   placeGoti('red', snlPos.red);
 }
