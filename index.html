@@ -1723,8 +1723,13 @@ function isStandalone() {
          window.navigator.standalone === true;
 }
 
+function isAndroid() {
+  return /android/i.test(navigator.userAgent);
+}
+
 function showInstallStrip() {
-  if (isStandalone()) return;                       // already installed
+  if (!isAndroid()) return;                                  // Android only
+  if (isStandalone()) return;                                // already installed
   if (sessionStorage.getItem('mkk-install-hidden')) return;  // dismissed this session
   const strip = document.getElementById('install-strip');
   if (!strip) return;
@@ -1744,7 +1749,7 @@ function dismissInstall() {
 }
 
 async function installApp() {
-  // Always clear old caches first so the INSTALLED app gets the latest build
+  // Clear old caches first so the installed app gets the latest build
   await refreshAppCache();
 
   if (deferredPrompt) {
@@ -1753,11 +1758,7 @@ async function installApp() {
     deferredPrompt = null;
     if (outcome === 'accepted') hideInstallStrip();
   } else {
-    // iOS / browsers without beforeinstallprompt
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    alert(isIOS
-      ? 'To install: tap the Share button below, then choose "Add to Home Screen".'
-      : 'To install: open your browser menu (⋮) and choose "Add to Home Screen" or "Install app".');
+    alert('To install: open your browser menu (⋮) and choose "Install app" or "Add to Home Screen".');
   }
 }
 
@@ -1786,11 +1787,7 @@ window.addEventListener('appinstalled', () => {
   hideInstallStrip();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Show strip for iOS too (no beforeinstallprompt there)
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  if (isIOS && !isStandalone()) setTimeout(showInstallStrip, 900);
-});
+
 
 </script>
 
