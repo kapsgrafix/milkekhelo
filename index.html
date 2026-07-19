@@ -14,9 +14,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <!-- ══ PRIMARY SEO ══ -->
-<title>Mil ke Khelo! — Free Card Games to Play Together | FIRST & Thank You</title>
-<meta name="description" content="Mil ke Khelo! is a free collection of fun card games to play with friends and family. Play FIRST — the icebreaker card game with 51 prompts — and Thank You, a gratitude card game. No app download needed. Works in your browser. Available in English and Hindi.">
-<meta name="keywords" content="card game, icebreaker game, party game, group game, family game, FIRST card game, thank you game, gratitude game, friends game, indoor game, hindi card game, mil ke khelo, free card game online">
+<title>Mil ke Khelo — Less Scrolling. More Stories. | Free Party Games</title>
+<meta name="description" content="Less scrolling, more stories. Mil ke Khelo is a free collection of games to play together — First (icebreaker cards), Thank You (gratitude cards), and Steps &amp; Slides. No download needed, works in your browser. English and Hindi.">
+<meta name="keywords" content="mil ke khelo, party games, icebreaker game, card game, family game, snakes and ladders, gratitude game, hindi games, free online games, group games, games to play together">
 <meta name="author" content="Mil ke Khelo!">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://milkekhelo.com/">
@@ -24,19 +24,21 @@
 <!-- ══ OPEN GRAPH (WhatsApp, Facebook previews) ══ -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://milkekhelo.com/">
-<meta property="og:title" content="Mil ke Khelo! — Fun Card Games to Play Together">
-<meta property="og:description" content="Free icebreaker and gratitude card games for friends and family. Play FIRST and Thank You — no download needed, works in your browser. English & Hindi.">
+<meta property="og:title" content="Mil ke Khelo — Less Scrolling. More Stories.">
+<meta property="og:description" content="Free party games for friends and family — icebreaker cards, gratitude cards, and Steps &amp; Slides. Play in English or Hindi, no download needed.">
 <meta property="og:image" content="https://milkekhelo.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="Mil ke Khelo logo — Less Scrolling. More Stories.">
 <meta property="og:site_name" content="Mil ke Khelo!">
 <meta property="og:locale" content="en_IN">
 <meta property="og:locale:alternate" content="hi_IN">
 
 <!-- ══ TWITTER CARD ══ -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mil ke Khelo! — Fun Card Games to Play Together">
-<meta name="twitter:description" content="Free icebreaker and gratitude card games for friends and family. No download needed.">
+<meta name="twitter:title" content="Mil ke Khelo — Less Scrolling. More Stories.">
+<meta name="twitter:description" content="Free party games for friends and family. Play in English or Hindi, no download needed.">
+<meta name="twitter:image:alt" content="Mil ke Khelo logo — Less Scrolling. More Stories.">
 <meta name="twitter:image" content="https://milkekhelo.com/og-image.png">
 
 <!-- ══ STRUCTURED DATA (Google Rich Results) ══ -->
@@ -44,9 +46,13 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Mil ke Khelo!",
+  "name": "Mil ke Khelo",
+  "alternateName": "Mil ke Khelo — Less Scrolling. More Stories.",
+  "slogan": "Less Scrolling. More Stories.",
   "url": "https://milkekhelo.com/",
-  "description": "A free collection of fun card games to play with friends and family. Includes FIRST, an icebreaker card game, and Thank You, a gratitude card game. Available in English and Hindi.",
+  "logo": "https://milkekhelo.com/milkekhelo-logo.png",
+  "image": "https://milkekhelo.com/og-image.png",
+  "description": "A free collection of games to play together — First (icebreaker card game), Thank You (gratitude card game), and Steps & Slides (dice board game). Available in English and Hindi, no download needed.",
   "applicationCategory": "GameApplication",
   "operatingSystem": "Any",
   "browserRequirements": "Requires JavaScript. Works in any modern browser.",
@@ -59,32 +65,30 @@
   },
   "author": {
     "@type": "Organization",
-    "name": "Mil ke Khelo!"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "5",
-    "ratingCount": "1"
+    "name": "Mil ke Khelo",
+    "url": "https://milkekhelo.com/",
+    "logo": "https://milkekhelo.com/milkekhelo-logo.png"
   },
   "hasPart": [
     {
       "@type": "Game",
-      "name": "FIRST!",
+      "name": "First",
       "description": "An icebreaker card game with 51 prompts about your firsts — first movie, first trip, first job and more. Share your stories and get to know each other.",
-      "numberOfPlayers": {
-        "@type": "QuantitativeValue",
-        "minValue": 2
-      },
+      "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 2 },
       "inLanguage": ["en", "hi"]
     },
     {
       "@type": "Game",
       "name": "Thank You",
       "description": "A gratitude card game with 51 prompts to pause and reflect on what you are thankful for — people, things, memories and more.",
-      "numberOfPlayers": {
-        "@type": "QuantitativeValue",
-        "minValue": 2
-      },
+      "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 2 },
+      "inLanguage": ["en", "hi"]
+    },
+    {
+      "@type": "Game",
+      "name": "Steps & Slides",
+      "description": "A two-player dice board game. Climb the steps, dodge the slides, and score the most points before the two-minute timer runs out.",
+      "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 2 },
       "inLanguage": ["en", "hi"]
     }
   ]
@@ -466,18 +470,23 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   padding:22px 0 0; flex-shrink:0;
 }
 
-.home-logo {
-  font-family:'Baloo 2',cursive;
-  font-size:clamp(38px,12vw,55px); font-weight:900;
-  letter-spacing:-1px;
-  text-align:center; flex-shrink:0;
-  line-height:1;
+.home-logo-wrap {
   margin:auto 0;
+  flex-shrink:0;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  padding:0 8px;
 }
-.lg-mil   { color:#ffffff; }
-.lg-ke    { color:#2dd4bf; }
-.lg-khelo { color:#f97316; }
-.lg-com   { color:#ffffff; font-size:.42em; letter-spacing:0; }
+.home-logo-img {
+  width:100%;
+  max-width:340px;
+  height:auto;
+  object-fit:contain;
+  user-select:none;
+  -webkit-user-drag:none;
+  filter:drop-shadow(0 4px 16px rgba(0,0,0,.35));
+}
 
 .home-cards {
   width:100%; max-width:440px;
@@ -648,16 +657,22 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   </div>
 
   <!-- logo -->
-  <div class="home-logo">
-    <span class="lg-mil">mil</span><span class="lg-ke">ke</span><span class="lg-khelo">khelo</span><span class="lg-com">.com</span>
-  </div>
+  <h1 class="home-logo-wrap">
+    <img src="milkekhelo-logo.png"
+         class="home-logo-img"
+         alt="Mil ke Khelo — Less Scrolling. More Stories. Free party games to play together"
+         title="Mil ke Khelo — Free party games"
+         width="600" height="236"
+         fetchpriority="high"
+         draggable="false">
+  </h1>
 
   <!-- game cards -->
   <div class="home-cards">
 
     <!-- FIRST — big hero card -->
     <div class="game-card gc-hero" onclick="startGame()">
-      <img src="first-home.png" class="gc-thumb-img" alt="First game" draggable="false">
+      <img src="first-home.png" class="gc-thumb-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
       <div class="gc-text">
         <div class="gc-name" id="gc-name-first">First</div>
         <div class="gc-desc" id="gc-desc-first">The icebreaker card game</div>
@@ -667,12 +682,12 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
     <!-- Row: Steps & Slides + Thank You -->
     <div class="gc-row">
       <div class="game-card gc-small gc-snl" onclick="startSnlGame()">
-        <img src="sns-home.png" class="gc-small-img" alt="Steps and Slides" draggable="false">
+        <img src="sns-home.png" class="gc-small-img" width="320" height="320" loading="eager" alt="Steps and Slides — dice board game" draggable="false">
         <div class="gc-small-name" id="gc-name-snl">Steps<br>&amp; Slides</div>
       </div>
 
       <div class="game-card gc-small gc-ty" onclick="startTyGame()">
-        <img src="thankyou-home.png" class="gc-small-img" alt="Thank You game" draggable="false">
+        <img src="thankyou-home.png" class="gc-small-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
         <div class="gc-small-name" id="gc-name-ty">Thank<br>You</div>
       </div>
     </div>
