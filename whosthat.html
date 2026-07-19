@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0b2e">
+
+<title>Who's That? — Party Game | Mil ke Khelo</title>
+<meta name="description" content="Who's That? is a free multiplayer party game. Answer questions about your friends — if everyone picks the same person, your team scores. Play with 3+ players on any phone.">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Who's That? — Multiplayer Party Game">
+<meta property="og:description" content="How well does your group know each other? Answer together, score together.">
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-1:#1a0b2e;
+  --bg-2:#2d1b4e;
+  --bg-3:#1a1a3e;
+  --accent:#a855f7;
+  --accent-2:#c084fc;
+  --gold:#fbbf24;
+  --green:#4ade80;
+  --red:#f87171;
+  --pink:#ec4899;
+  --cyan:#22d3ee;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family:'Nunito Sans',sans-serif;
+  background:linear-gradient(170deg,var(--bg-1) 0%,var(--bg-2) 50%,var(--bg-3) 100%);
+  background-attachment:fixed;
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display:none;
+  min-height:100vh;
+  flex-direction:column;
+  align-items:center;
+  padding:24px 20px calc(32px + env(safe-area-inset-bottom,0px));
+  padding-top:calc(24px + env(safe-area-inset-top,0px));
+}
+.screen.active { display:flex; animation:fadeSlide .4s cubic-bezier(.34,1.2,.64,1); }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── TYPOGRAPHY ── */
+.game-logo {
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(38px,11vw,52px);
+  font-weight:800; line-height:1;
+  text-align:center; margin:auto 0 8px;
+}
+.game-logo .l1 { color:#fff; }
+.game-logo .l2 { color:var(--accent-2); }
+.logo-sub {
+  font-size:14px; font-weight:700; letter-spacing:2px;
+  color:rgba(255,255,255,.42); text-transform:uppercase;
+  text-align:center; margin-bottom:auto;
+}
+.scr-title {
+  font-family:'Baloo 2',cursive;
+  font-size:28px; font-weight:800; color:#fff;
+  text-align:center; margin-bottom:6px;
+}
+.scr-sub {
+  font-size:14px; font-weight:600; color:rgba(255,255,255,.55);
+  text-align:center; margin-bottom:26px; line-height:1.45;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  width:100%; max-width:340px;
+  border:none; border-radius:50px;
+  padding:17px 0;
+  font-family:'Baloo 2',cursive;
+  font-size:18px; font-weight:700;
+  cursor:pointer; letter-spacing:.4px;
+  transition:transform .12s, box-shadow .12s, opacity .2s;
+  display:block; margin:0 auto;
+}
+.btn:active:not(:disabled) { transform:translateY(4px); }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+
+.btn-primary {
+  background:linear-gradient(180deg,var(--accent-2),var(--accent));
+  color:#fff; box-shadow:0 6px 0 #6b21a8, 0 10px 26px rgba(168,85,247,.35);
+}
+.btn-primary:active:not(:disabled) { box-shadow:0 2px 0 #6b21a8; }
+
+.btn-gold {
+  background:linear-gradient(180deg,#fcd34d,var(--gold));
+  color:#3b2503; box-shadow:0 6px 0 #b45309, 0 10px 26px rgba(251,191,36,.3);
+}
+.btn-gold:active:not(:disabled) { box-shadow:0 2px 0 #b45309; }
+
+.btn-ghost {
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.8);
+  box-shadow:none; font-size:16px; padding:15px 0;
+}
+.btn-ghost:active { background:rgba(255,255,255,.14); }
+
+.btn-stack { display:flex; flex-direction:column; gap:14px; width:100%; max-width:340px; margin:0 auto; }
+
+.link-back {
+  margin-top:20px; font-size:14px; font-weight:700;
+  color:rgba(255,255,255,.45); cursor:pointer;
+  text-align:center; border-bottom:1px dashed rgba(255,255,255,.25);
+  padding-bottom:2px; align-self:center;
+}
+.link-back:active { color:rgba(255,255,255,.8); }
+
+/* ── FORM ── */
+.form-card {
+  width:100%; max-width:360px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:22px; padding:22px 20px;
+  margin-bottom:22px;
+}
+.field { margin-bottom:18px; }
+.field:last-child { margin-bottom:0; }
+.field label {
+  display:block; font-size:12px; font-weight:800;
+  color:rgba(255,255,255,.5); letter-spacing:1.2px;
+  text-transform:uppercase; margin-bottom:7px;
+}
+.field input, .field select {
+  width:100%; background:rgba(0,0,0,.28);
+  border:1.5px solid rgba(255,255,255,.14);
+  border-radius:13px; padding:14px 15px;
+  font-family:'Nunito Sans',sans-serif;
+  font-size:16px; font-weight:700; color:#fff;
+  outline:none; transition:border-color .18s;
+}
+.field input:focus, .field select:focus { border-color:var(--accent); }
+.field input::placeholder { color:rgba(255,255,255,.28); font-weight:600; }
+.field-hint { font-size:11px; font-weight:600; color:rgba(255,255,255,.35); margin-top:6px; }
+
+.code-input {
+  text-align:center !important;
+  font-size:30px !important;
+  letter-spacing:9px !important;
+  font-weight:800 !important;
+  text-transform:uppercase;
+  padding:16px 10px !important;
+}
+
+/* ── GAME CODE DISPLAY ── */
+.code-box {
+  background:linear-gradient(150deg,rgba(168,85,247,.22),rgba(168,85,247,.06));
+  border:2px dashed rgba(192,132,252,.55);
+  border-radius:22px; padding:20px 24px;
+  text-align:center; margin-bottom:20px;
+  width:100%; max-width:340px;
+}
+.code-label {
+  font-size:11px; font-weight:800; letter-spacing:2px;
+  color:rgba(255,255,255,.5); text-transform:uppercase; margin-bottom:8px;
+}
+.code-value {
+  font-family:'Baloo 2',cursive;
+  font-size:44px; font-weight:800; letter-spacing:8px;
+  color:var(--gold); line-height:1;
+  text-shadow:0 0 24px rgba(251,191,36,.4);
+}
+.code-actions { display:flex; gap:9px; justify-content:center; margin-top:14px; }
+.code-btn {
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:50px; padding:8px 16px;
+  font-family:'Nunito Sans',sans-serif;
+  font-size:12px; font-weight:800; color:#fff; cursor:pointer;
+}
+.code-btn:active { background:rgba(255,255,255,.2); }
+
+/* ── PLAYER LIST ── */
+.players-box { width:100%; max-width:340px; margin-bottom:18px; }
+.players-head {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:11px; padding:0 4px;
+}
+.players-head-title {
+  font-size:12px; font-weight:800; letter-spacing:1.4px;
+  color:rgba(255,255,255,.5); text-transform:uppercase;
+}
+.players-count {
+  font-size:12px; font-weight:800; color:var(--accent-2);
+  background:rgba(168,85,247,.16); border-radius:50px; padding:3px 11px;
+}
+.player-chip {
+  display:flex; align-items:center; gap:11px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:15px; padding:11px 14px; margin-bottom:8px;
+  animation:popIn .32s cubic-bezier(.34,1.5,.64,1);
+}
+@keyframes popIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
+.player-avatar {
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',cursive; font-size:16px; font-weight:800;
+  color:#fff; flex-shrink:0;
+}
+.player-name { font-size:15px; font-weight:800; color:#fff; flex:1; }
+.player-tag {
+  font-size:10px; font-weight:800; letter-spacing:1px;
+  color:var(--gold); background:rgba(251,191,36,.15);
+  border-radius:50px; padding:3px 9px; text-transform:uppercase;
+}
+.waiting-msg {
+  text-align:center; font-size:14px; font-weight:700;
+  color:rgba(255,255,255,.42); padding:22px 12px; line-height:1.55;
+}
+.dots::after {
+  content:''; animation:dots 1.4s steps(4,end) infinite;
+}
+@keyframes dots { 0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} }
+
+/* ── GAME HEADER (score bar) ── */
+.game-top {
+  width:100%; max-width:420px;
+  display:flex; gap:9px; margin-bottom:20px;
+}
+.stat-pill {
+  flex:1; background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:15px; padding:9px 6px; text-align:center;
+}
+.stat-val {
+  font-family:'Baloo 2',cursive; font-size:21px; font-weight:800;
+  color:#fff; line-height:1.1;
+}
+.stat-val.gold { color:var(--gold); }
+.stat-lbl {
+  font-size:9px; font-weight:800; letter-spacing:.9px;
+  color:rgba(255,255,255,.42); text-transform:uppercase; margin-top:1px;
+}
+
+/* ── QUESTION ── */
+.q-card {
+  width:100%; max-width:420px;
+  background:linear-gradient(150deg,rgba(236,72,153,.2),rgba(168,85,247,.14));
+  border:1px solid rgba(236,72,153,.3);
+  border-radius:24px; padding:24px 22px;
+  text-align:center; margin-bottom:20px;
+}
+.q-num {
+  font-size:11px; font-weight:800; letter-spacing:2px;
+  color:var(--accent-2); text-transform:uppercase; margin-bottom:9px;
+}
+.q-text {
+  font-family:'Baloo 2',cursive;
+  font-size:23px; font-weight:700; color:#fff;
+  line-height:1.3;
+}
+
+/* ── ANSWER OPTIONS ── */
+.opts { width:100%; max-width:420px; display:flex; flex-direction:column; gap:10px; }
+.opt {
+  display:flex; align-items:center; gap:13px;
+  background:rgba(255,255,255,.07);
+  border:2px solid rgba(255,255,255,.11);
+  border-radius:17px; padding:14px 16px;
+  cursor:pointer; transition:all .16s;
+}
+.opt:active { transform:scale(.98); }
+.opt.selected {
+  background:rgba(168,85,247,.24);
+  border-color:var(--accent);
+  box-shadow:0 0 18px rgba(168,85,247,.3);
+}
+.opt.locked { pointer-events:none; opacity:.55; }
+.opt-name { font-size:17px; font-weight:800; color:#fff; flex:1; text-align:left; }
+.opt-check {
+  width:24px; height:24px; border-radius:50%;
+  border:2px solid rgba(255,255,255,.25);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:#fff; flex-shrink:0;
+}
+.opt.selected .opt-check {
+  background:var(--accent); border-color:var(--accent);
+}
+
+.answered-note {
+  width:100%; max-width:420px;
+  text-align:center; font-size:14px; font-weight:700;
+  color:var(--accent-2); margin-top:20px;
+  background:rgba(168,85,247,.1);
+  border:1px solid rgba(168,85,247,.22);
+  border-radius:15px; padding:14px;
+}
+
+/* ── REVEAL ── */
+.reveal-banner {
+  width:100%; max-width:420px;
+  border-radius:22px; padding:22px;
+  text-align:center; margin-bottom:18px;
+  animation:popIn .45s cubic-bezier(.34,1.5,.64,1);
+}
+.reveal-banner.hit {
+  background:linear-gradient(150deg,rgba(74,222,128,.26),rgba(74,222,128,.08));
+  border:2px solid rgba(74,222,128,.5);
+}
+.reveal-banner.miss {
+  background:linear-gradient(150deg,rgba(248,113,113,.2),rgba(248,113,113,.06));
+  border:2px solid rgba(248,113,113,.35);
+}
+.reveal-icon { font-size:44px; line-height:1; margin-bottom:8px; }
+.reveal-title {
+  font-family:'Baloo 2',cursive; font-size:24px; font-weight:800;
+  color:#fff; margin-bottom:4px;
+}
+.reveal-sub { font-size:14px; font-weight:700; color:rgba(255,255,255,.65); }
+
+.votes { width:100%; max-width:420px; display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.vote-row {
+  display:flex; align-items:center; gap:11px;
+  background:rgba(255,255,255,.05);
+  border-radius:14px; padding:11px 14px;
+}
+.vote-from { font-size:14px; font-weight:800; color:rgba(255,255,255,.55); }
+.vote-arrow { color:rgba(255,255,255,.3); font-size:13px; }
+.vote-to { font-size:15px; font-weight:800; color:var(--gold); flex:1; }
+
+/* ── END SCREEN ── */
+.end-icon { font-size:76px; line-height:1; margin-bottom:14px; text-align:center; }
+.end-title {
+  font-family:'Baloo 2',cursive; font-size:32px; font-weight:800;
+  text-align:center; margin-bottom:8px; line-height:1.15;
+}
+.end-title.win { color:var(--green); }
+.end-title.lose { color:var(--red); }
+.end-stats {
+  width:100%; max-width:340px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px; padding:18px 20px; margin:22px 0;
+}
+.end-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 0; border-bottom:1px solid rgba(255,255,255,.07);
+}
+.end-row:last-child { border-bottom:none; }
+.end-row-lbl { font-size:14px; font-weight:700; color:rgba(255,255,255,.55); }
+.end-row-val { font-family:'Baloo 2',cursive; font-size:20px; font-weight:800; color:#fff; }
+
+/* ── TOAST ── */
+#toast {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:rgba(20,10,40,.96); border:1px solid rgba(255,255,255,.16);
+  border-radius:50px; padding:12px 24px;
+  font-size:14px; font-weight:700; color:#fff;
+  z-index:999; opacity:0; transition:all .3s cubic-bezier(.34,1.4,.64,1);
+  pointer-events:none; white-space:nowrap;
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── LOADER ── */
+.loader {
+  width:34px; height:34px; margin:22px auto;
+  border:3px solid rgba(255,255,255,.14);
+  border-top-color:var(--accent);
+  border-radius:50%; animation:spin .8s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.setup-note {
+  width:100%; max-width:400px;
+  background:rgba(251,191,36,.1);
+  border:1px solid rgba(251,191,36,.3);
+  border-radius:16px; padding:16px 18px;
+  font-size:13px; line-height:1.6; color:rgba(255,255,255,.8);
+  margin-top:20px;
+}
+.setup-note b { color:var(--gold); }
+.setup-note code {
+  background:rgba(0,0,0,.35); padding:1px 6px; border-radius:5px;
+  font-size:12px; color:var(--cyan);
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="screen active" id="scr-home">
+  <div class="game-logo"><span class="l1">Who's</span> <span class="l2">That?</span></div>
+  <div class="logo-sub">How well do you know each other?</div>
+
+  <div class="btn-stack">
+    <button class="btn btn-primary" onclick="go('scr-create')">Create Game</button>
+    <button class="btn btn-ghost" onclick="go('scr-join')">Join Game</button>
+  </div>
+</div>
+
+<!-- ══════════ CREATE ══════════ -->
+<div class="screen" id="scr-create">
+  <div class="scr-title">Create Game</div>
+  <div class="scr-sub">Set it up, then share the code</div>
+
+  <div class="form-card">
+    <div class="field">
+      <label for="in-group">Group Name</label>
+      <input type="text" id="in-group" placeholder="The Chai Gang" maxlength="24" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="in-host">Your Name</label>
+      <input type="text" id="in-host" placeholder="Your name" maxlength="16" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="in-qcount">Number of Questions</label>
+      <select id="in-qcount">
+        <option value="5">5 questions</option>
+        <option value="10" selected>10 questions</option>
+        <option value="15">15 questions</option>
+        <option value="20">20 questions</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="in-target">Target Score</label>
+      <select id="in-target">
+        <option value="3">3 unanimous answers</option>
+        <option value="5" selected>5 unanimous answers</option>
+        <option value="7">7 unanimous answers</option>
+        <option value="10">10 unanimous answers</option>
+      </select>
+      <div class="field-hint">Reach this many matching answers to win</div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="createGame()">Create Game</button>
+  <div class="link-back" onclick="go('scr-home')">← Back</div>
+</div>
+
+<!-- ══════════ JOIN ══════════ -->
+<div class="screen" id="scr-join">
+  <div class="scr-title">Join Game</div>
+  <div class="scr-sub">Enter the code your host shared</div>
+
+  <div class="form-card">
+    <div class="field">
+      <label for="in-code">Game Code</label>
+      <input type="text" id="in-code" class="code-input" placeholder="ABCD" maxlength="4" autocomplete="off" autocapitalize="characters">
+    </div>
+    <div class="field">
+      <label for="in-name">Your Name</label>
+      <input type="text" id="in-name" placeholder="Your name" maxlength="16" autocomplete="off">
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="joinGame()">Join Game</button>
+  <div class="link-back" onclick="go('scr-home')">← Back</div>
+</div>
+
+<!-- ══════════ LOBBY ══════════ -->
+<div class="screen" id="scr-lobby">
+  <div class="scr-title" id="lobby-group">Lobby</div>
+  <div class="scr-sub" id="lobby-sub">Share this code with your group</div>
+
+  <div class="code-box" id="code-box">
+    <div class="code-label">Game Code</div>
+    <div class="code-value" id="code-value">----</div>
+    <div class="code-actions">
+      <button class="code-btn" onclick="copyCode()">📋 Copy</button>
+      <button class="code-btn" onclick="shareCode()">📤 Share</button>
+    </div>
+  </div>
+
+  <div class="players-box">
+    <div class="players-head">
+      <div class="players-head-title">Players</div>
+      <div class="players-count" id="lobby-count">0</div>
+    </div>
+    <div id="lobby-players"></div>
+    <div class="waiting-msg" id="lobby-wait">Waiting for players<span class="dots"></span></div>
+  </div>
+
+  <button class="btn btn-gold" id="btn-start" onclick="startGame()" disabled>Start Game</button>
+  <div class="link-back" onclick="leaveGame()">← Leave</div>
+</div>
+
+<!-- ══════════ QUESTION ══════════ -->
+<div class="screen" id="scr-question">
+  <div class="game-top">
+    <div class="stat-pill">
+      <div class="stat-val gold" id="st-score">0 / 5</div>
+      <div class="stat-lbl">Score</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-val" id="st-remaining">10</div>
+      <div class="stat-lbl">Remaining</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-val" id="st-answered">0/3</div>
+      <div class="stat-lbl">Answered</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num" id="q-num">Question 1</div>
+    <div class="q-text" id="q-text">Loading…</div>
+  </div>
+
+  <div class="opts" id="q-opts"></div>
+  <div class="answered-note" id="q-note" style="display:none">
+    Answer locked in — waiting for everyone else<span class="dots"></span>
+  </div>
+</div>
+
+<!-- ══════════ REVEAL ══════════ -->
+<div class="screen" id="scr-reveal">
+  <div class="reveal-banner" id="rev-banner">
+    <div class="reveal-icon" id="rev-icon">🎯</div>
+    <div class="reveal-title" id="rev-title">Unanimous!</div>
+    <div class="reveal-sub" id="rev-sub">+1 point</div>
+  </div>
+
+  <div class="votes" id="rev-votes"></div>
+
+  <div class="game-top" style="max-width:420px">
+    <div class="stat-pill">
+      <div class="stat-val gold" id="rev-score">0 / 5</div>
+      <div class="stat-lbl">Score</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-val" id="rev-remaining">9</div>
+      <div class="stat-lbl">Remaining</div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="btn-next-q" onclick="nextQuestion()">Next Question →</button>
+  <div class="waiting-msg" id="rev-wait" style="display:none">
+    Waiting for the host<span class="dots"></span>
+  </div>
+</div>
+
+<!-- ══════════ END ══════════ -->
+<div class="screen" id="scr-end">
+  <div style="margin:auto 0">
+    <div class="end-icon" id="end-icon">🎉</div>
+    <div class="end-title win" id="end-title">Your team wins!</div>
+    <div class="scr-sub" id="end-sub" style="margin-bottom:0">Well played</div>
+
+    <div class="end-stats">
+      <div class="end-row">
+        <div class="end-row-lbl">Final Score</div>
+        <div class="end-row-val" id="end-score">5</div>
+      </div>
+      <div class="end-row">
+        <div class="end-row-lbl">Target Score</div>
+        <div class="end-row-val" id="end-target">5</div>
+      </div>
+      <div class="end-row">
+        <div class="end-row-lbl">Total Questions</div>
+        <div class="end-row-val" id="end-total">10</div>
+      </div>
+      <div class="end-row">
+        <div class="end-row-lbl">Unanimous Answers</div>
+        <div class="end-row-val" id="end-unanimous">5</div>
+      </div>
+    </div>
+
+    <div class="btn-stack">
+      <button class="btn btn-primary" onclick="playAgain()">🔄 Play Again</button>
+      <button class="btn btn-ghost" onclick="leaveGame()">🏠 Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CONFIG NEEDED ══════════ -->
+<div class="screen" id="scr-setup">
+  <div class="scr-title">⚙️ Setup Needed</div>
+  <div class="scr-sub">Firebase isn't configured yet</div>
+  <div class="setup-note">
+    This game needs a free Firebase Realtime Database to sync players across phones.<br><br>
+    <b>Steps:</b><br>
+    1. Go to <code>console.firebase.google.com</code><br>
+    2. Create a project (free)<br>
+    3. Add a <b>Realtime Database</b> → start in <b>test mode</b><br>
+    4. Project Settings → Web app → copy the config<br>
+    5. Paste it into <code>FIREBASE_CONFIG</code> near the top of the script in this file<br><br>
+    Everything else already works — this is the only step left.
+  </div>
+  <div class="link-back" onclick="go('scr-home')">← Back</div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"
+        onerror="loadFallbackSDK('app')"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"
+        onerror="loadFallbackSDK('database')"></script>
+<script>
+// If gstatic is blocked, try jsDelivr as a backup CDN
+window.__sdkFallbackTried = { app:false, database:false };
+function loadFallbackSDK(which) {
+  if (window.__sdkFallbackTried[which]) return;
+  window.__sdkFallbackTried[which] = true;
+  const s = document.createElement('script');
+  s.src = which === 'app'
+    ? 'https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.js'
+    : 'https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.js';
+  s.async = false;
+  document.head.appendChild(s);
+}
+</script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  FIREBASE CONFIG — paste your own config object here
+// ═══════════════════════════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDcVztmot4ljQ0mKq3vdt0Tga6bUj6CSEM",
+  authDomain: "whosthat-f2c0c.firebaseapp.com",
+  databaseURL: "https://whosthat-f2c0c-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "whosthat-f2c0c",
+  storageBucket: "whosthat-f2c0c.firebasestorage.app",
+  messagingSenderId: "968255281698",
+  appId: "1:968255281698:web:e0fbaece982c31653b487b"
+};
+
+const CONFIGURED = !!FIREBASE_CONFIG.databaseURL;
+
+// ═══════════════════════════════════════════════════════════════
+//  QUESTION BANK
+// ═══════════════════════════════════════════════════════════════
+const QUESTIONS = [
+  "Who will become the first millionaire in this group?",
+  "Who is the most annoying person here?",
+  "Who can keep a secret the best?",
+  "Who is most likely to survive a zombie apocalypse?",
+  "Who is always late?",
+  "Who gives the best advice?",
+  "Who would forget their own birthday?",
+  "Who is most likely to become famous?",
+  "Who tells the worst jokes?",
+  "Who would you call at 3am in an emergency?",
+  "Who spends the most time on their phone?",
+  "Who is the biggest foodie?",
+  "Who would win a dance-off?",
+  "Who is most likely to move abroad?",
+  "Who takes the best photos?",
+  "Who is the worst driver?",
+  "Who would survive the longest without WiFi?",
+  "Who is most likely to start a business?",
+  "Who cries during movies?",
+  "Who is the group's biggest gossip?",
+  "Who would win at a trivia night?",
+  "Who is most likely to adopt ten pets?",
+  "Who has the messiest room?",
+  "Who is the best cook?",
+  "Who would get lost in their own city?",
+  "Who is most likely to become a teacher?",
+  "Who sings the loudest in the car?",
+  "Who is the most competitive?",
+  "Who would spend their whole salary in one day?",
+  "Who is the most organised?"
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+const AVATAR_COLORS = ['#a855f7','#22d3ee','#fbbf24','#4ade80','#ec4899','#f87171','#818cf8','#fb923c','#2dd4bf','#c084fc'];
+
+let db = null, gameRef = null, unsub = null;
+let myId = null, myName = '', isHost = false, currentCode = '';
+let gameState = null, lastPhase = '', lastQIndex = -1;
+
+// ═══════════════════════════════════════════════════════════════
+//  FIREBASE INIT — uses the compat SDK loaded via <script src>
+//  (dynamic import() is blocked in some in-app / sandboxed browsers)
+// ═══════════════════════════════════════════════════════════════
+let fb = {};
+let fbReady = false;
+let fbWaiting = null;
+
+function buildWrapper() {
+  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  db = firebase.database();
+  fb = {
+    ref:    (_db, path) => db.ref(path),
+    set:    (ref, val)  => ref.set(val),
+    update: (ref, val)  => ref.update(val),
+    get:    (ref)       => ref.once('value'),
+    remove: (ref)       => ref.remove(),
+    onValue: (ref, cb)  => {
+      const handler = ref.on('value', cb);
+      return () => ref.off('value', handler);
+    }
+  };
+  fbReady = true;
+}
+
+function initFirebase() {
+  if (fbReady) return true;
+  if (!CONFIGURED) return false;
+  if (typeof firebase === 'undefined' || !firebase.database) return false;
+  try {
+    buildWrapper();
+    return true;
+  } catch (err) {
+    console.error('Firebase init failed', err);
+    return false;
+  }
+}
+
+// Poll for the SDK — handles slow networks and fallback CDN loads
+function waitForFirebase(timeoutMs = 9000) {
+  if (fbReady) return Promise.resolve(true);
+  if (fbWaiting) return fbWaiting;
+  fbWaiting = new Promise(resolve => {
+    const started = Date.now();
+    (function poll() {
+      if (initFirebase()) { resolve(true); return; }
+      if (Date.now() - started > timeoutMs) { resolve(false); return; }
+      setTimeout(poll, 220);
+    })();
+  });
+  return fbWaiting;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+window.go = go;
+
+function toast(msg, ms = 2200) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), ms);
+}
+
+function makeCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c = '';
+  for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
+  return c;
+}
+
+function makeId() {
+  return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function avatarColor(id) {
+  let sum = 0;
+  for (const ch of String(id)) sum += ch.charCodeAt(0);
+  return AVATAR_COLORS[sum % AVATAR_COLORS.length];
+}
+
+function playersArray(state) {
+  if (!state || !state.players) return [];
+  return Object.entries(state.players)
+    .map(([id, p]) => ({ id, ...p }))
+    .sort((a, b) => (a.joinedAt || 0) - (b.joinedAt || 0));
+}
+
+async function ensureReady() {
+  if (!CONFIGURED) { go('scr-setup'); return false; }
+  if (fbReady) return true;
+  toast('Connecting…', 1200);
+  const ok = await waitForFirebase();
+  if (!ok) {
+    toast('Could not reach Firebase — check your internet', 3200);
+    return false;
+  }
+  return true;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CREATE GAME
+// ═══════════════════════════════════════════════════════════════
+window.createGame = async function () {
+  if (!(await ensureReady())) return;
+
+  const group = document.getElementById('in-group').value.trim();
+  const host  = document.getElementById('in-host').value.trim();
+  const qCount = parseInt(document.getElementById('in-qcount').value, 10);
+  const target = parseInt(document.getElementById('in-target').value, 10);
+
+  if (!group) { toast('Enter a group name'); return; }
+  if (!host)  { toast('Enter your name'); return; }
+  if (target > qCount) { toast('Target can\'t exceed question count'); return; }
+
+  myId = makeId();
+  myName = host;
+  isHost = true;
+  currentCode = makeCode();
+
+  const questions = shuffle(QUESTIONS).slice(0, qCount);
+
+  const initial = {
+    group, qCount, target, questions,
+    phase: 'lobby',
+    qIndex: 0,
+    score: 0,
+    hostId: myId,
+    createdAt: Date.now(),
+    players: {
+      [myId]: { name: host, isHost: true, joinedAt: Date.now() }
+    },
+    answers: {}
+  };
+
+  try {
+    gameRef = fb.ref(db, 'whosthat/' + currentCode);
+    await fb.set(gameRef, initial);
+    attachListener();
+    go('scr-lobby');
+  } catch (err) {
+    console.error(err);
+    toast('Could not create game — check connection');
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  JOIN GAME
+// ═══════════════════════════════════════════════════════════════
+window.joinGame = async function () {
+  if (!(await ensureReady())) return;
+
+  const code = document.getElementById('in-code').value.trim().toUpperCase();
+  const name = document.getElementById('in-name').value.trim();
+
+  if (code.length !== 4) { toast('Enter the 4-letter code'); return; }
+  if (!name) { toast('Enter your name'); return; }
+
+  try {
+    const ref = fb.ref(db, 'whosthat/' + code);
+    const snap = await fb.get(ref);
+    if (!snap.exists()) { toast('No game found with that code'); return; }
+
+    const state = snap.val();
+    if (state.phase !== 'lobby') { toast('That game has already started'); return; }
+
+    myId = makeId();
+    myName = name;
+    isHost = false;
+    currentCode = code;
+    gameRef = ref;
+
+    await fb.set(fb.ref(db, `whosthat/${code}/players/${myId}`), {
+      name, isHost: false, joinedAt: Date.now()
+    });
+
+    attachListener();
+    go('scr-lobby');
+  } catch (err) {
+    console.error(err);
+    toast('Could not join — check connection');
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  REALTIME LISTENER
+// ═══════════════════════════════════════════════════════════════
+function attachListener() {
+  if (unsub) unsub();
+  unsub = fb.onValue(gameRef, snap => {
+    if (!snap.exists()) {
+      toast('Game ended by host');
+      cleanup();
+      go('scr-home');
+      return;
+    }
+    gameState = snap.val();
+    render();
+  });
+}
+
+function cleanup() {
+  if (unsub) { unsub(); unsub = null; }
+  gameRef = null; gameState = null;
+  myId = null; isHost = false; currentCode = '';
+  lastPhase = ''; lastQIndex = -1;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER — drives every screen from shared state
+// ═══════════════════════════════════════════════════════════════
+function render() {
+  if (!gameState) return;
+  const s = gameState;
+  const players = playersArray(s);
+
+  if (s.phase === 'lobby') {
+    renderLobby(s, players);
+    if (lastPhase !== 'lobby') go('scr-lobby');
+  }
+  else if (s.phase === 'question') {
+    renderQuestion(s, players);
+    if (lastPhase !== 'question' || lastQIndex !== s.qIndex) go('scr-question');
+  }
+  else if (s.phase === 'reveal') {
+    renderReveal(s, players);
+    if (lastPhase !== 'reveal' || lastQIndex !== s.qIndex) go('scr-reveal');
+  }
+  else if (s.phase === 'end') {
+    renderEnd(s);
+    if (lastPhase !== 'end') go('scr-end');
+  }
+
+  lastPhase = s.phase;
+  lastQIndex = s.qIndex;
+}
+
+// ── LOBBY ──
+function renderLobby(s, players) {
+  document.getElementById('lobby-group').textContent = s.group || 'Lobby';
+  document.getElementById('code-value').textContent = currentCode;
+  document.getElementById('lobby-count').textContent = players.length;
+
+  const list = document.getElementById('lobby-players');
+  list.innerHTML = players.map(p => `
+    <div class="player-chip">
+      <div class="player-avatar" style="background:${avatarColor(p.id)}">${escapeHtml(p.name.charAt(0).toUpperCase())}</div>
+      <div class="player-name">${escapeHtml(p.name)}${p.id === myId ? ' (you)' : ''}</div>
+      ${p.isHost ? '<div class="player-tag">Host</div>' : ''}
+    </div>
+  `).join('');
+
+  const enough = players.length >= 3;
+  const wait = document.getElementById('lobby-wait');
+  const btn = document.getElementById('btn-start');
+
+  if (isHost) {
+    btn.style.display = 'block';
+    btn.disabled = !enough;
+    btn.textContent = enough ? 'Start Game' : `Need ${3 - players.length} more player${3 - players.length === 1 ? '' : 's'}`;
+    wait.style.display = enough ? 'none' : 'block';
+    wait.innerHTML = 'Waiting for players<span class="dots"></span>';
+    document.getElementById('lobby-sub').textContent = 'Share this code with your group';
+  } else {
+    btn.style.display = 'none';
+    wait.style.display = 'block';
+    wait.innerHTML = 'Waiting for the game to begin<span class="dots"></span><br><span style="font-size:13px;opacity:.75">The game creator will start the game shortly.</span>';
+    document.getElementById('lobby-sub').textContent = 'You\'re in! Sit tight.';
+  }
+}
+
+// ── QUESTION ──
+function renderQuestion(s, players) {
+  const answers = s.answers || {};
+  const answeredCount = Object.keys(answers).length;
+  const myAnswer = answers[myId];
+
+  document.getElementById('st-score').textContent = `${s.score} / ${s.target}`;
+  document.getElementById('st-remaining').textContent = s.qCount - s.qIndex;
+  document.getElementById('st-answered').textContent = `${answeredCount}/${players.length}`;
+  document.getElementById('q-num').textContent = `Question ${s.qIndex + 1} of ${s.qCount}`;
+  document.getElementById('q-text').textContent = s.questions[s.qIndex];
+
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = players.map(p => `
+    <div class="opt ${myAnswer === p.id ? 'selected' : ''} ${myAnswer ? 'locked' : ''}"
+         onclick="submitAnswer('${p.id}')">
+      <div class="player-avatar" style="background:${avatarColor(p.id)}">${escapeHtml(p.name.charAt(0).toUpperCase())}</div>
+      <div class="opt-name">${escapeHtml(p.name)}${p.id === myId ? ' (you)' : ''}</div>
+      <div class="opt-check">${myAnswer === p.id ? '✓' : ''}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('q-note').style.display = myAnswer ? 'block' : 'none';
+
+  // Host advances to reveal once everyone has answered
+  if (isHost && answeredCount === players.length && players.length >= 3) {
+    setTimeout(() => resolveRound(), 600);
+  }
+}
+
+window.submitAnswer = async function (targetId) {
+  if (!gameState || gameState.phase !== 'question') return;
+  if ((gameState.answers || {})[myId]) return;
+  try {
+    await fb.set(fb.ref(db, `whosthat/${currentCode}/answers/${myId}`), targetId);
+  } catch (err) {
+    toast('Could not send answer');
+  }
+};
+
+// ── RESOLVE (host only) ──
+async function resolveRound() {
+  const s = gameState;
+  if (!s || s.phase !== 'question') return;
+
+  const players = playersArray(s);
+  const answers = s.answers || {};
+  if (Object.keys(answers).length < players.length) return;
+
+  const values = Object.values(answers);
+  const unanimous = values.every(v => v === values[0]);
+  const newScore = s.score + (unanimous ? 1 : 0);
+
+  try {
+    await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
+      phase: 'reveal',
+      score: newScore,
+      lastUnanimous: unanimous,
+      lastPickedId: unanimous ? values[0] : null
+    });
+  } catch (err) { console.error(err); }
+}
+
+// ── REVEAL ──
+function renderReveal(s, players) {
+  const nameOf = id => {
+    const p = players.find(x => x.id === id);
+    return p ? p.name : '—';
+  };
+
+  const banner = document.getElementById('rev-banner');
+  const unanimous = !!s.lastUnanimous;
+
+  banner.className = 'reveal-banner ' + (unanimous ? 'hit' : 'miss');
+  document.getElementById('rev-icon').textContent = unanimous ? '🎯' : '🤷';
+  document.getElementById('rev-title').textContent = unanimous ? 'Unanimous!' : 'Not quite!';
+  document.getElementById('rev-sub').textContent = unanimous
+    ? `Everyone picked ${nameOf(s.lastPickedId)} — +1 point`
+    : 'No point this round';
+
+  const answers = s.answers || {};
+  document.getElementById('rev-votes').innerHTML = players.map(p => `
+    <div class="vote-row">
+      <div class="player-avatar" style="background:${avatarColor(p.id)};width:28px;height:28px;font-size:13px">${escapeHtml(p.name.charAt(0).toUpperCase())}</div>
+      <div class="vote-from">${escapeHtml(p.name)}</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to">${escapeHtml(nameOf(answers[p.id]))}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('rev-score').textContent = `${s.score} / ${s.target}`;
+  document.getElementById('rev-remaining').textContent = s.qCount - s.qIndex - 1;
+
+  const btn = document.getElementById('btn-next-q');
+  const wait = document.getElementById('rev-wait');
+  const isLast = s.qIndex + 1 >= s.qCount;
+  const reachedTarget = s.score >= s.target;
+
+  if (isHost) {
+    btn.style.display = 'block';
+    wait.style.display = 'none';
+    btn.textContent = (reachedTarget || isLast) ? 'See Results →' : 'Next Question →';
+  } else {
+    btn.style.display = 'none';
+    wait.style.display = 'block';
+  }
+}
+
+window.nextQuestion = async function () {
+  const s = gameState;
+  if (!s || !isHost) return;
+
+  const isLast = s.qIndex + 1 >= s.qCount;
+  const reachedTarget = s.score >= s.target;
+
+  try {
+    if (reachedTarget || isLast) {
+      await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
+        phase: 'end',
+        won: reachedTarget
+      });
+    } else {
+      await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
+        phase: 'question',
+        qIndex: s.qIndex + 1,
+        answers: {}
+      });
+    }
+  } catch (err) { console.error(err); }
+};
+
+// ── END ──
+function renderEnd(s) {
+  const won = !!s.won;
+  document.getElementById('end-icon').textContent = won ? '🎉' : '😢';
+  const title = document.getElementById('end-title');
+  title.textContent = won ? 'Congratulations! Your team wins!' : 'Better luck next time!';
+  title.className = 'end-title ' + (won ? 'win' : 'lose');
+  document.getElementById('end-sub').textContent = won
+    ? `${s.group} nailed it`
+    : `${s.group} gave it a good shot`;
+
+  document.getElementById('end-score').textContent = s.score;
+  document.getElementById('end-target').textContent = s.target;
+  document.getElementById('end-total').textContent = s.qIndex + 1;
+  document.getElementById('end-unanimous').textContent = s.score;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HOST ACTIONS
+// ═══════════════════════════════════════════════════════════════
+window.startGame = async function () {
+  if (!isHost || !gameState) return;
+  const players = playersArray(gameState);
+  if (players.length < 3) { toast('Need at least 3 players'); return; }
+  try {
+    await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
+      phase: 'question', qIndex: 0, score: 0, answers: {}
+    });
+  } catch (err) { toast('Could not start'); }
+};
+
+window.playAgain = async function () {
+  if (!gameState) return;
+  if (!isHost) { toast('Only the host can restart'); return; }
+  const fresh = shuffle(QUESTIONS).slice(0, gameState.qCount);
+  try {
+    await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
+      phase: 'lobby', qIndex: 0, score: 0, answers: {},
+      questions: fresh, won: null, lastUnanimous: null, lastPickedId: null
+    });
+  } catch (err) { toast('Could not restart'); }
+};
+
+window.leaveGame = async function () {
+  try {
+    if (gameRef && myId) {
+      if (isHost) {
+        await fb.remove(gameRef);
+      } else {
+        await fb.remove(fb.ref(db, `whosthat/${currentCode}/players/${myId}`));
+      }
+    }
+  } catch (err) { /* ignore */ }
+  cleanup();
+  go('scr-home');
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  SHARE / COPY
+// ═══════════════════════════════════════════════════════════════
+window.copyCode = async function () {
+  try {
+    await navigator.clipboard.writeText(currentCode);
+    toast('Code copied!');
+  } catch {
+    toast('Code: ' + currentCode);
+  }
+};
+
+window.shareCode = async function () {
+  const text = `Join my "Who's That?" game! Code: ${currentCode}\n${location.href}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: "Who's That?", text }); }
+    catch { /* cancelled */ }
+  } else {
+    try { await navigator.clipboard.writeText(text); toast('Invite copied!'); }
+    catch { toast('Code: ' + currentCode); }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  MISC
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+}
+
+// Auto-uppercase the code field
+document.getElementById('in-code').addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+});
+
+// Warn before closing mid-game
+window.addEventListener('beforeunload', e => {
+  if (gameRef && gameState && gameState.phase !== 'lobby') {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+// Start connecting as soon as the page is ready
+if (CONFIGURED) {
+  waitForFirebase().then(ok => {
+    if (!ok) console.warn('Firebase SDK unavailable — check network or CDN access.');
+  });
+} else {
+  console.warn("Who's That?: Firebase not configured — see the Setup screen.");
+}
+</script>
+
+</body>
+</html>
