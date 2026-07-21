@@ -350,6 +350,7 @@ body {
 .end-title.lose { color:var(--red); }
 .end-stats {
   width:100%; max-width:340px;
+  margin-left:auto; margin-right:auto;
   background:rgba(255,255,255,.055);
   border:1px solid rgba(255,255,255,.1);
   border-radius:20px; padding:18px 20px; margin:22px 0;
@@ -392,6 +393,15 @@ body {
   font-size:15px; font-weight:800; cursor:pointer; flex-shrink:0;
 }
 .g-help:active { background:rgba(255,255,255,.22); }
+.hdr-right { display:flex; align-items:center; gap:7px; }
+.g-lang {
+  min-width:42px; height:30px; border-radius:50px;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.85); font-family:'Nunito Sans',sans-serif;
+  font-size:12px; font-weight:800; cursor:pointer; padding:0 10px;
+  letter-spacing:.5px;
+}
+.g-lang:active { background:rgba(255,255,255,.22); }
 .g-logo {
   font-family:'Baloo 2',cursive; font-size:19px; font-weight:800;
   color:#fff; letter-spacing:.2px; white-space:nowrap;
@@ -485,6 +495,33 @@ body {
   margin-top:auto;
 }
 
+
+/* ══ CONFETTI ══ */
+#confetti {
+  position:fixed; inset:0; pointer-events:none; z-index:600;
+  display:none;
+}
+#confetti.on { display:block; }
+
+/* ══ ANSWERED TICK ══ */
+.opt-tick {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--green); color:#052e16;
+  font-size:12px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; animation:popIn .3s cubic-bezier(.34,1.5,.64,1);
+}
+.opt-tick-slot { width:22px; flex-shrink:0; }
+.reveal-sub.plus { color:var(--green); font-weight:800; }
+
+
+.end-wrap {
+  margin:auto 0; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.end-wrap .scr-sub { margin-bottom:0; }
+
 /* ── TOAST ── */
 #toast {
   position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px);
@@ -529,11 +566,10 @@ body {
     <div class="hdr-left">
       <button class="g-back" onclick="exitToSite()">✕ Exit</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">WHO'S <span>THAT?</span></div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
@@ -541,11 +577,11 @@ body {
     <div class="home-art">🕵️</div>
     <div>
       <div class="game-logo"><span class="l1">Who's</span> <span class="l2">That?</span></div>
-      <div class="logo-sub">How well do you know each other?</div>
+      <div class="logo-sub" id="home-tagline">How well do you know each other?</div>
     </div>
     <div class="btn-stack">
-      <button class="btn btn-primary" onclick="go('scr-create')">Create Game</button>
-      <button class="btn btn-ghost" onclick="go('scr-join')">Join Game</button>
+      <button class="btn btn-primary" id="btn-create" onclick="goCreate()">Create Game</button>
+      <button class="btn btn-ghost" id="btn-join" onclick="goJoin()">Join Game</button>
     </div>
   </div>
 </div>
@@ -554,20 +590,20 @@ body {
 <div class="screen" id="scr-create">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="go('scr-home')">← Back</button>
+      <button class="g-back" data-kind="back" onclick="go('scr-home')">← Back</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">CREATE <span>GAME</span></div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
   <div class="scr-body">
+    <div class="scr-title" id="t-create">Create Game</div>
     <div class="form-card">
       <div class="field">
-        <label for="in-qcount">Number of Questions</label>
+        <label for="in-qcount" id="l-qcount">Number of Questions</label>
         <select id="in-qcount" onchange="syncTargetMax()">
           <option value="5">5 questions</option>
           <option value="10" selected>10 questions</option>
@@ -577,7 +613,7 @@ body {
       </div>
 
       <div class="field">
-        <label for="in-target">Target Score</label>
+        <label for="in-target" id="l-target">Target Score</label>
         <div class="stepper">
           <button class="step-btn" onclick="bumpTarget(-1)" aria-label="Decrease">−</button>
           <input type="number" id="in-target" class="step-input" value="5" min="1" max="10"
@@ -588,12 +624,12 @@ body {
       </div>
 
       <div class="field">
-        <label for="in-host">Your Name</label>
+        <label for="in-host" id="l-host">Your Name</label>
         <input type="text" id="in-host" placeholder="Your name" maxlength="16" autocomplete="off">
       </div>
     </div>
 
-    <button class="btn btn-primary" onclick="createGame()">Create Game</button>
+    <button class="btn btn-primary" id="btn-create-go" onclick="createGame()">Create Game</button>
   </div>
 </div>
 
@@ -601,29 +637,29 @@ body {
 <div class="screen" id="scr-join">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="go('scr-home')">← Back</button>
+      <button class="g-back" data-kind="back" onclick="go('scr-home')">← Back</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">JOIN <span>GAME</span></div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
   <div class="scr-body">
-    <div class="scr-sub">Enter the code your host shared</div>
+    <div class="scr-title" id="t-join">Join Game</div>
+    <div class="scr-sub" id="s-join">Enter the code your host shared</div>
     <div class="form-card">
       <div class="field">
-        <label for="in-code">Game Code</label>
+        <label for="in-code" id="l-code">Game Code</label>
         <input type="text" id="in-code" class="code-input" placeholder="ABCD" maxlength="4" autocomplete="off" autocapitalize="characters">
       </div>
       <div class="field">
-        <label for="in-name">Your Name</label>
+        <label for="in-name" id="l-name">Your Name</label>
         <input type="text" id="in-name" placeholder="Your name" maxlength="16" autocomplete="off">
       </div>
     </div>
-    <button class="btn btn-primary" onclick="joinGame()">Join Game</button>
+    <button class="btn btn-primary" id="btn-join-go" onclick="joinGame()">Join Game</button>
   </div>
 </div>
 
@@ -633,26 +669,25 @@ body {
     <div class="hdr-left">
       <button class="g-back" onclick="leaveGame()">✕ Exit</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo" id="lobby-title">LOBBY</div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
   <div class="lobby-scroll">
     <div class="code-box" id="code-box">
-      <div class="code-label">Game Code</div>
+      <div class="code-label" id="code-label">Game Code</div>
       <div class="code-value" id="code-value">----</div>
       <div class="code-actions">
-        <button class="code-btn" onclick="copyCode()">📋 Copy Code</button>
+        <button class="code-btn" id="btn-copy" onclick="copyCode()">📋 Copy Code</button>
       </div>
     </div>
 
     <div class="players-box">
       <div class="players-head">
-        <div class="players-head-title">Players</div>
+        <div class="players-head-title" id="players-title">Players</div>
         <div class="players-count" id="lobby-count">0</div>
       </div>
       <div id="lobby-players"></div>
@@ -671,26 +706,21 @@ body {
     <div class="hdr-left">
       <button class="g-back" onclick="leaveGame()">✕ Exit</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">WHO'S <span>THAT?</span></div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
   <div class="game-top">
     <div class="stat-pill">
       <div class="stat-val gold" id="st-score">0 / 5</div>
-      <div class="stat-lbl">Score</div>
+      <div class="stat-lbl lbl-score">Score</div>
     </div>
     <div class="stat-pill">
       <div class="stat-val" id="st-remaining">10</div>
-      <div class="stat-lbl">Remaining</div>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-val" id="st-answered">0/3</div>
-      <div class="stat-lbl">Answered</div>
+      <div class="stat-lbl lbl-remaining">Remaining</div>
     </div>
   </div>
 
@@ -711,11 +741,10 @@ body {
     <div class="hdr-left">
       <button class="g-back" onclick="leaveGame()">✕ Exit</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">WHO'S <span>THAT?</span></div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
@@ -730,11 +759,11 @@ body {
   <div class="game-top" style="max-width:420px">
     <div class="stat-pill">
       <div class="stat-val gold" id="rev-score">0 / 5</div>
-      <div class="stat-lbl">Score</div>
+      <div class="stat-lbl lbl-score">Score</div>
     </div>
     <div class="stat-pill">
       <div class="stat-val" id="rev-remaining">9</div>
-      <div class="stat-lbl">Remaining</div>
+      <div class="stat-lbl lbl-remaining">Remaining</div>
     </div>
   </div>
 
@@ -750,41 +779,40 @@ body {
     <div class="hdr-left">
       <button class="g-back" onclick="leaveGame()">✕ Exit</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">WHO'S <span>THAT?</span></div>
-    </div>
+    <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
     </div>
   </div>
 
-  <div style="margin:auto 0;width:100%">
+  <div class="end-wrap">
     <div class="end-icon" id="end-icon">🎉</div>
     <div class="end-title win" id="end-title">Your team wins!</div>
     <div class="scr-sub" id="end-sub" style="margin-bottom:0">Well played</div>
 
     <div class="end-stats">
       <div class="end-row">
-        <div class="end-row-lbl">Final Score</div>
+        <div class="end-row-lbl" id="lbl-final">Final Score</div>
         <div class="end-row-val" id="end-score">5</div>
       </div>
       <div class="end-row">
-        <div class="end-row-lbl">Target Score</div>
+        <div class="end-row-lbl" id="lbl-target">Target Score</div>
         <div class="end-row-val" id="end-target">5</div>
       </div>
       <div class="end-row">
-        <div class="end-row-lbl">Total Questions</div>
+        <div class="end-row-lbl" id="lbl-total">Total Questions</div>
         <div class="end-row-val" id="end-total">10</div>
       </div>
       <div class="end-row">
-        <div class="end-row-lbl">Unanimous Answers</div>
+        <div class="end-row-lbl" id="lbl-unanimous">Unanimous Answers</div>
         <div class="end-row-val" id="end-unanimous">5</div>
       </div>
     </div>
 
     <div class="btn-stack">
-      <button class="btn btn-primary" onclick="playAgain()">🔄 Play Again</button>
-      <button class="btn btn-ghost" onclick="leaveGame()">🏠 Back to Home</button>
+      <button class="btn btn-primary" id="btn-again" onclick="playAgain()">🔄 Play Again</button>
+      <button class="btn btn-ghost" id="btn-home" onclick="leaveGame()">🏠 Back to Home</button>
     </div>
   </div>
 </div>
@@ -793,12 +821,12 @@ body {
 <div class="screen" id="scr-setup">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="go('scr-home')">← Back</button>
+      <button class="g-back" data-kind="back" onclick="go('scr-home')">← Back</button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo">SETUP</div>
+    <div class="hdr-center"></div>
+    <div class="hdr-right">
+      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl-2">EN</span></button>
     </div>
-    <div class="hdr-right"></div>
   </div>
   <div class="scr-body" style="justify-content:flex-start;padding-top:20px">
   <div class="scr-title">⚙️ Setup Needed</div>
@@ -822,41 +850,18 @@ body {
   <div class="how-sheet">
     <div class="how-handle"></div>
     <div class="how-header">
-      <div class="how-title">How to Play</div>
+      <div class="how-title" id="how-title">How to Play</div>
       <button class="how-close" onclick="closeHow()">✕</button>
     </div>
-    <div class="how-step">
-      <div class="step-num">1</div>
-      <div><div class="step-title">Gather Your Group</div>
-      <div class="step-desc">2 to 10 players. One person creates the game and shares the code.</div></div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">2</div>
-      <div><div class="step-title">Everyone Joins</div>
-      <div class="step-desc">Others enter the code and their name to join the lobby.</div></div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">3</div>
-      <div><div class="step-title">Answer Together</div>
-      <div class="step-desc">A question appears — pick the player you think fits best. Nobody sees the answers until everyone has picked.</div></div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">4</div>
-      <div><div class="step-title">Score as a Team</div>
-      <div class="step-desc">If every single player picked the same person, the team earns 1 point.</div></div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">5</div>
-      <div><div class="step-title">Reach the Target</div>
-      <div class="step-desc">Hit your target score before the questions run out and the whole team wins.</div></div>
-    </div>
+    <div id="how-steps"></div>
     <div class="how-goal">
-      <div class="how-goal-title">🎯 Goal of the Game</div>
-      <div class="how-goal-text">This isn't about winning against each other — it's about finding out how well your group thinks alike.</div>
+      <div class="how-goal-title" id="goal-title">🎯 Goal of the Game</div>
+      <div class="how-goal-text" id="goal-text">This isn't about winning against each other — it's about finding out how well your group thinks alike.</div>
     </div>
   </div>
 </div>
 
+<canvas id="confetti"></canvas>
 <div id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"
@@ -897,38 +902,390 @@ const CONFIGURED = !!FIREBASE_CONFIG.databaseURL;
 // ═══════════════════════════════════════════════════════════════
 //  QUESTION BANK
 // ═══════════════════════════════════════════════════════════════
-const QUESTIONS = [
+const QUESTIONS = {
+  en: [
   "Who will become the first millionaire in this group?",
+  "Who is most likely to start their own business?",
+  "Who would spend their whole salary in one day?",
+  "Who is the best at saving money?",
+  "Who would lend you money without asking why?",
+  "Who is most likely to win the lottery and tell nobody?",
+  "Who negotiates the hardest while shopping?",
+  "Who would forget to pay a bill for months?",
   "Who is the most annoying person here?",
   "Who can keep a secret the best?",
-  "Who is most likely to survive a zombie apocalypse?",
-  "Who is always late?",
-  "Who gives the best advice?",
-  "Who would forget their own birthday?",
-  "Who is most likely to become famous?",
-  "Who tells the worst jokes?",
-  "Who would you call at 3am in an emergency?",
-  "Who spends the most time on their phone?",
-  "Who is the biggest foodie?",
-  "Who would win a dance-off?",
-  "Who is most likely to move abroad?",
-  "Who takes the best photos?",
-  "Who is the worst driver?",
-  "Who would survive the longest without WiFi?",
-  "Who is most likely to start a business?",
-  "Who cries during movies?",
   "Who is the group's biggest gossip?",
-  "Who would win at a trivia night?",
-  "Who is most likely to adopt ten pets?",
-  "Who has the messiest room?",
-  "Who is the best cook?",
-  "Who would get lost in their own city?",
-  "Who is most likely to become a teacher?",
-  "Who sings the loudest in the car?",
   "Who is the most competitive?",
-  "Who would spend their whole salary in one day?",
-  "Who is the most organised?"
-];
+  "Who is the most organised?",
+  "Who is the most stubborn?",
+  "Who is the calmest in a crisis?",
+  "Who is the most dramatic?",
+  "Who apologises the most?",
+  "Who is the most patient?",
+  "Who overthinks everything?",
+  "Who is the most spontaneous?",
+  "Who is always late?",
+  "Who spends the most time on their phone?",
+  "Who has the messiest room?",
+  "Who wakes up the earliest?",
+  "Who sleeps the most?",
+  "Who drinks the most chai or coffee?",
+  "Who checks their phone first thing in the morning?",
+  "Who takes the longest to get ready?",
+  "Who leaves messages on read the longest?",
+  "Who has the most unread emails?",
+  "Who gives the best advice?",
+  "Who is the best cook?",
+  "Who takes the best photos?",
+  "Who would win at a trivia night?",
+  "Who would win a dance-off?",
+  "Who sings the loudest in the car?",
+  "Who is best at remembering birthdays?",
+  "Who is the best storyteller?",
+  "Who is the best at keeping plants alive?",
+  "Who could fix something around the house?",
+  "Who is most likely to survive a zombie apocalypse?",
+  "Who would survive the longest without WiFi?",
+  "Who would get lost in their own city?",
+  "Who would panic first in an emergency?",
+  "Who would you want beside you in a horror movie?",
+  "Who would talk their way out of trouble?",
+  "Who would last longest stranded on an island?",
+  "Who would be the first to try alien food?",
+  "Who would you call at 3am in an emergency?",
+  "Who makes friends the fastest?",
+  "Who gives the best hugs?",
+  "Who is the peacemaker of the group?",
+  "Who remembers every detail of old conversations?",
+  "Who is most likely to plan a surprise party?",
+  "Who is the glue that holds this group together?",
+  "Who would cancel plans at the last minute?",
+  "Who texts the most in the group chat?",
+  "Who is most likely to become lifelong friends with everyone here?",
+  "Who tells the worst jokes?",
+  "Who laughs at their own jokes the most?",
+  "Who cries during movies?",
+  "Who has the loudest laugh?",
+  "Who makes the weirdest facial expressions?",
+  "Who talks in their sleep?",
+  "Who is most likely to trip over nothing?",
+  "Who has the most embarrassing story?",
+  "Who is most likely to become famous?",
+  "Who is most likely to move abroad?",
+  "Who is most likely to become a teacher?",
+  "Who will have the most kids?",
+  "Who is most likely to write a book?",
+  "Who is most likely to run a marathon?",
+  "Who is most likely to appear on TV?",
+  "Who is most likely to become a politician?",
+  "Who is most likely to retire early?",
+  "Who is most likely to go viral online?",
+  "Who is the biggest foodie?",
+  "Who is the pickiest eater?",
+  "Who would eat the same meal every day?",
+  "Who orders dessert first?",
+  "Who is most likely to try the spiciest dish?",
+  "Who takes photos of their food?",
+  "Who is most likely to become a vegetarian?",
+  "Who always finishes everyone else's leftovers?",
+  "Who plans the best trips?",
+  "Who would forget their passport at home?",
+  "Who packs the heaviest suitcase?",
+  "Who is most likely to travel solo?",
+  "Who would go bungee jumping first?",
+  "Who takes the most photos on holiday?",
+  "Who would miss their flight?",
+  "Who would adopt ten pets?",
+  "Who is the worst driver?",
+  "Who would forget their own birthday?",
+  "Who is most likely to win an argument?",
+  "Who would survive a week without their phone?",
+  "Who is the most superstitious?",
+  "Who believes in ghosts the most?",
+  "Who would be the last to leave a party?",
+  "Who is most likely to fall asleep in a movie?",
+  "Who has the best taste in music?",
+  "Who is most likely to start a random new hobby?",
+  "Who would be the best team captain?"
+  ],
+  hi: [
+  "इस ग्रुप में सबसे पहले करोड़पति कौन बनेगा?",
+  "अपना खुद का बिज़नेस शुरू करने की सबसे ज़्यादा संभावना किसकी है?",
+  "पूरी सैलरी एक ही दिन में कौन खर्च कर देगा?",
+  "पैसे बचाने में सबसे अच्छा कौन है?",
+  "बिना वजह पूछे आपको पैसे कौन उधार देगा?",
+  "लॉटरी जीतकर किसी को न बताने वाला कौन होगा?",
+  "शॉपिंग में सबसे ज़्यादा मोल-भाव कौन करता है?",
+  "महीनों तक बिल भरना कौन भूल जाएगा?",
+  "यहाँ सबसे ज़्यादा परेशान करने वाला कौन है?",
+  "राज़ सबसे अच्छे से कौन रख सकता है?",
+  "ग्रुप का सबसे बड़ा गॉसिप किंग या क्वीन कौन है?",
+  "सबसे ज़्यादा कॉम्पिटिटिव कौन है?",
+  "सबसे ज़्यादा व्यवस्थित कौन है?",
+  "सबसे ज़्यादा ज़िद्दी कौन है?",
+  "मुश्किल घड़ी में सबसे शांत कौन रहता है?",
+  "सबसे ज़्यादा ड्रामेबाज़ कौन है?",
+  "सबसे ज़्यादा माफ़ी कौन माँगता है?",
+  "सबसे ज़्यादा धैर्य किसमें है?",
+  "हर बात पर ज़्यादा सोचने वाला कौन है?",
+  "सबसे ज़्यादा बेफ़िक्र कौन है?",
+  "हमेशा लेट कौन आता है?",
+  "फ़ोन पर सबसे ज़्यादा समय कौन बिताता है?",
+  "सबसे गंदा कमरा किसका है?",
+  "सबसे जल्दी कौन उठता है?",
+  "सबसे ज़्यादा कौन सोता है?",
+  "सबसे ज़्यादा चाय या कॉफ़ी कौन पीता है?",
+  "सुबह उठते ही फ़ोन कौन देखता है?",
+  "तैयार होने में सबसे ज़्यादा समय कौन लेता है?",
+  "मैसेज पढ़कर सबसे देर से जवाब कौन देता है?",
+  "सबसे ज़्यादा अनरीड ईमेल किसके हैं?",
+  "सबसे अच्छी सलाह कौन देता है?",
+  "सबसे अच्छा खाना कौन बनाता है?",
+  "सबसे अच्छी फ़ोटो कौन खींचता है?",
+  "ट्रिविया नाइट में कौन जीतेगा?",
+  "डांस मुक़ाबले में कौन जीतेगा?",
+  "गाड़ी में सबसे ज़ोर से कौन गाता है?",
+  "जन्मदिन याद रखने में सबसे अच्छा कौन है?",
+  "सबसे अच्छा किस्सा कौन सुनाता है?",
+  "पौधों को ज़िंदा रखने में सबसे अच्छा कौन है?",
+  "घर की टूटी चीज़ कौन ठीक कर सकता है?",
+  "ज़ॉम्बी अपोकैलिप्स में सबसे ज़्यादा कौन बचेगा?",
+  "बिना वाई-फ़ाई सबसे ज़्यादा कौन रह सकता है?",
+  "अपने ही शहर में कौन खो जाएगा?",
+  "इमरजेंसी में सबसे पहले कौन घबराएगा?",
+  "हॉरर फ़िल्म में आप किसे साथ चाहेंगे?",
+  "बातों से मुसीबत से कौन निकल जाएगा?",
+  "सुनसान द्वीप पर सबसे ज़्यादा कौन टिकेगा?",
+  "एलियन का खाना सबसे पहले कौन चखेगा?",
+  "रात 3 बजे इमरजेंसी में आप किसे कॉल करेंगे?",
+  "सबसे जल्दी दोस्त कौन बनाता है?",
+  "सबसे अच्छी झप्पी कौन देता है?",
+  "ग्रुप का शांति दूत कौन है?",
+  "पुरानी बातें हर डिटेल के साथ कौन याद रखता है?",
+  "सरप्राइज़ पार्टी प्लान करने की संभावना किसकी है?",
+  "इस ग्रुप को जोड़कर कौन रखता है?",
+  "आख़िरी वक़्त पर प्लान कौन कैंसिल करेगा?",
+  "ग्रुप चैट में सबसे ज़्यादा कौन लिखता है?",
+  "यहाँ सबसे लंबी दोस्ती किसकी रहेगी?",
+  "सबसे घटिया चुटकुले कौन सुनाता है?",
+  "अपने ही चुटकुलों पर सबसे ज़्यादा कौन हँसता है?",
+  "फ़िल्मों में कौन रोता है?",
+  "सबसे ज़ोरदार हँसी किसकी है?",
+  "सबसे अजीब चेहरे कौन बनाता है?",
+  "नींद में कौन बड़बड़ाता है?",
+  "बिना किसी वजह के कौन गिर सकता है?",
+  "सबसे शर्मनाक किस्सा किसका है?",
+  "मशहूर होने की सबसे ज़्यादा संभावना किसकी है?",
+  "विदेश जाने की सबसे ज़्यादा संभावना किसकी है?",
+  "टीचर बनने की संभावना किसकी है?",
+  "सबसे ज़्यादा बच्चे किसके होंगे?",
+  "किताब लिखने की संभावना किसकी है?",
+  "मैराथन दौड़ने की संभावना किसकी है?",
+  "टीवी पर आने की संभावना किसकी है?",
+  "नेता बनने की संभावना किसकी है?",
+  "जल्दी रिटायर होने की संभावना किसकी है?",
+  "ऑनलाइन वायरल होने की संभावना किसकी है?",
+  "सबसे बड़ा खाने का शौकीन कौन है?",
+  "सबसे नखरे वाला खाने में कौन है?",
+  "रोज़ एक ही खाना कौन खा सकता है?",
+  "सबसे पहले मिठाई कौन ऑर्डर करता है?",
+  "सबसे तीखा खाना कौन चखेगा?",
+  "खाने की फ़ोटो कौन खींचता है?",
+  "शाकाहारी बनने की संभावना किसकी है?",
+  "सबका बचा खाना कौन खत्म करता है?",
+  "सबसे अच्छी ट्रिप कौन प्लान करता है?",
+  "पासपोर्ट घर पर कौन भूल जाएगा?",
+  "सबसे भारी सूटकेस कौन पैक करता है?",
+  "अकेले घूमने की संभावना किसकी है?",
+  "बंजी जंपिंग सबसे पहले कौन करेगा?",
+  "छुट्टियों में सबसे ज़्यादा फ़ोटो कौन खींचता है?",
+  "फ़्लाइट कौन मिस करेगा?",
+  "दस पालतू जानवर कौन पाल लेगा?",
+  "सबसे ख़राब ड्राइवर कौन है?",
+  "अपना ही जन्मदिन कौन भूल जाएगा?",
+  "बहस जीतने की सबसे ज़्यादा संभावना किसकी है?",
+  "बिना फ़ोन एक हफ़्ता कौन रह सकता है?",
+  "सबसे ज़्यादा अंधविश्वासी कौन है?",
+  "भूतों पर सबसे ज़्यादा कौन यक़ीन करता है?",
+  "पार्टी से सबसे आख़िर में कौन निकलेगा?",
+  "फ़िल्म देखते हुए कौन सो जाएगा?",
+  "सबसे अच्छा म्यूज़िक टेस्ट किसका है?",
+  "अचानक नया शौक कौन शुरू कर देगा?",
+  "सबसे अच्छा टीम कैप्टन कौन बनेगा?"
+  ]
+};
+
+
+// ═══════════════════════════════════════════════════════════════
+//  LANGUAGE
+// ═══════════════════════════════════════════════════════════════
+let lang = 'en';
+
+const T = {
+  en: {
+    tagline:"How well do you know each other?",
+    create:"Create Game", join:"Join Game",
+    tCreate:"Create Game", tJoin:"Join Game",
+    joinSub:"Enter the code your host shared",
+    lQCount:"Number of Questions", lTarget:"Target Score", lName:"Your Name",
+    lCode:"Game Code", phName:"Your name",
+    qOpt:n=>`${n} questions`,
+    hint:m=>`Matching answers needed to win (1–${m})`,
+    codeLabel:"Game Code", copyBtn:"📋 Copy Code",
+    players:"Players", waitingPlayers:"Waiting for players",
+    waitingStart:"Waiting for the game to begin",
+    hostWillStart:"The game creator will start the game shortly.",
+    startGame:n=>`Start Game (${n} player${n===1?'':'s'})`,
+    needMore:"Need 1 more player",
+    score:"Score", remaining:"Remaining",
+    qNum:(a,b)=>`Question ${a} of ${b}`,
+    locked:"Answer locked in — waiting for everyone else",
+    wellDone:"Well done!", missed:"Missed!",
+    plusOne:"+1 point", noPoint:"No point this round",
+    everyonePicked:n=>`Everyone picked ${n}`,
+    nextQ:"Next Question →", seeResults:"See Results →",
+    waitHost:"Waiting for the host",
+    winTitle:"Congratulations! Your team wins!",
+    loseTitle:"Better luck next time!",
+    winSub:"Your group thinks alike!", loseSub:"Good effort — try again?",
+    finalScore:"Final Score", targetScore:"Target Score",
+    totalQ:"Total Questions", unanimous:"Unanimous Answers",
+    playAgain:"🔄 Play Again", backHome:"🏠 Back to Home",
+    exit:"✕ Exit", back:"← Back",
+    howTitle:"How to Play",
+    steps:[
+      ["Gather Your Group","2 to 10 players. One person creates the game and shares the code."],
+      ["Everyone Joins","Others enter the code and their name to join the lobby."],
+      ["Answer Together","A question appears — pick the player you think fits best. Nobody sees the answers until everyone has picked."],
+      ["Score as a Team","If every single player picked the same person, the team earns 1 point."],
+      ["Reach the Target","Hit your target score before the questions run out and the whole team wins."]
+    ],
+    goalTitle:"🎯 Goal of the Game",
+    goalText:"This isn't about winning against each other — it's about finding out how well your group thinks alike."
+  },
+  hi: {
+    tagline:"आप एक-दूसरे को कितना जानते हैं?",
+    create:"गेम बनाएं", join:"गेम जॉइन करें",
+    tCreate:"गेम बनाएं", tJoin:"गेम जॉइन करें",
+    joinSub:"होस्ट का दिया कोड डालें",
+    lQCount:"सवालों की संख्या", lTarget:"टारगेट स्कोर", lName:"आपका नाम",
+    lCode:"गेम कोड", phName:"आपका नाम",
+    qOpt:n=>`${n} सवाल`,
+    hint:m=>`जीतने के लिए मिलते-जुलते जवाब (1–${m})`,
+    codeLabel:"गेम कोड", copyBtn:"📋 कोड कॉपी करें",
+    players:"खिलाड़ी", waitingPlayers:"खिलाड़ियों का इंतज़ार",
+    waitingStart:"खेल शुरू होने का इंतज़ार",
+    hostWillStart:"होस्ट जल्द ही खेल शुरू करेंगे।",
+    startGame:n=>`खेल शुरू करें (${n} खिलाड़ी)`,
+    needMore:"1 और खिलाड़ी चाहिए",
+    score:"स्कोर", remaining:"बाकी",
+    qNum:(a,b)=>`सवाल ${a} / ${b}`,
+    locked:"जवाब दर्ज — बाकी सबका इंतज़ार",
+    wellDone:"शाबाश!", missed:"चूक गए!",
+    plusOne:"+1 अंक", noPoint:"इस बार कोई अंक नहीं",
+    everyonePicked:n=>`सबने ${n} को चुना`,
+    nextQ:"अगला सवाल →", seeResults:"नतीजे देखें →",
+    waitHost:"होस्ट का इंतज़ार",
+    winTitle:"बधाई हो! आपकी टीम जीत गई!",
+    loseTitle:"अगली बार बेहतर किस्मत!",
+    winSub:"आपका ग्रुप एक जैसा सोचता है!", loseSub:"अच्छी कोशिश — फिर खेलें?",
+    finalScore:"फाइनल स्कोर", targetScore:"टारगेट स्कोर",
+    totalQ:"कुल सवाल", unanimous:"एकमत जवाब",
+    playAgain:"🔄 फिर खेलें", backHome:"🏠 होम पर जाएं",
+    exit:"✕ बाहर", back:"← वापस",
+    howTitle:"कैसे खेलें",
+    steps:[
+      ["ग्रुप जुटाएं","2 से 10 खिलाड़ी। एक व्यक्ति गेम बनाकर कोड शेयर करे।"],
+      ["सब जॉइन करें","बाकी लोग कोड और अपना नाम डालकर लॉबी में आएं।"],
+      ["साथ जवाब दें","सवाल आएगा — जो खिलाड़ी सही लगे उसे चुनें। सबके जवाब देने तक कोई किसी का जवाब नहीं देख सकता।"],
+      ["टीम के तौर पर स्कोर","अगर हर खिलाड़ी ने एक ही व्यक्ति को चुना, तो टीम को 1 अंक मिलेगा।"],
+      ["टारगेट तक पहुंचें","सवाल खत्म होने से पहले टारगेट स्कोर छू लें और पूरी टीम जीत जाएगी।"]
+    ],
+    goalTitle:"🎯 खेल का मकसद",
+    goalText:"यह एक-दूसरे से जीतने का खेल नहीं है — यह जानने का है कि आपका ग्रुप कितना एक जैसा सोचता है।"
+  }
+};
+
+function t() { return T[lang]; }
+
+window.toggleLang = function () {
+  lang = (lang === 'en') ? 'hi' : 'en';
+  applyLang();
+};
+
+function applyLang() {
+  const L = t();
+  const el = id => document.getElementById(id);
+  const setTxt = (id, v) => { const e = el(id); if (e) e.textContent = v; };
+
+  // Language button labels
+  document.querySelectorAll('#lang-lbl, #lang-lbl-2').forEach(e => {
+    e.textContent = (lang === 'en') ? 'EN' : 'हिं';
+  });
+
+  // Home
+  setTxt('home-tagline', L.tagline);
+  setTxt('btn-create', L.create);
+  setTxt('btn-join', L.join);
+
+  // Create form
+  setTxt('t-create', L.tCreate);
+  setTxt('l-qcount', L.lQCount);
+  setTxt('l-target', L.lTarget);
+  setTxt('l-host', L.lName);
+  setTxt('btn-create-go', L.create);
+  const hostIn = el('in-host'); if (hostIn) hostIn.placeholder = L.phName;
+  const qSel = el('in-qcount');
+  if (qSel) [...qSel.options].forEach(o => o.textContent = L.qOpt(o.value));
+  syncTargetMax();
+
+  // Join form
+  setTxt('t-join', L.tJoin);
+  setTxt('s-join', L.joinSub);
+  setTxt('l-code', L.lCode);
+  setTxt('l-name', L.lName);
+  setTxt('btn-join-go', L.join);
+  const nameIn = el('in-name'); if (nameIn) nameIn.placeholder = L.phName;
+
+  // Buttons across screens
+  document.querySelectorAll('.g-back').forEach(b => {
+    b.textContent = b.dataset.kind === 'back' ? L.back : L.exit;
+  });
+
+  // Lobby
+  setTxt('code-label', L.codeLabel);
+  setTxt('btn-copy', L.copyBtn);
+  setTxt('players-title', L.players);
+
+  // Stat labels
+  document.querySelectorAll('.lbl-score').forEach(e => e.textContent = L.score);
+  document.querySelectorAll('.lbl-remaining').forEach(e => e.textContent = L.remaining);
+
+  // End screen labels
+  setTxt('lbl-final', L.finalScore);
+  setTxt('lbl-target', L.targetScore);
+  setTxt('lbl-total', L.totalQ);
+  setTxt('lbl-unanimous', L.unanimous);
+  setTxt('btn-again', L.playAgain);
+  setTxt('btn-home', L.backHome);
+
+  // How to play
+  setTxt('how-title', L.howTitle);
+  setTxt('goal-title', L.goalTitle);
+  setTxt('goal-text', L.goalText);
+  const stepsWrap = el('how-steps');
+  if (stepsWrap) {
+    stepsWrap.innerHTML = L.steps.map((s,i) => `
+      <div class="how-step">
+        <div class="step-num">${i+1}</div>
+        <div><div class="step-title">${escapeHtml(s[0])}</div>
+        <div class="step-desc">${escapeHtml(s[1])}</div></div>
+      </div>`).join('');
+  }
+
+  // Re-render live game views
+  if (gameState) render();
+}
 
 // ═══════════════════════════════════════════════════════════════
 //  STATE
@@ -991,6 +1348,72 @@ function waitForFirebase(timeoutMs = 9000) {
   });
   return fbWaiting;
 }
+
+
+// ═══════════════════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════════════════
+function fireConfetti(duration = 2000) {
+  const cv = document.getElementById('confetti');
+  if (!cv) return;
+  cv.classList.add('on');
+  cv.width = window.innerWidth;
+  cv.height = window.innerHeight;
+  const ctx = cv.getContext('2d');
+  const colors = ['#60a5fa','#fbbf24','#4ade80','#f87171','#ec4899','#22d3ee','#fff'];
+  const bits = [];
+  for (let i = 0; i < 130; i++) {
+    bits.push({
+      x: Math.random() * cv.width,
+      y: Math.random() * -cv.height,
+      w: 6 + Math.random() * 7,
+      hgt: 9 + Math.random() * 9,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      vy: 2.4 + Math.random() * 3.4,
+      vx: -1.3 + Math.random() * 2.6,
+      rot: Math.random() * 360,
+      vr: -7 + Math.random() * 14
+    });
+  }
+  const start = performance.now();
+  (function frame(now) {
+    const elapsed = now - start;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    bits.forEach(b => {
+      b.y += b.vy; b.x += b.vx; b.rot += b.vr;
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot * Math.PI / 180);
+      ctx.fillStyle = b.c;
+      ctx.globalAlpha = elapsed > duration - 500 ? Math.max(0, (duration - elapsed) / 500) : 1;
+      ctx.fillRect(-b.w/2, -b.hgt/2, b.w, b.hgt);
+      ctx.restore();
+    });
+    if (elapsed < duration) {
+      requestAnimationFrame(frame);
+    } else {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      cv.classList.remove('on');
+    }
+  })(start);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FORM RESET — clear every field on entry
+// ═══════════════════════════════════════════════════════════════
+window.goCreate = function () {
+  document.getElementById('in-host').value = '';
+  document.getElementById('in-qcount').value = '10';
+  document.getElementById('in-target').value = '5';
+  syncTargetMax();
+  go('scr-create');
+};
+
+window.goJoin = function () {
+  document.getElementById('in-code').value = '';
+  document.getElementById('in-name').value = '';
+  go('scr-join');
+};
 
 // ═══════════════════════════════════════════════════════════════
 //  HELPERS
@@ -1074,10 +1497,11 @@ window.createGame = async function () {
   isHost = true;
   currentCode = makeCode();
 
-  const questions = shuffle(QUESTIONS).slice(0, qCount);
+  const allIdx = QUESTIONS.en.map((_, i) => i);
+  const qIdx = shuffle(allIdx).slice(0, qCount);
 
   const initial = {
-    qCount, target, questions,
+    qCount, target, qIdx,
     phase: 'lobby',
     qIndex: 0,
     score: 0,
@@ -1232,6 +1656,7 @@ function render() {
 
 // ── LOBBY ──
 function renderLobby(s, players) {
+  const L = t();
   document.getElementById('code-value').textContent = currentCode;
   document.getElementById('lobby-count').textContent = players.length + ' / 10';
 
@@ -1251,46 +1676,58 @@ function renderLobby(s, players) {
   if (isHost) {
     btn.style.display = 'block';
     btn.disabled = !enough;
-    btn.textContent = enough
-      ? `Start Game (${players.length} player${players.length === 1 ? '' : 's'})`
-      : 'Need 1 more player';
+    btn.textContent = enough ? L.startGame(players.length) : L.needMore;
     wait.style.display = enough ? 'none' : 'block';
-    wait.innerHTML = 'Waiting for players<span class="dots"></span>';
+    wait.innerHTML = L.waitingPlayers + '<span class="dots"></span>';
   } else {
     btn.style.display = 'none';
     wait.style.display = 'block';
-    wait.innerHTML = 'Waiting for the game to begin<span class="dots"></span><br><span style="font-size:13px;opacity:.75">The game creator will start the game shortly.</span>';
+    wait.innerHTML = L.waitingStart + '<span class="dots"></span><br><span style="font-size:13px;opacity:.75">' + L.hostWillStart + '</span>';
   }
 }
 
 // ── QUESTION ──
 function renderQuestion(s, players) {
+  const L = t();
   const answers = s.answers || {};
-  const answeredCount = Object.keys(answers).length;
   const myAnswer = answers[myId];
 
   document.getElementById('st-score').textContent = `${s.score} / ${s.target}`;
   document.getElementById('st-remaining').textContent = s.qCount - s.qIndex;
-  document.getElementById('st-answered').textContent = `${answeredCount}/${players.length}`;
-  document.getElementById('q-num').textContent = `Question ${s.qIndex + 1} of ${s.qCount}`;
-  document.getElementById('q-text').textContent = s.questions[s.qIndex];
+  document.getElementById('q-num').textContent = L.qNum(s.qIndex + 1, s.qCount);
+  document.getElementById('q-text').textContent = questionText(s, s.qIndex);
 
   const opts = document.getElementById('q-opts');
-  opts.innerHTML = players.map(p => `
+  opts.innerHTML = players.map(p => {
+    const hasAnswered = !!answers[p.id];
+    return `
     <div class="opt ${myAnswer === p.id ? 'selected' : ''} ${myAnswer ? 'locked' : ''}"
          onclick="submitAnswer('${p.id}')">
       <div class="player-avatar" style="background:${avatarColor(p.id)}">${escapeHtml(p.name.charAt(0).toUpperCase())}</div>
       <div class="opt-name">${escapeHtml(p.name)}${p.id === myId ? ' (you)' : ''}</div>
+      ${hasAnswered ? '<div class="opt-tick">✓</div>' : '<div class="opt-tick-slot"></div>'}
       <div class="opt-check">${myAnswer === p.id ? '✓' : ''}</div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
-  document.getElementById('q-note').style.display = myAnswer ? 'block' : 'none';
+  const note = document.getElementById('q-note');
+  note.style.display = myAnswer ? 'block' : 'none';
+  note.innerHTML = L.locked + '<span class="dots"></span>';
 
-  // Host advances to reveal once everyone has answered
+  const answeredCount = Object.keys(answers).length;
   if (isHost && answeredCount === players.length && players.length >= 2) {
     setTimeout(() => resolveRound(), 600);
   }
+}
+
+function questionText(s, i) {
+  const idxList = s.qIdx || null;
+  if (idxList && typeof idxList[i] === 'number') {
+    const bank = QUESTIONS[lang] || QUESTIONS.en;
+    return bank[idxList[i]] || '';
+  }
+  // fallback for older games
+  return (s.questions && s.questions[i]) || '';
 }
 
 window.submitAnswer = async function (targetId) {
@@ -1315,19 +1752,31 @@ async function resolveRound() {
   const values = Object.values(answers);
   const unanimous = values.every(v => v === values[0]);
   const newScore = s.score + (unanimous ? 1 : 0);
+  const hitTarget = newScore >= s.target;
 
   try {
     await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
       phase: 'reveal',
       score: newScore,
       lastUnanimous: unanimous,
-      lastPickedId: unanimous ? values[0] : null
+      lastPickedId: unanimous ? values[0] : null,
+      targetHit: hitTarget
     });
+
+    // Target reached — celebrate, then auto-advance to results after 2s
+    if (hitTarget) {
+      setTimeout(async () => {
+        await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
+          phase: 'end', won: true
+        });
+      }, 2000);
+    }
   } catch (err) { console.error(err); }
 }
 
 // ── REVEAL ──
 function renderReveal(s, players) {
+  const L = t();
   const nameOf = id => {
     const p = players.find(x => x.id === id);
     return p ? p.name : '—';
@@ -1337,11 +1786,17 @@ function renderReveal(s, players) {
   const unanimous = !!s.lastUnanimous;
 
   banner.className = 'reveal-banner ' + (unanimous ? 'hit' : 'miss');
-  document.getElementById('rev-icon').textContent = unanimous ? '🎯' : '🤷';
-  document.getElementById('rev-title').textContent = unanimous ? 'Unanimous!' : 'Not quite!';
-  document.getElementById('rev-sub').textContent = unanimous
-    ? `Everyone picked ${nameOf(s.lastPickedId)} — +1 point`
-    : 'No point this round';
+  document.getElementById('rev-icon').textContent = unanimous ? '👏' : '😔';
+  document.getElementById('rev-title').textContent = unanimous ? L.wellDone : L.missed;
+
+  const sub = document.getElementById('rev-sub');
+  if (unanimous) {
+    sub.className = 'reveal-sub plus';
+    sub.textContent = `${L.everyonePicked(nameOf(s.lastPickedId))} — ${L.plusOne}`;
+  } else {
+    sub.className = 'reveal-sub';
+    sub.textContent = L.noPoint;
+  }
 
   const answers = s.answers || {};
   document.getElementById('rev-votes').innerHTML = players.map(p => `
@@ -1361,13 +1816,26 @@ function renderReveal(s, players) {
   const isLast = s.qIndex + 1 >= s.qCount;
   const reachedTarget = s.score >= s.target;
 
+  // Target reached → confetti, hide controls, auto-advance handles the rest
+  if (reachedTarget) {
+    if (!renderReveal._celebrated) {
+      renderReveal._celebrated = true;
+      fireConfetti(2000);
+    }
+    btn.style.display = 'none';
+    wait.style.display = 'none';
+    return;
+  }
+  renderReveal._celebrated = false;
+
   if (isHost) {
     btn.style.display = 'block';
     wait.style.display = 'none';
-    btn.textContent = (reachedTarget || isLast) ? 'See Results →' : 'Next Question →';
+    btn.textContent = isLast ? L.seeResults : L.nextQ;
   } else {
     btn.style.display = 'none';
     wait.style.display = 'block';
+    wait.innerHTML = L.waitHost + '<span class="dots"></span>';
   }
 }
 
@@ -1396,14 +1864,13 @@ window.nextQuestion = async function () {
 
 // ── END ──
 function renderEnd(s) {
+  const L = t();
   const won = !!s.won;
   document.getElementById('end-icon').textContent = won ? '🎉' : '😢';
   const title = document.getElementById('end-title');
-  title.textContent = won ? 'Congratulations! Your team wins!' : 'Better luck next time!';
+  title.textContent = won ? L.winTitle : L.loseTitle;
   title.className = 'end-title ' + (won ? 'win' : 'lose');
-  document.getElementById('end-sub').textContent = won
-    ? 'Your group thinks alike!'
-    : 'Good effort — try again?';
+  document.getElementById('end-sub').textContent = won ? L.winSub : L.loseSub;
 
   document.getElementById('end-score').textContent = s.score;
   document.getElementById('end-target').textContent = s.target;
@@ -1428,11 +1895,12 @@ window.startGame = async function () {
 window.playAgain = async function () {
   if (!gameState) return;
   if (!isHost) { toast('Only the host can restart'); return; }
-  const fresh = shuffle(QUESTIONS).slice(0, gameState.qCount);
+  const allIdx = QUESTIONS.en.map((_, i) => i);
+  const fresh = shuffle(allIdx).slice(0, gameState.qCount);
   try {
     await fb.update(fb.ref(db, 'whosthat/' + currentCode), {
       phase: 'lobby', qIndex: 0, score: 0, answers: {},
-      questions: fresh, won: null, lastUnanimous: null, lastPickedId: null
+      qIdx: fresh, won: null, lastUnanimous: null, lastPickedId: null
     });
   } catch (err) { toast('Could not restart'); }
 };
@@ -1492,8 +1960,8 @@ function escapeHtml(str) {
     ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
 }
 
-// Initialise stepper limits
-syncTargetMax();
+// Initialise language + stepper
+applyLang();
 
 // Auto-uppercase the code field
 document.getElementById('in-code').addEventListener('input', e => {
