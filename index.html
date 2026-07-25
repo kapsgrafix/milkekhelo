@@ -265,6 +265,15 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .g-counter { background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 13px; font-size:13px; font-weight:800; color:#FFD700; }
 .g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
 .g-back:active { background:rgba(255,80,80,.2); }
+.g-help {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.75); font-family:'Baloo 2','Nunito Sans',sans-serif;
+  font-size:15px; font-weight:800; cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .15s;
+}
+.g-help:active { background:rgba(255,255,255,.22); }
 
 .g-progress { padding:10px 16px 0; flex-shrink:0; display:flex; align-items:center; gap:10px; }
 .prog-bar { flex:1; height:8px; background:rgba(255,255,255,.1); border-radius:50px; overflow:hidden; }
@@ -459,7 +468,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   position:fixed; inset:0;
   display:flex; flex-direction:column;
   align-items:center; justify-content:flex-start;
-  background:linear-gradient(180deg,#050a1a 0%,#0a1836 40%,#123a7a 100%);
+  background:#14244D;
   overflow-y:auto; overflow-x:hidden;
   padding:0 20px 48px;
 }
@@ -504,83 +513,11 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .game-card:active { transform:scale(.97); }
 
 /* Hero card — First */
-.gc-hero {
-  background:linear-gradient(135deg,#a855f7 0%,#7B3FA0 45%,#6A2C8F 100%);
-  display:flex; align-items:center; gap:18px;
-  padding:20px 22px;
-  box-shadow:0 8px 24px rgba(123,63,160,.35);
-}
-.gc-thumb {
-  width:82px; height:82px; flex-shrink:0;
-  border-radius:18px;
-  background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(255,255,255,.4));
-  display:flex; align-items:center; justify-content:center;
-  font-size:38px;
-}
-.gc-text { flex:1; min-width:0; }
-.gc-name {
-  font-family:'Baloo 2',cursive;
-  font-size:34px; font-weight:900; color:#fff;
-  line-height:1.05; margin-bottom:6px;
-}
-.gc-desc {
-  font-family:'Baloo 2',cursive;
-  font-size:16px; font-weight:600; color:rgba(255,255,255,.92);
-  line-height:1.3;
-}
-
-/* Small cards row */
-.gc-row { display:flex; gap:14px; }
-.gc-small {
-  flex:1; aspect-ratio:1/1.05;
-  display:flex; flex-direction:column;
-  align-items:flex-start; justify-content:flex-end;
-  padding:18px 16px;
-  position:relative;
-}
-.gc-small-icon {
-  position:absolute; top:14px; left:14px;
-  width:56px; height:74px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:52px; line-height:1; opacity:.95;
-}
-.gc-small-name {
-  font-family:'Baloo 2',cursive;
-  font-size:23px; font-weight:900; color:#fff;
-  line-height:1.15;
-}
-.gc-snl { background:linear-gradient(135deg,#fb923c 0%,#f97316 50%,#ea580c 100%); box-shadow:0 8px 24px rgba(249,115,22,.32); }
-.gc-ty  { background:linear-gradient(135deg,#4ade80 0%,#16a34a 50%,#15803d 100%); box-shadow:0 8px 24px rgba(22,163,74,.32); }
 
 
 
 
 
-/* Mini FIRST card thumbnail */
-.gc-thumb-first { background:transparent !important; padding:0; }
-.mini-card {
-  width:100%; height:100%;
-  background:linear-gradient(160deg,#8B4BB0 0%,#7B3FA0 55%,#6A3390 100%);
-  border-radius:14px;
-  border:2.5px solid rgba(255,255,255,.35);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:4px;
-  box-shadow:0 4px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.2);
-  position:relative;
-}
-.mini-card::before {
-  content:''; position:absolute; inset:5px;
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:8px; pointer-events:none;
-}
-.mini-card-icon { font-size:26px; line-height:1; }
-.mini-card-label {
-  font-family:'Montserrat',sans-serif;
-  font-size:9px; font-weight:900; color:#fff;
-  letter-spacing:1px; text-transform:uppercase;
-  text-shadow:0 1px 3px rgba(0,0,0,.3);
-}
 
 
 /* ══ UNIFIED GAME HEADER ══ */
@@ -617,27 +554,6 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .gc-mini-emoji { font-size:32px; line-height:1; }
 
 
-/* Home card image thumbnails */
-.gc-thumb-img {
-  width:88px; height:88px; flex-shrink:0;
-  object-fit:contain;
-  filter:drop-shadow(0 4px 10px rgba(0,0,0,.28));
-  user-select:none; -webkit-user-drag:none;
-}
-.gc-small-img {
-  position:absolute; top:12px; left:50%;
-  transform:translateX(-50%);
-  width:78px; height:78px;
-  object-fit:contain;
-  filter:drop-shadow(0 4px 10px rgba(0,0,0,.25));
-  user-select:none; -webkit-user-drag:none;
-}
-.gc-small {
-  align-items:center !important;
-  text-align:center;
-  padding-top:96px !important;
-}
-.gc-small-name { text-align:center; }
 
 
 /* ══ INSTALL STRIP ══ */
@@ -675,6 +591,73 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 /* Push page down when strip is visible */
 body.has-strip #launcher { padding-top:52px; }
+
+
+/* ══ HOME 2x2 GRID ══ */
+.gc-grid {
+  width:100%; max-width:440px;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.gc-cell {
+  position:relative;
+  aspect-ratio:1/1;
+  border-radius:24px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:8px; padding:16px 12px;
+  overflow:hidden;
+}
+.gc-cell-img {
+  width:96px; height:96px; object-fit:contain;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
+  user-select:none; -webkit-user-drag:none;
+}
+.gc-cell-icon {
+  width:96px; height:96px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:72px; line-height:1;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
+}
+.gc-cell-name {
+  font-family:'Baloo 2',cursive;
+  font-size:20px; font-weight:800; color:#fff;
+  text-align:center; line-height:1.15;
+}
+.gc-first { background:#8B5CF6; box-shadow:0 8px 22px rgba(139,92,246,.3); }
+.gc-snl   { background:#F68A2F; box-shadow:0 8px 22px rgba(246,138,47,.3); }
+.gc-ty    { background:#22C55E; box-shadow:0 8px 22px rgba(34,197,94,.3); }
+.gc-wt    { background:#3B82F6; box-shadow:0 8px 22px rgba(59,130,246,.3); }
+
+/* Coming soon */
+.gc-soon { cursor:default; }
+.gc-soon .gc-cell-icon, .gc-soon .gc-cell-name { opacity:.72; }
+.gc-soon-tag {
+  position:absolute; top:10px; left:50%;
+  transform:translateX(-50%);
+  background:#fbbf24; color:#3b2503;
+  font-family:'Nunito Sans',sans-serif;
+  font-size:10px; font-weight:900; letter-spacing:.6px;
+  text-transform:uppercase;
+  padding:4px 12px; border-radius:50px;
+  white-space:nowrap;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+  z-index:2;
+}
+.gc-tooltip {
+  position:absolute; bottom:12px; left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:rgba(10,18,40,.96);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff; font-size:12px; font-weight:700;
+  padding:7px 14px; border-radius:50px;
+  white-space:nowrap; opacity:0; pointer-events:none;
+  transition:opacity .2s, transform .2s;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+.gc-tooltip.show {
+  opacity:1; transform:translateX(-50%) translateY(0);
+}
 
 </style>
 <body>
@@ -718,29 +701,31 @@ body.has-strip #launcher { padding-top:52px; }
 
   <!-- game cards -->
   <div class="home-cards">
+    <div class="gc-grid">
 
-    <!-- FIRST — big hero card -->
-    <div class="game-card gc-hero" onclick="startGame()">
-      <img src="first-home.png" class="gc-thumb-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
-      <div class="gc-text">
-        <div class="gc-name" id="gc-name-first">First</div>
-        <div class="gc-desc" id="gc-desc-first">The icebreaker card game</div>
+      <div class="game-card gc-cell gc-first" onclick="startGame()">
+        <img src="first-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
+        <div class="gc-cell-name" id="gc-name-first">First</div>
       </div>
+
+      <div class="game-card gc-cell gc-snl" onclick="startSnlGame()">
+        <img src="sns-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Steps and Slides — dice board game" draggable="false">
+        <div class="gc-cell-name" id="gc-name-snl">Steps &amp; Slides</div>
+      </div>
+
+      <div class="game-card gc-cell gc-ty" onclick="startTyGame()">
+        <img src="thankyou-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
+        <div class="gc-cell-name" id="gc-name-ty">Thank You</div>
+      </div>
+
+      <div class="game-card gc-cell gc-wt gc-soon" onclick="showSoon(event)">
+        <div class="gc-soon-tag" id="wt-soon-tag">Coming Soon</div>
+        <div class="gc-cell-icon">🕵️</div>
+        <div class="gc-cell-name" id="gc-name-wt">Who's That?</div>
+        <div class="gc-tooltip" id="wt-tooltip">Will be live soon :)</div>
+      </div>
+
     </div>
-
-    <!-- Row: Steps & Slides + Thank You -->
-    <div class="gc-row">
-      <div class="game-card gc-small gc-snl" onclick="startSnlGame()">
-        <img src="sns-home.png" class="gc-small-img" width="320" height="320" loading="eager" alt="Steps and Slides — dice board game" draggable="false">
-        <div class="gc-small-name" id="gc-name-snl">Steps<br>&amp; Slides</div>
-      </div>
-
-      <div class="game-card gc-small gc-ty" onclick="startTyGame()">
-        <img src="thankyou-home.png" class="gc-small-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
-        <div class="gc-small-name" id="gc-name-ty">Thank<br>You</div>
-      </div>
-    </div>
-
   </div>
 
 </div><!-- /launcher -->
@@ -966,6 +951,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── LANGUAGE ──
 let lang = 'en';
+
+function showSoon(e) {
+  e.stopPropagation();
+  const tip = document.getElementById('wt-tooltip');
+  if (!tip) return;
+  tip.classList.add('show');
+  clearTimeout(tip._t);
+  tip._t = setTimeout(() => tip.classList.remove('show'), 2200);
+}
+
 function setLang(l) {
   lang = l;
   document.getElementById('btn-en').classList.toggle('active', l==='en');
@@ -976,8 +971,11 @@ function setLang(l) {
   // ── HOME: game names transliterated to Devanagari (same sound) ──
   if (_el('gc-name-first')) _el('gc-name-first').textContent = hi ? 'फर्स्ट' : 'First';
   if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
-  if (_el('gc-name-snl'))   _el('gc-name-snl').innerHTML     = hi ? 'स्टेप्स<br>एंड स्लाइड्स' : 'Steps<br>&amp; Slides';
-  if (_el('gc-name-ty'))    _el('gc-name-ty').innerHTML      = hi ? 'थैंक<br>यू' : 'Thank<br>You';
+  if (_el('gc-name-snl'))   _el('gc-name-snl').textContent  = hi ? 'स्टेप्स एंड स्लाइड्स' : 'Steps & Slides';
+  if (_el('gc-name-ty'))    _el('gc-name-ty').textContent   = hi ? 'थैंक यू' : 'Thank You';
+  if (_el('gc-name-wt'))    _el('gc-name-wt').textContent   = hi ? 'हूज़ दैट?' : "Who's That?";
+  if (_el('wt-soon-tag'))   _el('wt-soon-tag').textContent  = hi ? 'जल्द आ रहा' : 'Coming Soon';
+  if (_el('wt-tooltip'))    _el('wt-tooltip').textContent   = hi ? 'जल्द ही लाइव होगा :)' : 'Will be live soon :)';
 
   // ── In-game headers (transliterated names) ──
   if (_el('g-logo-first')) _el('g-logo-first').innerHTML = hi ? 'फर्स्ट<span>!</span>' : 'FIRST<span>!</span>';
