@@ -254,7 +254,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .card-tap-next { right:0; }
 /* ══ GAME SCREEN ══ */
 #game {
-  position:fixed; inset:0; background:#1A1A2E;
+  position:fixed; inset:0; background:linear-gradient(160deg,#1a0b2e 0%,#2d1b4e 55%,#1a0b2e 100%);
   display:none; flex-direction:column;
 }
 #game.active { display:flex; }
@@ -280,10 +280,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .prog-bar-fill { height:100%; background:linear-gradient(90deg,#FFD700,#FF8C00); border-radius:50px; transition:width .5s cubic-bezier(.34,1.56,.64,1); }
 .prog-num { font-size:12px; font-weight:800; color:rgba(255,255,255,.4); min-width:32px; text-align:right; }
 
-.card-swipe-hint { text-align:center; padding:6px 0 0; font-size:11px; font-weight:700; color:rgba(255,255,255,.2); letter-spacing:1px; flex-shrink:0; }
+.card-swipe-hint { text-align:center; padding:2px 0 8px; font-size:11px; font-weight:700; color:rgba(255,255,255,.28); letter-spacing:1px; flex-shrink:0; }
 .card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:6px 14px 12px; perspective:1000px; overflow:hidden; touch-action:pan-y; }
 
-.playing-card { width:min(275px,calc(100vw - 40px)); max-height:calc(100vh - 250px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 25px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
+.playing-card { width:min(275px,calc(100vw - 40px)); max-height:calc(100vh - 250px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 10px 26px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
 .playing-card:active { transform:scale(.98); }
 .c-ent{background:var(--col-ent);} .c-adv{background:var(--col-adv);} .c-rel{background:var(--col-rel);} .c-mil{background:var(--col-mil);} .c-sch{background:var(--col-sch);}
 .c-ty1{background:var(--col-ty1);} .c-ty2{background:var(--col-ty2);} .c-ty3{background:var(--col-ty3);}
@@ -666,7 +666,7 @@ body.has-strip #launcher { padding-top:52px; }
   font-family:'Baloo 2',cursive;
   font-size:19px; font-weight:700;
   color:rgba(255,255,255,.9);
-  padding:20px 20px 2px;
+  padding:14px 20px 4px;
   letter-spacing:.2px;
 }
 
@@ -759,7 +759,6 @@ body.has-strip #launcher { padding-top:52px; }
     <div class="prog-bar"><div class="prog-bar-fill" id="prog-fill" style="width:2%"></div></div>
     <div class="prog-num" id="prog-num">1/50</div>
   </div>
-  <div class="card-swipe-hint" id="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="first-prompt" id="first-prompt">Share the story of your...</div>
   <div class="card-stage" id="card-stage">
     <div class="playing-card c-ent" id="playing-card">
@@ -779,6 +778,7 @@ body.has-strip #launcher { padding-top:52px; }
       </div>
     </div>
   </div>
+  <div class="card-swipe-hint" id="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="g-actions">
     <button class="btn-prev" id="btn-prev" onclick="prevCard()" aria-label="Previous card">← Prev</button>
     <button class="btn-next" id="btn-next" onclick="nextCard()" aria-label="Next card">Next →</button>
@@ -1850,7 +1850,6 @@ if ('serviceWorker' in navigator) {
     <div class="prog-bar"><div class="prog-bar-fill" id="ty-prog-fill" style="width:2%"></div></div>
     <div class="prog-num" id="ty-prog-num">1/51</div>
   </div>
-  <div class="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="card-stage" id="ty-card-stage">
     <div class="playing-card c-ty1" id="ty-playing-card">
       <div class="card-tap-prev" onclick="prevTyCard()"></div>
@@ -1869,6 +1868,7 @@ if ('serviceWorker' in navigator) {
       </div>
     </div>
   </div>
+  <div class="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="g-actions">
     <button class="btn-prev" id="ty-btn-prev" onclick="prevTyCard()">← Prev</button>
     <button class="btn-next" onclick="nextTyCard()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">Next →</button>
