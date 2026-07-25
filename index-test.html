@@ -265,6 +265,15 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .g-counter { background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 13px; font-size:13px; font-weight:800; color:#FFD700; }
 .g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
 .g-back:active { background:rgba(255,80,80,.2); }
+.g-help {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.75); font-family:'Baloo 2','Nunito Sans',sans-serif;
+  font-size:15px; font-weight:800; cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .15s;
+}
+.g-help:active { background:rgba(255,255,255,.22); }
 
 .g-progress { padding:10px 16px 0; flex-shrink:0; display:flex; align-items:center; gap:10px; }
 .prog-bar { flex:1; height:8px; background:rgba(255,255,255,.1); border-radius:50px; overflow:hidden; }
