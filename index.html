@@ -128,6 +128,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .lang-toggle { display:flex; align-items:center; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:50px; overflow:hidden; }
 .lang-btn { padding:5px 13px; font-size:11px; font-weight:800; letter-spacing:.8px; color:rgba(255,255,255,.45); cursor:pointer; background:transparent; border:none; font-family:'Nunito Sans',sans-serif; transition:all .2s; }
 .lang-btn.active { background:#FFD700; color:#1A1A2E; border-radius:50px; }
+.lang-toggle-sm { flex-shrink:0; }
+.lang-toggle-sm .lang-btn { padding:5px 11px; font-size:11px; }
 
 
 /* each slide — transparent so #launcher bg shows */
@@ -531,7 +533,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .hdr-left  { justify-self:start; }
 .hdr-center{ justify-self:center; text-align:center; }
-.hdr-right { justify-self:end; }
+.hdr-right { justify-self:end; display:flex; align-items:center; gap:7px; }
 
 
 /* Thank You mini playing card */
@@ -753,6 +755,10 @@ body.has-strip #launcher { padding-top:52px; }
     </div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+      <div class="lang-toggle lang-toggle-sm">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
   <div class="g-progress">
@@ -973,10 +979,14 @@ function showSoon(e) {
   tip._t = setTimeout(() => tip.classList.remove('show'), 2200);
 }
 
+function toggleLang() {
+  setLang(lang === 'en' ? 'hi' : 'en');
+}
+
 function setLang(l) {
   lang = l;
-  document.getElementById('btn-en').classList.toggle('active', l==='en');
-  document.getElementById('btn-hi').classList.toggle('active', l==='hi');
+document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('active', l==='en'));
+  document.querySelectorAll('.lb-hi, #btn-hi').forEach(e => e.classList.toggle('active', l==='hi'));
   const hi = (l === 'hi');
   const _el = id => document.getElementById(id);
 
@@ -1844,6 +1854,10 @@ if ('serviceWorker' in navigator) {
     </div>
     <div class="hdr-right">
       <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
+      <div class="lang-toggle lang-toggle-sm">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
   <div class="g-progress">
@@ -1917,6 +1931,10 @@ if ('serviceWorker' in navigator) {
     </div>
     <div class="hdr-right">
       <button class="g-help" onclick="openSnlHow()" aria-label="How to play">?</button>
+      <div class="lang-toggle lang-toggle-sm">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 

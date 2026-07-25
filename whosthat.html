@@ -394,14 +394,17 @@ body {
 }
 .g-help:active { background:rgba(255,255,255,.22); }
 .hdr-right { display:flex; align-items:center; gap:7px; }
-.g-lang {
-  min-width:42px; height:30px; border-radius:50px;
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
-  color:rgba(255,255,255,.85); font-family:'Nunito Sans',sans-serif;
-  font-size:12px; font-weight:800; cursor:pointer; padding:0 10px;
-  letter-spacing:.5px;
+.lang-toggle {
+  display:flex; align-items:center;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+  border-radius:50px; overflow:hidden; flex-shrink:0;
 }
-.g-lang:active { background:rgba(255,255,255,.22); }
+.lang-btn {
+  padding:5px 12px; font-size:11px; font-weight:800; letter-spacing:.6px;
+  color:rgba(255,255,255,.5); cursor:pointer; background:transparent;
+  border:none; font-family:'Nunito Sans',sans-serif; transition:all .2s;
+}
+.lang-btn.active { background:#fbbf24; color:#1a1a2e; border-radius:50px; }
 .g-logo {
   font-family:'Baloo 2',cursive; font-size:19px; font-weight:800;
   color:#fff; letter-spacing:.2px; white-space:nowrap;
@@ -569,7 +572,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -595,7 +601,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -642,7 +651,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -672,7 +684,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -709,7 +724,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -744,7 +762,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -782,7 +803,10 @@ body {
     <div class="hdr-center"></div>
     <div class="hdr-right">
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
@@ -825,7 +849,10 @@ body {
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
-      <button class="g-lang" onclick="toggleLang()" aria-label="Change language"><span id="lang-lbl-2">EN</span></button>
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
   <div class="scr-body" style="justify-content:flex-start;padding-top:20px">
@@ -1209,19 +1236,22 @@ const T = {
 function t() { return T[lang]; }
 
 window.toggleLang = function () {
-  lang = (lang === 'en') ? 'hi' : 'en';
+  setLang(lang === 'en' ? 'hi' : 'en');
+};
+
+window.setLang = function (l) {
+  lang = l;
+  document.querySelectorAll('.lb-en').forEach(e => e.classList.toggle('active', l === 'en'));
+  document.querySelectorAll('.lb-hi').forEach(e => e.classList.toggle('active', l === 'hi'));
   applyLang();
 };
 
 function applyLang() {
   const L = t();
+  document.querySelectorAll('.lb-en').forEach(e => e.classList.toggle('active', lang === 'en'));
+  document.querySelectorAll('.lb-hi').forEach(e => e.classList.toggle('active', lang === 'hi'));
   const el = id => document.getElementById(id);
   const setTxt = (id, v) => { const e = el(id); if (e) e.textContent = v; };
-
-  // Language button labels
-  document.querySelectorAll('#lang-lbl, #lang-lbl-2').forEach(e => {
-    e.textContent = (lang === 'en') ? 'EN' : 'हिं';
-  });
 
   // Home
   setTxt('home-tagline', L.tagline);
