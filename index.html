@@ -281,9 +281,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .prog-num { font-size:12px; font-weight:800; color:rgba(255,255,255,.4); min-width:32px; text-align:right; }
 
 .card-swipe-hint { text-align:center; padding:6px 0 0; font-size:11px; font-weight:700; color:rgba(255,255,255,.2); letter-spacing:1px; flex-shrink:0; }
-.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:12px 14px; perspective:1000px; overflow:hidden; touch-action:pan-y; }
+.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:6px 14px 12px; perspective:1000px; overflow:hidden; touch-action:pan-y; }
 
-.playing-card { width:min(300px,calc(100vw - 28px)); max-height:calc(100vh - 205px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 25px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
+.playing-card { width:min(275px,calc(100vw - 40px)); max-height:calc(100vh - 250px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 25px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
 .playing-card:active { transform:scale(.98); }
 .c-ent{background:var(--col-ent);} .c-adv{background:var(--col-adv);} .c-rel{background:var(--col-rel);} .c-mil{background:var(--col-mil);} .c-sch{background:var(--col-sch);}
 .c-ty1{background:var(--col-ty1);} .c-ty2{background:var(--col-ty2);} .c-ty3{background:var(--col-ty3);}
@@ -659,6 +659,17 @@ body.has-strip #launcher { padding-top:52px; }
   opacity:1; transform:translateX(-50%) translateY(0);
 }
 
+
+.first-prompt {
+  flex-shrink:0;
+  text-align:center;
+  font-family:'Baloo 2',cursive;
+  font-size:19px; font-weight:700;
+  color:rgba(255,255,255,.9);
+  padding:20px 20px 2px;
+  letter-spacing:.2px;
+}
+
 </style>
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
@@ -749,6 +760,7 @@ body.has-strip #launcher { padding-top:52px; }
     <div class="prog-num" id="prog-num">1/50</div>
   </div>
   <div class="card-swipe-hint" id="card-swipe-hint">Tap card or swipe to flip</div>
+  <div class="first-prompt" id="first-prompt">Share the story of your...</div>
   <div class="card-stage" id="card-stage">
     <div class="playing-card c-ent" id="playing-card">
       <div class="card-tap-prev" onclick="prevCard()"></div>
@@ -971,6 +983,7 @@ function setLang(l) {
   // ── HOME: game names transliterated to Devanagari (same sound) ──
   if (_el('gc-name-first')) _el('gc-name-first').textContent = hi ? 'फर्स्ट' : 'First';
   if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
+  if (_el('first-prompt')) _el('first-prompt').textContent = hi ? 'अपनी कहानी बताएं...' : 'Share the story of your...';
   if (_el('gc-name-snl'))   _el('gc-name-snl').textContent  = hi ? 'स्टेप्स एंड स्लाइड्स' : 'Steps & Slides';
   if (_el('gc-name-ty'))    _el('gc-name-ty').textContent   = hi ? 'थैंक यू' : 'Thank You';
   if (_el('gc-name-wt'))    _el('gc-name-wt').textContent   = hi ? 'हूज़ दैट?' : "Who's That?";
