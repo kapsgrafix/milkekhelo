@@ -267,6 +267,11 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .g-counter { background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 13px; font-size:13px; font-weight:800; color:#FFD700; }
 .g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
 .g-back:active { background:rgba(255,80,80,.2); }
+.g-back-arrow {
+  width:32px; height:32px; padding:0;
+  border-radius:50%; font-size:18px; font-weight:900;
+  justify-content:center; line-height:1; gap:0;
+}
 .g-help {
   width:30px; height:30px; border-radius:50%;
   background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
@@ -531,7 +536,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   flex-shrink:0;
   gap:8px;
 }
-.hdr-left  { justify-self:start; }
+.hdr-left  { justify-self:start; display:flex; align-items:center; gap:10px; }
 .hdr-center{ justify-self:center; text-align:center; }
 .hdr-right { justify-self:end; display:flex; align-items:center; gap:7px; }
 
@@ -748,13 +753,13 @@ body.has-strip #launcher { padding-top:52px; }
 <div id="game">
   <div class="g-header">
     <div class="hdr-left">
-      <button class="g-back" id="g-back" onclick="exitGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" id="g-back" onclick="exitGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
       <div class="g-logo" id="g-logo-first">FIRST<span>!</span></div>
     </div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -821,7 +826,7 @@ const T = {
   en: {
     tagline:"The Icebreaker Card Game", startBtn:"▶  Start Game",
     howLink:"How to Play", countLabel:"50 cards · 5 categories · Shuffled every game",
-    backBtn:"✕ Exit", swipeHint:"Tap card or swipe to flip", nextBtn:"Next Card →",
+    swipeHint:"Tap card or swipe to flip", nextBtn:"Next Card →",
     endTitle:"All Done!", endSub:"You've gone through all 51 cards!\nReady for another round?",
     playAgain:"🔀  Play Again", howTitle:"How to Play",
     goalTitle:"🎯 Goal of the Game",
@@ -839,7 +844,7 @@ const T = {
   hi: {
     tagline:"Ice-Breaker Card Game", startBtn:"▶  खेल शुरू करें",
     howLink:"कैसे खेलें", countLabel:"50 कार्ड · 5 श्रेणियाँ · हर बार अलग क्रम",
-    backBtn:"✕ Exit", swipeHint:"कार्ड दबाएं या स्वाइप करें", nextBtn:"अगला कार्ड →",
+    swipeHint:"कार्ड दबाएं या स्वाइप करें", nextBtn:"अगला कार्ड →",
     endTitle:"शाबाश!", endSub:"सभी 51 कार्ड देख लिए!\nएक और राउंड खेलें?",
     playAgain:"🔀  फिर खेलें", howTitle:"कैसे खेलें",
     goalTitle:"🎯 खेल का मकसद",
@@ -1007,7 +1012,6 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
 
   // ── FIRST game UI ──
   const t = T[l];
-  if (_el('g-back'))           _el('g-back').textContent           = t.backBtn;
   if (_el('card-swipe-hint'))  _el('card-swipe-hint').textContent  = t.swipeHint;
   if (_el('btn-next'))         _el('btn-next').textContent         = t.nextBtn;
   if (_el('btn-prev'))         _el('btn-prev').textContent         = hi ? '← पिछला' : '← Prev';
@@ -1022,7 +1026,6 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
   // ── THANK YOU game UI ──
   const tyGame = _el('ty-game');
   if (tyGame) {
-    const ex = tyGame.querySelector('.g-back');       if (ex) ex.textContent = hi ? '✕ बाहर' : '✕ Exit';
     const hn = tyGame.querySelector('.card-swipe-hint'); if (hn) hn.textContent = hi ? 'कार्ड दबाएं या स्वाइप करें' : 'Tap card or swipe to flip';
     const nx = tyGame.querySelector('.btn-next');     if (nx) nx.textContent = hi ? 'अगला →' : 'Next →';
     const pv = tyGame.querySelector('.btn-prev');     if (pv) pv.textContent = hi ? '← पिछला' : '← Prev';
@@ -1064,7 +1067,6 @@ let deck=[], idx=0, isAnimating=false;
 function startGame() {
   deck = shuffle(CARDS); idx = 0;
   const t = T[lang];
-  document.getElementById('g-back').textContent = t.backBtn;
   document.getElementById('card-swipe-hint').textContent = t.swipeHint;
   document.getElementById('btn-next').textContent = t.nextBtn;
   document.getElementById('end-title').textContent = t.endTitle;
@@ -1211,8 +1213,6 @@ function startTyGame(){
   // Localise TY game UI
   const hi = (lang === 'hi');
   const tyGame = document.getElementById('ty-game');
-  const exitBtn = tyGame.querySelector('.g-back');
-  if (exitBtn) exitBtn.textContent = hi ? '✕ बाहर' : '✕ Exit';
   const hint = tyGame.querySelector('.card-swipe-hint');
   if (hint) hint.textContent = hi ? 'कार्ड दबाएं या स्वाइप करें' : 'Tap card or swipe to flip';
   const nextBtn = tyGame.querySelector('.btn-next');
@@ -1517,8 +1517,6 @@ function startSnlGame(isRestart) {
   document.getElementById('snl-p-red-name').textContent = t.red;
   document.getElementById('snl-pts-lbl-y').textContent = t.pts;
   document.getElementById('snl-pts-lbl-r').textContent = t.pts;
-  const exitBtn = document.querySelector('#snl-game .g-back');
-  if (exitBtn) exitBtn.textContent = lang==='hi' ? '✕ बाहर' : '✕ Exit';
   const againBtn = document.querySelector('#snl-end-screen .btn-play-again');
   if (againBtn) againBtn.textContent = t.playAgain;
 
@@ -1701,8 +1699,6 @@ function applySnlLangFull() {
   if (_el('snl-pts-lbl-y'))     _el('snl-pts-lbl-y').textContent     = t.pts;
   if (_el('snl-pts-lbl-r'))     _el('snl-pts-lbl-r').textContent     = t.pts;
   // Exit
-  const ex = document.querySelector('#snl-game .g-back');
-  if (ex) ex.textContent = hi ? '✕ बाहर' : '✕ Exit';
   // Play again + back home
   const ag = document.querySelector('#snl-end-screen .btn-play-again');
   if (ag) ag.innerHTML = hi ? '🔄 &nbsp; फिर खेलें' : '🔄 &nbsp; Play Again';
@@ -1847,13 +1843,13 @@ if ('serviceWorker' in navigator) {
 <div id="ty-game">
   <div class="g-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="exitTyGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="exitTyGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
       <div class="g-logo" id="g-logo-ty" style="font-size:18px;">THANK <span>YOU!</span></div>
     </div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -1924,13 +1920,13 @@ if ('serviceWorker' in navigator) {
 <div id="snl-game">
   <div class="snl-topbar">
     <div class="hdr-left">
-      <button class="g-back" onclick="exitSnlGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="exitSnlGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openSnlHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
       <div class="snl-timer" id="snl-timer">2:00</div>
     </div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openSnlHow()" aria-label="How to play">?</button>
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>

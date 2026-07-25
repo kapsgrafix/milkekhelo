@@ -374,7 +374,7 @@ body {
   gap:8px;
   flex-shrink:0;
 }
-.hdr-left  { justify-self:start; }
+.hdr-left  { justify-self:start; display:flex; align-items:center; gap:10px; }
 .hdr-center{ justify-self:center; text-align:center; }
 .hdr-right { justify-self:end; }
 .g-back {
@@ -386,6 +386,15 @@ body {
   display:flex; align-items:center; gap:5px;
 }
 .g-back:active { background:rgba(255,80,80,.2); }
+.g-back-arrow {
+  width:32px; height:32px; padding:0;
+  border-radius:50%; font-size:18px; font-weight:900;
+  justify-content:center; line-height:1; gap:0;
+}
+.g-title {
+  font-family:'Baloo 2',cursive; font-size:19px; font-weight:800;
+  color:#fff; letter-spacing:.2px; white-space:nowrap;
+}
 .g-help {
   width:30px; height:30px; border-radius:50%;
   background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
@@ -567,11 +576,11 @@ body {
 <div class="screen active" id="scr-home">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="exitToSite()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="exitToSite()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -596,11 +605,13 @@ body {
 <div class="screen" id="scr-create">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" data-kind="back" onclick="go('scr-home')">← Back</button>
-    </div>
-    <div class="hdr-center"></div>
-    <div class="hdr-right">
+      <button class="g-back g-back-arrow" onclick="go('scr-home')" aria-label="Back">←</button>
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
+    <div class="hdr-center">
+      <div class="g-title" id="t-create">Create Game</div>
+    </div>
+    <div class="hdr-right">
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -609,7 +620,6 @@ body {
   </div>
 
   <div class="scr-body">
-    <div class="scr-title" id="t-create">Create Game</div>
     <div class="form-card">
       <div class="field">
         <label for="in-qcount" id="l-qcount">Number of Questions</label>
@@ -646,11 +656,13 @@ body {
 <div class="screen" id="scr-join">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" data-kind="back" onclick="go('scr-home')">← Back</button>
-    </div>
-    <div class="hdr-center"></div>
-    <div class="hdr-right">
+      <button class="g-back g-back-arrow" onclick="go('scr-home')" aria-label="Back">←</button>
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
+    <div class="hdr-center">
+      <div class="g-title" id="t-join">Join Game</div>
+    </div>
+    <div class="hdr-right">
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -659,7 +671,6 @@ body {
   </div>
 
   <div class="scr-body">
-    <div class="scr-title" id="t-join">Join Game</div>
     <div class="scr-sub" id="s-join">Enter the code your host shared</div>
     <div class="form-card">
       <div class="field">
@@ -679,11 +690,11 @@ body {
 <div class="screen" id="scr-lobby">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="leaveGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="leaveGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -719,11 +730,11 @@ body {
 <div class="screen" id="scr-question">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="leaveGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="leaveGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -757,11 +768,11 @@ body {
 <div class="screen" id="scr-reveal">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="leaveGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="leaveGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -798,11 +809,11 @@ body {
 <div class="screen" id="scr-end">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" onclick="leaveGame()">✕ Exit</button>
+      <button class="g-back g-back-arrow" onclick="leaveGame()" aria-label="Back">←</button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
       <div class="lang-toggle">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
         <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
@@ -845,7 +856,7 @@ body {
 <div class="screen" id="scr-setup">
   <div class="wt-header">
     <div class="hdr-left">
-      <button class="g-back" data-kind="back" onclick="go('scr-home')">← Back</button>
+      <button class="g-back g-back-arrow" onclick="go('scr-home')" aria-label="Back">←</button>
     </div>
     <div class="hdr-center"></div>
     <div class="hdr-right">
@@ -1178,7 +1189,6 @@ const T = {
     finalScore:"Final Score", targetScore:"Target Score",
     totalQ:"Total Questions", unanimous:"Unanimous Answers",
     playAgain:"🔄 Play Again", backHome:"🏠 Back to Home",
-    exit:"✕ Exit", back:"← Back",
     howTitle:"How to Play",
     steps:[
       ["Gather Your Group","2 to 10 players. One person creates the game and shares the code."],
@@ -1219,7 +1229,6 @@ const T = {
     finalScore:"फाइनल स्कोर", targetScore:"टारगेट स्कोर",
     totalQ:"कुल सवाल", unanimous:"एकमत जवाब",
     playAgain:"🔄 फिर खेलें", backHome:"🏠 होम पर जाएं",
-    exit:"✕ बाहर", back:"← वापस",
     howTitle:"कैसे खेलें",
     steps:[
       ["ग्रुप जुटाएं","2 से 10 खिलाड़ी। एक व्यक्ति गेम बनाकर कोड शेयर करे।"],
@@ -1278,9 +1287,6 @@ function applyLang() {
   const nameIn = el('in-name'); if (nameIn) nameIn.placeholder = L.phName;
 
   // Buttons across screens
-  document.querySelectorAll('.g-back').forEach(b => {
-    b.textContent = b.dataset.kind === 'back' ? L.back : L.exit;
-  });
 
   // Lobby
   setTxt('code-label', L.codeLabel);
