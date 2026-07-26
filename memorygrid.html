@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0b2e">
+
+<title>Memory Grid — Mil ke Khelo</title>
+<meta name="description" content="Memory Grid is a free brain-training memory game. Memorise the lit dots, then tap them all from memory. Easy, Medium and Hard levels with streaks, lives and hints.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Memory Grid — Memory Party Game">
+<meta property="og:description" content="Memorise the pattern, tap it back. How long can your streak last?">
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --accent:#a855f7;
+  --accent-2:#c084fc;
+  --gold:#fbbf24;
+  --green:#4ade80;
+  --red:#f87171;
+  --dot:#3b2b5e;
+  --dot-lit:#c084fc;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family:'Nunito Sans',sans-serif;
+  background:linear-gradient(160deg,#1a0b2e 0%,#2d1b4e 55%,#1a0b2e 100%);
+  background-attachment:fixed;
+  color:#fff; min-height:100vh; min-height:100dvh;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display:none; min-height:100vh; min-height:100dvh;
+  flex-direction:column; align-items:center;
+  padding:0 20px calc(20px + env(safe-area-inset-bottom,0px));
+  padding-top:calc(6px + env(safe-area-inset-top,0px));
+}
+.screen.active { display:flex; animation:fadeSlide .4s cubic-bezier(.34,1.2,.64,1); }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── HEADER (standard) ── */
+.mg-header {
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; width:100%; padding:14px 4px 8px; gap:8px; flex-shrink:0;
+}
+.hdr-left  { justify-self:start; display:flex; align-items:center; gap:10px; }
+.hdr-center{ justify-self:center; text-align:center; }
+.hdr-right { justify-self:end; }
+
+.g-back, .g-help {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.8); cursor:pointer;
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:800;
+  flex-shrink:0; transition:background .15s;
+}
+.g-back:active, .g-help:active { background:rgba(255,255,255,.24); }
+.g-back-arrow::before { content:'←'; display:block; line-height:1; transform:translateY(-1px); font-size:17px; }
+
+.g-logo {
+  font-family:'Baloo 2',cursive; font-size:19px; font-weight:800;
+  color:#fff; letter-spacing:.2px; white-space:nowrap;
+}
+.g-logo span { color:var(--accent-2); }
+
+.lang-toggle {
+  display:flex; align-items:center;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+  border-radius:50px; overflow:hidden; flex-shrink:0;
+}
+.lang-btn {
+  padding:5px 11px; font-size:11px; font-weight:800; letter-spacing:.6px;
+  color:rgba(255,255,255,.5); cursor:pointer; background:transparent;
+  border:none; font-family:'Nunito Sans',sans-serif; transition:all .2s;
+}
+.lang-btn.active { background:var(--gold); color:#1a1a2e; border-radius:50px; }
+
+/* ── HOME ── */
+.home-center {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  width:100%; gap:28px; padding:10px 0;
+}
+.home-art { font-size:clamp(58px,17vw,80px); line-height:1; }
+.game-logo {
+  font-family:'Baloo 2',cursive; font-size:clamp(34px,10vw,46px);
+  font-weight:800; line-height:1; text-align:center;
+}
+.game-logo .l1 { color:#fff; }
+.game-logo .l2 { color:var(--accent-2); }
+.logo-sub {
+  font-size:13px; font-weight:700; letter-spacing:1.4px;
+  color:rgba(255,255,255,.42); text-transform:uppercase;
+  text-align:center; margin-top:8px;
+}
+
+.scr-title {
+  font-family:'Baloo 2',cursive; font-size:26px; font-weight:800;
+  text-align:center; margin-bottom:6px;
+}
+.scr-sub {
+  font-size:14px; font-weight:600; color:rgba(255,255,255,.55);
+  text-align:center; margin-bottom:6px; line-height:1.45;
+}
+
+/* ── LEVEL SELECT ── */
+.level-cards { width:100%; max-width:360px; display:flex; flex-direction:column; gap:14px; }
+.level-card {
+  border-radius:22px; padding:20px 22px; cursor:pointer;
+  display:flex; align-items:center; gap:16px;
+  transition:transform .12s; border:2px solid transparent;
+  position:relative; overflow:hidden;
+}
+.level-card:active { transform:scale(.97); }
+.level-icon {
+  font-size:38px; line-height:1; flex-shrink:0;
+  width:56px; height:56px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.15); border-radius:16px;
+}
+.level-info { flex:1; }
+.level-name { font-family:'Baloo 2',cursive; font-size:22px; font-weight:800; color:#fff; line-height:1.1; }
+.level-desc { font-size:13px; font-weight:700; color:rgba(255,255,255,.85); margin-top:2px; }
+.lc-easy   { background:linear-gradient(135deg,#4ade80,#16a34a); box-shadow:0 8px 22px rgba(34,197,94,.3); }
+.lc-medium { background:linear-gradient(135deg,#fbbf24,#ea580c); box-shadow:0 8px 22px rgba(251,146,60,.3); }
+.lc-hard   { background:linear-gradient(135deg,#f87171,#b91c1c); box-shadow:0 8px 22px rgba(239,68,68,.3); }
+
+/* ── BUTTONS ── */
+.btn {
+  width:100%; max-width:340px; border:none; border-radius:50px; padding:16px 0;
+  font-family:'Baloo 2',cursive; font-size:18px; font-weight:700;
+  cursor:pointer; letter-spacing:.4px; display:block; margin:0 auto;
+  transition:transform .12s, box-shadow .12s;
+}
+.btn:active { transform:translateY(4px); }
+.btn-primary {
+  background:linear-gradient(180deg,var(--accent-2),var(--accent));
+  color:#fff; box-shadow:0 6px 0 #6b21a8, 0 10px 26px rgba(168,85,247,.35);
+}
+.btn-primary:active { box-shadow:0 2px 0 #6b21a8; }
+.btn-ghost {
+  background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.8); box-shadow:none; font-size:16px;
+}
+.btn-ghost:active { background:rgba(255,255,255,.14); }
+.link-back {
+  margin-top:20px; font-size:14px; font-weight:700;
+  color:rgba(255,255,255,.5); cursor:pointer; text-align:center;
+  border-bottom:1px dashed rgba(255,255,255,.3); padding-bottom:2px; align-self:center;
+}
+.link-back:active { color:rgba(255,255,255,.9); }
+
+/* ── GAME STATUS BAR (score + lives) ── */
+.mg-status {
+  width:100%; max-width:460px;
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding:2px 4px 0; flex-shrink:0;
+}
+.score-box {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  border-radius:15px; padding:8px 16px; text-align:left;
+}
+.score-val {
+  font-family:'Baloo 2',cursive; font-size:24px; font-weight:800;
+  color:var(--gold); line-height:1;
+}
+.score-lbl { font-size:9px; font-weight:800; letter-spacing:1px; color:rgba(255,255,255,.42); text-transform:uppercase; margin-top:2px; }
+.lives-box { display:flex; gap:5px; align-items:center; padding-top:4px; }
+.life { font-size:22px; line-height:1; transition:transform .3s, opacity .3s; }
+.life.lost { opacity:.25; transform:scale(.8); filter:grayscale(1); }
+
+/* ── GRID ── */
+.grid-wrap {
+  flex:1; width:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px; min-height:0;
+}
+.grid-status {
+  font-family:'Baloo 2',cursive; font-size:17px; font-weight:700;
+  color:rgba(255,255,255,.9); text-align:center; min-height:22px;
+  transition:color .2s;
+}
+.grid-status.go { color:var(--green); }
+.grid-status.show { color:var(--accent-2); }
+.mg-grid {
+  display:grid; gap:min(4.5vw,26px);
+  touch-action:manipulation;
+}
+.dot {
+  width:100%; aspect-ratio:1/1; border-radius:50%;
+  background:var(--dot);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.4);
+  cursor:pointer; position:relative;
+  transition:background .18s, transform .12s, box-shadow .18s;
+}
+.dot::after {
+  content:''; position:absolute; inset:22%;
+  border-radius:50%; background:transparent; transition:background .18s;
+}
+.dot.lit {
+  background:var(--dot-lit);
+  box-shadow:0 0 18px rgba(192,132,252,.7), inset 0 1px 2px rgba(255,255,255,.4);
+}
+.dot.correct {
+  background:var(--green);
+  box-shadow:0 0 18px rgba(74,222,128,.7), inset 0 1px 2px rgba(255,255,255,.4);
+  animation:pop .3s cubic-bezier(.34,1.6,.64,1);
+}
+.dot.wrong {
+  background:var(--red);
+  box-shadow:0 0 18px rgba(248,113,113,.8);
+  animation:shake .4s;
+}
+@keyframes pop { 0%{transform:scale(.7)} 60%{transform:scale(1.15)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.mg-grid.locked .dot { pointer-events:none; }
+
+.mode-label {
+  font-size:11px; font-weight:800; letter-spacing:1.5px;
+  color:rgba(255,255,255,.35); text-transform:uppercase; text-align:center;
+}
+
+/* ── HINT BUTTON ── */
+.mg-bottom {
+  width:100%; max-width:460px; display:flex; justify-content:flex-end;
+  padding:8px 4px 4px; flex-shrink:0;
+}
+.hint-btn {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(251,191,36,.15); border:1px solid rgba(251,191,36,.4);
+  border-radius:50px; padding:10px 18px; cursor:pointer;
+  font-family:'Baloo 2',sans-serif; font-size:14px; font-weight:700; color:var(--gold);
+  transition:transform .1s, opacity .2s;
+}
+.hint-btn:active { transform:scale(.95); }
+.hint-btn:disabled { opacity:.35; cursor:not-allowed; }
+.hint-count {
+  background:var(--gold); color:#3b2503;
+  border-radius:50px; font-size:11px; font-weight:900;
+  padding:1px 7px; min-width:20px; text-align:center;
+}
+
+/* ── WELL DONE FLASH ── */
+#flash {
+  position:fixed; inset:0; z-index:500; display:none;
+  align-items:center; justify-content:center; pointer-events:none;
+}
+#flash.show { display:flex; }
+.flash-text {
+  font-family:'Baloo 2',cursive; font-size:44px; font-weight:800;
+  color:#fff;
+  -webkit-text-stroke:2px #9a3412;
+  paint-order:stroke fill;
+  text-shadow:0 3px 10px rgba(0,0,0,.5);
+  animation:flashPop .6s cubic-bezier(.34,1.6,.64,1);
+}
+@keyframes flashPop { 0%{transform:scale(.5);opacity:0} 40%{transform:scale(1.1);opacity:1} 100%{transform:scale(1);opacity:1} }
+
+/* ── GAME OVER OVERLAY ── */
+#gameover {
+  position:fixed; inset:0; z-index:450;
+  background:rgba(26,11,46,.95); backdrop-filter:blur(6px);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  padding:32px; text-align:center;
+}
+#gameover.show { display:flex; animation:fadeSlide .4s ease; }
+.go-icon { font-size:70px; line-height:1; margin-bottom:12px; }
+.go-title { font-family:'Baloo 2',cursive; font-size:30px; font-weight:800; color:var(--red); margin-bottom:6px; }
+.go-sub { font-size:14px; font-weight:600; color:rgba(255,255,255,.55); margin-bottom:24px; }
+.go-scorecard {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+  border-radius:20px; padding:22px 28px; margin-bottom:26px; min-width:220px;
+}
+.go-score-big { font-family:'Baloo 2',cursive; font-size:54px; font-weight:800; color:var(--gold); line-height:1; }
+.go-score-lbl { font-size:12px; font-weight:800; letter-spacing:1.5px; color:rgba(255,255,255,.5); text-transform:uppercase; margin-top:4px; }
+.go-best { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:14px; }
+
+#confetti { position:fixed; inset:0; pointer-events:none; z-index:600; display:none; }
+#confetti.on { display:block; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="screen active" id="scr-home">
+  <div class="mg-header">
+    <div class="hdr-left">
+      <button class="g-back g-back-arrow" onclick="exitToSite()" aria-label="Back"></button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
+    <div class="hdr-center"></div>
+    <div class="hdr-right">
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-center" style="gap:24px">
+    <div>
+      <div class="home-art" style="margin-bottom:10px">🧠</div>
+      <div class="game-logo"><span class="l1">Memory</span> <span class="l2">Grid</span></div>
+      <div class="logo-sub">Memorise · Tap · Repeat</div>
+    </div>
+    <div class="level-cards">
+      <div class="level-card lc-easy" onclick="startLevel('easy')">
+        <div class="level-icon">🟢</div>
+        <div class="level-info">
+          <div class="level-name">Easy</div>
+          <div class="level-desc">3×3 grid · 4 dots</div>
+        </div>
+      </div>
+      <div class="level-card lc-medium" onclick="startLevel('medium')">
+        <div class="level-icon">🟡</div>
+        <div class="level-info">
+          <div class="level-name">Medium</div>
+          <div class="level-desc">4×4 grid · 7 dots</div>
+        </div>
+      </div>
+      <div class="level-card lc-hard" onclick="startLevel('hard')">
+        <div class="level-icon">🔴</div>
+        <div class="level-info">
+          <div class="level-name">Hard</div>
+          <div class="level-desc">5×5 grid · 10 dots</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ GAME ══════════ -->
+<div class="screen" id="scr-game">
+  <div class="mg-header">
+    <div class="hdr-left">
+      <button class="g-back g-back-arrow" onclick="quitGame()" aria-label="Back"></button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
+    <div class="hdr-center"><div class="g-logo">MEMORY <span>GRID</span></div></div>
+    <div class="hdr-right">
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mg-status">
+    <div class="score-box">
+      <div class="score-val" id="score-val">0</div>
+      <div class="score-lbl">Streak</div>
+    </div>
+    <div class="lives-box" id="lives-box"></div>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="grid-status" id="grid-status">Memorise!</div>
+    <div class="mg-grid" id="mg-grid"></div>
+    <div class="mode-label" id="mode-label">Easy Mode</div>
+  </div>
+
+  <div class="mg-bottom">
+    <button class="hint-btn" id="hint-btn" onclick="useHint()">
+      💡 Hint <span class="hint-count" id="hint-count">3</span>
+    </button>
+  </div>
+
+  <!-- Well done flash -->
+  <div id="flash"><div class="flash-text" id="flash-text">Well done!</div></div>
+
+  <!-- Game over -->
+  <div id="gameover">
+    <div class="go-icon">💀</div>
+    <div class="go-title" id="go-title">Game Over</div>
+    <div class="go-sub" id="go-sub">You tapped the wrong dot</div>
+    <div class="go-scorecard">
+      <div class="go-score-big" id="go-score">0</div>
+      <div class="go-score-lbl">Final Streak</div>
+      <div class="go-best" id="go-best"></div>
+    </div>
+    <button class="btn btn-primary" onclick="playAgain()">🔄 Play Again</button>
+    <div class="link-back" onclick="exitToSite()">🏠 Back to Home</div>
+  </div>
+</div>
+
+<!-- ══════════ HOW TO PLAY ══════════ -->
+<div id="how-overlay" onclick="closeHow(event)" style="position:fixed;inset:0;z-index:400;background:rgba(15,8,30,.88);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center;">
+  <div class="how-sheet" style="background:linear-gradient(160deg,#2d1b4e,#1a0b2e);border-radius:26px 26px 0 0;border:1px solid rgba(192,132,252,.2);border-bottom:none;width:100%;max-width:520px;padding:14px 22px 34px;max-height:82vh;overflow-y:auto;">
+    <div style="width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:0 auto 16px;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--accent-2);">How to Play</div>
+      <button onclick="closeHow()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;">✕</button>
+    </div>
+    <div id="how-steps"></div>
+    <div style="background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);border-radius:16px;padding:15px 17px;margin-top:6px;">
+      <div style="font-size:14px;font-weight:800;color:var(--accent-2);margin-bottom:5px;">🎯 Goal</div>
+      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.5;">Build the longest streak you can. One wrong tap ends a round — but you have 3 lives per streak, and 3 hints to help.</div>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+
+// ═══════════════════════════════════════════════════════════════
+//  LANGUAGE
+// ═══════════════════════════════════════════════════════════════
+let lang = 'en';
+const MG_T = {
+  en: {
+    sub:"Memorise · Tap · Repeat",
+    easy:"Easy", medium:"Medium", hard:"Hard",
+    easyD:"3×3 grid · 4 dots", mediumD:"4×4 grid · 7 dots", hardD:"5×5 grid · 10 dots",
+    streak:"Streak", memorise:"Memorise!", memoriseAgain:"Memorise again!",
+    tap:"Tap the dots!", hint:"Hint", mode:m=>({easy:'Easy Mode',medium:'Medium Mode',hard:'Hard Mode'}[m]),
+    hereThey:"Here they are!", outLives:"Out of lives!",
+    lifeLeft:"1 life left!", livesLeft:n=>`${n} lives left`,
+    gameOver:"Game Over", finalStreak:"Final Streak",
+    reachedStreak:n=>`You reached a streak of ${n}`, betterLuck:"Better luck this time!",
+    bestStreak:n=>`Best streak: ${n}`, playAgain:"🔄 Play Again", backHome:"🏠 Back to Home",
+    praise:['Well done!','Nailed it!','Perfect!','Sharp memory!','Brilliant!','On fire! 🔥']
+  },
+  hi: {
+    sub:"याद करो · दबाओ · दोहराओ",
+    easy:"आसान", medium:"मध्यम", hard:"कठिन",
+    easyD:"3×3 ग्रिड · 4 डॉट", mediumD:"4×4 ग्रिड · 7 डॉट", hardD:"5×5 ग्रिड · 10 डॉट",
+    streak:"स्ट्रीक", memorise:"याद करो!", memoriseAgain:"फिर याद करो!",
+    tap:"डॉट दबाओ!", hint:"हिंट", mode:m=>({easy:'आसान मोड',medium:'मध्यम मोड',hard:'कठिन मोड'}[m]),
+    hereThey:"ये रहे!", outLives:"जान खत्म!",
+    lifeLeft:"1 जान बची!", livesLeft:n=>`${n} जान बची`,
+    gameOver:"गेम ओवर", finalStreak:"फाइनल स्ट्रीक",
+    reachedStreak:n=>`आपकी स्ट्रीक ${n} तक पहुंची`, betterLuck:"अगली बार बेहतर!",
+    bestStreak:n=>`बेस्ट स्ट्रीक: ${n}`, playAgain:"🔄 फिर खेलें", backHome:"🏠 होम पर जाएं",
+    praise:['शाबाश!','बढ़िया!','परफेक्ट!','तेज़ याददाश्त!','कमाल!','आग! 🔥']
+  }
+};
+function T() { return MG_T[lang]; }
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lb-en').forEach(e => e.classList.toggle('active', l === 'en'));
+  document.querySelectorAll('.lb-hi').forEach(e => e.classList.toggle('active', l === 'hi'));
+  applyLang();
+}
+
+function applyLang() {
+  const t = T();
+  const set = (sel, val) => document.querySelectorAll(sel).forEach(e => e.textContent = val);
+  // Home
+  document.querySelectorAll('.logo-sub').forEach(e => e.textContent = t.sub);
+  set('.lc-easy .level-name', t.easy);   set('.lc-easy .level-desc', t.easyD);
+  set('.lc-medium .level-name', t.medium); set('.lc-medium .level-desc', t.mediumD);
+  set('.lc-hard .level-name', t.hard);   set('.lc-hard .level-desc', t.hardD);
+  // Score label
+  document.querySelectorAll('.score-lbl').forEach(e => e.textContent = t.streak);
+  // Mode label + hint text live-update
+  if (gridSize) document.getElementById('mode-label').textContent = t.mode(level);
+  const hb = document.getElementById('hint-btn');
+  if (hb) hb.childNodes[0].nodeValue = '💡 ' + t.hint + ' ';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════════
+const LEVELS = {
+  easy:   { size:3, dots:4,  label:'Easy Mode' },
+  medium: { size:4, dots:7,  label:'Medium Mode' },
+  hard:   { size:5, dots:10, label:'Hard Mode' }
+};
+const REVEAL_MS = { easy:500, medium:1000, hard:1500 }; // show + hint timing per level
+const MAX_LIVES = 3;
+const MAX_HINTS = 3;
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+let level = 'easy';
+let gridSize = 3, dotCount = 4;
+let target = [];        // indices that are correct
+let found = [];         // correct indices tapped so far
+let score = 0;          // streak
+let lives = MAX_LIVES;
+let hints = MAX_HINTS;
+let phase = 'idle';     // idle | showing | play | over
+let best = 0;
+
+try { best = parseInt(localStorage.getItem('mg-best') || '0', 10) || 0; } catch(e){}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickTarget() {
+  const total = gridSize * gridSize;
+  const all = Array.from({ length: total }, (_, i) => i);
+  return shuffle(all).slice(0, dotCount).sort((a, b) => a - b);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GAME FLOW
+// ═══════════════════════════════════════════════════════════════
+function startLevel(lv) {
+  level = lv;
+  gridSize = LEVELS[lv].size;
+  dotCount = LEVELS[lv].dots;
+  score = 0;
+  lives = MAX_LIVES;
+  hints = MAX_HINTS;
+  document.getElementById('mode-label').textContent = T().mode(lv);
+  go('scr-game');
+  buildGrid();
+  renderLives();
+  renderHint();
+  updateScore();
+  document.getElementById('gameover').classList.remove('show');
+  newRound();
+}
+
+function buildGrid() {
+  const grid = document.getElementById('mg-grid');
+  grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+  grid.style.gap = Math.min(window.innerWidth * 0.045, 26) + 'px';
+  // Keep each cell the SAME size across all modes (matched to hard mode).
+  const gap = Math.min(window.innerWidth * 0.045, 26);
+  const hardW = Math.min(window.innerWidth - 48, 420, (window.innerHeight - 340));
+  const cell = (hardW - gap * 4) / 5;           // hard-mode cell size
+  const gridW = cell * gridSize + gap * (gridSize - 1);
+  grid.style.width = gridW + 'px';
+  grid.innerHTML = '';
+  const total = gridSize * gridSize;
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.dataset.idx = i;
+    d.addEventListener('click', () => tapDot(i));
+    grid.appendChild(d);
+  }
+}
+
+function newRound() {
+  found = [];
+  target = pickTarget();
+  phase = 'showing';
+  clearDots();
+  const grid = document.getElementById('mg-grid');
+  grid.classList.add('locked');
+  setStatus(T().memorise, 'show');
+
+  // Reveal the target dots
+  target.forEach(i => dotEl(i).classList.add('lit'));
+
+  const showTime = REVEAL_MS[level];
+  setTimeout(() => {
+    // Hide them
+    target.forEach(i => dotEl(i).classList.remove('lit'));
+    grid.classList.remove('locked');
+    phase = 'play';
+    setStatus(T().tap, 'go');
+  }, showTime);
+}
+
+function tapDot(i) {
+  if (phase !== 'play') return;
+  const el = dotEl(i);
+  if (found.includes(i)) return;
+
+  if (target.includes(i)) {
+    // Correct
+    found.push(i);
+    el.classList.add('correct');
+    if (found.length === target.length) {
+      roundWon();
+    }
+  } else {
+    // Wrong
+    el.classList.add('wrong');
+    loseLife(i);
+  }
+}
+
+function roundWon() {
+  phase = 'idle';
+  score++;
+  updateScore();
+  if (score > best) {
+    best = score;
+    try { localStorage.setItem('mg-best', String(best)); } catch(e){}
+  }
+  fireConfetti(1400);
+  flash(pickPraise());
+  setTimeout(() => newRound(), 1500);
+}
+
+function loseLife(wrongIdx) {
+  lives--;
+  renderLives();
+
+  if (lives <= 0) {
+    // Game over — reveal the full correct pattern briefly, then overlay
+    phase = 'over';
+    document.getElementById('mg-grid').classList.add('locked');
+    target.forEach(i => { if (!found.includes(i)) dotEl(i).classList.add('lit'); });
+    setStatus(T().outLives, '');
+    setTimeout(showGameOver, 1000);
+  } else {
+    // Lost a life — clear the wrong mark and keep playing (do NOT reveal dots)
+    setStatus(lives === 1 ? T().lifeLeft : T().livesLeft(lives), '');
+    setTimeout(() => {
+      if (wrongIdx != null) dotEl(wrongIdx).classList.remove('wrong');
+      setStatus(T().tap, 'go');
+    }, 600);
+  }
+}
+
+function showGameOver() {
+  document.getElementById('go-title').textContent = T().gameOver;
+  document.querySelector('.go-score-lbl').textContent = T().finalStreak;
+  document.getElementById('go-score').textContent = score;
+  document.getElementById('go-best').textContent = best > 0 ? T().bestStreak(best) : '';
+  document.getElementById('go-sub').textContent =
+    score === 0 ? T().betterLuck : T().reachedStreak(score);
+  document.getElementById('gameover').classList.add('show');
+}
+
+function playAgain() {
+  document.getElementById('gameover').classList.remove('show');
+  startLevel(level);
+}
+
+function quitGame() {
+  go('scr-home');
+}
+
+function exitToSite() {
+  window.location.href = 'index.html';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HINT
+// ═══════════════════════════════════════════════════════════════
+function useHint() {
+  if (phase !== 'play' || hints <= 0) return;
+  hints--;
+  renderHint();
+  const grid = document.getElementById('mg-grid');
+  grid.classList.add('locked');
+  const prevPhase = phase;
+  phase = 'showing';
+  setStatus(T().hereThey, 'show');
+  // show the ones not yet found
+  const toShow = target.filter(i => !found.includes(i));
+  toShow.forEach(i => dotEl(i).classList.add('lit'));
+  setTimeout(() => {
+    toShow.forEach(i => dotEl(i).classList.remove('lit'));
+    grid.classList.remove('locked');
+    phase = 'play';
+    setStatus(T().tap, 'go');
+  }, REVEAL_MS[level]);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════════════════════════════
+function dotEl(i) { return document.querySelector(`.dot[data-idx="${i}"]`); }
+
+function clearDots() {
+  document.querySelectorAll('.dot').forEach(d => {
+    d.classList.remove('lit', 'correct', 'wrong');
+  });
+}
+
+function setStatus(text, cls) {
+  const el = document.getElementById('grid-status');
+  el.textContent = text;
+  el.className = 'grid-status' + (cls ? ' ' + cls : '');
+}
+
+function updateScore() {
+  document.getElementById('score-val').textContent = score;
+}
+
+function renderLives() {
+  const box = document.getElementById('lives-box');
+  box.innerHTML = '';
+  for (let i = 0; i < MAX_LIVES; i++) {
+    const s = document.createElement('span');
+    s.className = 'life' + (i >= lives ? ' lost' : '');
+    s.textContent = '❤️';
+    box.appendChild(s);
+  }
+}
+
+function renderHint() {
+  document.getElementById('hint-count').textContent = hints;
+  document.getElementById('hint-btn').disabled = hints <= 0;
+}
+
+function pickPraise() { const p = T().praise; return p[Math.floor(Math.random() * p.length)]; }
+
+function flash(text) {
+  const f = document.getElementById('flash');
+  document.getElementById('flash-text').textContent = text;
+  f.classList.add('show');
+  setTimeout(() => f.classList.remove('show'), 1400);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════════════════
+function fireConfetti(duration = 1400) {
+  const cv = document.getElementById('confetti');
+  cv.classList.add('on');
+  cv.width = window.innerWidth;
+  cv.height = window.innerHeight;
+  const ctx = cv.getContext('2d');
+  const colors = ['#c084fc','#fbbf24','#4ade80','#f87171','#60a5fa','#fff'];
+  const bits = [];
+  for (let i = 0; i < 90; i++) {
+    bits.push({
+      x: Math.random() * cv.width, y: Math.random() * -cv.height * 0.5,
+      w: 6 + Math.random() * 6, h: 9 + Math.random() * 8,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      vy: 2.6 + Math.random() * 3.2, vx: -1.2 + Math.random() * 2.4,
+      rot: Math.random() * 360, vr: -7 + Math.random() * 14
+    });
+  }
+  const start = performance.now();
+  (function frame(now) {
+    const elapsed = now - start;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    bits.forEach(b => {
+      b.y += b.vy; b.x += b.vx; b.rot += b.vr;
+      ctx.save();
+      ctx.translate(b.x, b.y); ctx.rotate(b.rot * Math.PI / 180);
+      ctx.fillStyle = b.c;
+      ctx.globalAlpha = elapsed > duration - 400 ? Math.max(0, (duration - elapsed) / 400) : 1;
+      ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h);
+      ctx.restore();
+    });
+    if (elapsed < duration) requestAnimationFrame(frame);
+    else { ctx.clearRect(0, 0, cv.width, cv.height); cv.classList.remove('on'); }
+  })(start);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HOW TO PLAY
+// ═══════════════════════════════════════════════════════════════
+const HOW_STEPS = [
+  ['Watch Closely','When the round starts, some dots light up for 2 seconds. Memorise them.'],
+  ['Tap From Memory','After they vanish, tap every dot that was lit — in any order.'],
+  ['Build a Streak','Clear all the dots to score. Each cleared round adds to your streak.'],
+  ['Mind Your Lives','A wrong tap costs a life. You get 3 lives per streak.'],
+  ['Use Hints','Stuck? Tap Hint to flash the pattern again — 3 hints per streak.']
+];
+function openHow() {
+  document.getElementById('how-steps').innerHTML = HOW_STEPS.map((s, i) => `
+    <div style="display:flex;gap:13px;margin-bottom:16px;">
+      <div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;font-family:'Baloo 2',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;">${i+1}</div>
+      <div><div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:2px;">${s[0]}</div>
+      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.6);line-height:1.5;">${s[1]}</div></div>
+    </div>`).join('');
+  const o = document.getElementById('how-overlay');
+  o.style.display = 'flex';
+}
+function closeHow(e) {
+  if (e && e.target !== document.getElementById('how-overlay')) return;
+  document.getElementById('how-overlay').style.display = 'none';
+}
+
+// Rebuild grid on resize/orientation change
+window.addEventListener('resize', () => {
+  if (document.getElementById('scr-game').classList.contains('active') && gridSize) {
+    const grid = document.getElementById('mg-grid');
+    const gap = Math.min(window.innerWidth * 0.045, 26);
+    const hardW = Math.min(window.innerWidth - 48, 420, (window.innerHeight - 340));
+    const cell = (hardW - gap * 4) / 5;
+    grid.style.width = (cell * gridSize + gap * (gridSize - 1)) + 'px';
+    grid.style.gap = gap + 'px';
+  }
+});
+</script>
+
+</body>
+</html>
