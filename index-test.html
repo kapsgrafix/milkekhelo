@@ -634,7 +634,7 @@ body.has-strip #launcher { padding-top:52px; }
 }
 .gc-big {
   aspect-ratio:1/1;
-  border-radius:26px;
+  border-radius:16px;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   gap:6px; padding:18px 14px;
@@ -650,6 +650,8 @@ body.has-strip #launcher { padding-top:52px; }
 .gc-big-name {
   font-family:'Baloo 2',cursive; font-size:21px; font-weight:800;
   color:#fff; text-align:center; line-height:1.1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
 }
 
 /* Row 2 — horizontal scroll */
@@ -658,8 +660,8 @@ body.has-strip #launcher { padding-top:52px; }
   overflow-x:auto; overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
   scroll-snap-type:x proximity;
-  margin:0 -20px;              /* bleed past launcher side padding */
-  padding:2px 20px 8px;        /* re-add so first/last cards align */
+  margin-right:-20px;          /* bleed off the right edge for the peek */
+  padding:2px 20px 8px 0;      /* left flush with big row, right room to scroll */
   scrollbar-width:none;
 }
 .gc-scroll-row::-webkit-scrollbar { display:none; }
@@ -667,7 +669,7 @@ body.has-strip #launcher { padding-top:52px; }
   flex:0 0 auto;
   width:41%; max-width:190px;
   aspect-ratio:1/1;
-  border-radius:24px;
+  border-radius:16px;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   gap:4px; padding:14px 10px;
@@ -684,6 +686,8 @@ body.has-strip #launcher { padding-top:52px; }
 .gc-mini-name {
   font-family:'Baloo 2',cursive; font-size:17px; font-weight:800;
   color:#fff; text-align:center; line-height:1.1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
 }
 
 /* Card colours */

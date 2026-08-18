@@ -211,6 +211,14 @@ body {
   box-shadow:0 0 18px rgba(74,222,128,.7), inset 0 1px 2px rgba(255,255,255,.4);
   animation:pop .3s cubic-bezier(.34,1.6,.64,1);
 }
+.dot.correct[data-num]::before {
+  content:attr(data-num);
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',sans-serif; font-weight:800;
+  font-size:min(5vw,26px); color:#052e16;
+  text-shadow:0 1px 1px rgba(255,255,255,.4);
+}
 .dot.wrong {
   background:var(--red);
   box-shadow:0 0 18px rgba(248,113,113,.8);
@@ -418,7 +426,7 @@ const MG_T = {
     easy:"Easy", medium:"Medium", hard:"Hard",
     easyD:"3×3 grid · 4 dots", mediumD:"4×4 grid · 7 dots", hardD:"5×5 grid · 10 dots",
     streak:"Streak", memorise:"Memorise!", memoriseAgain:"Memorise again!",
-    tap:"Tap the dots!", hint:"Hint", mode:m=>({easy:'Easy Mode',medium:'Medium Mode',hard:'Hard Mode'}[m]),
+    tap:(a,b)=>`Tap the dots — ${a} of ${b}`, hint:"Hint", mode:m=>({easy:'Easy Mode',medium:'Medium Mode',hard:'Hard Mode'}[m]),
     hereThey:"Here they are!", outLives:"Out of lives!",
     lifeLeft:"1 life left!", livesLeft:n=>`${n} lives left`,
     gameOver:"Game Over", finalStreak:"Final Streak",
@@ -431,7 +439,7 @@ const MG_T = {
     easy:"आसान", medium:"मध्यम", hard:"कठिन",
     easyD:"3×3 ग्रिड · 4 डॉट", mediumD:"4×4 ग्रिड · 7 डॉट", hardD:"5×5 ग्रिड · 10 डॉट",
     streak:"स्ट्रीक", memorise:"याद करो!", memoriseAgain:"फिर याद करो!",
-    tap:"डॉट दबाओ!", hint:"हिंट", mode:m=>({easy:'आसान मोड',medium:'मध्यम मोड',hard:'कठिन मोड'}[m]),
+    tap:(a,b)=>`डॉट दबाओ — ${a} / ${b}`, hint:"हिंट", mode:m=>({easy:'आसान मोड',medium:'मध्यम मोड',hard:'कठिन मोड'}[m]),
     hereThey:"ये रहे!", outLives:"जान खत्म!",
     lifeLeft:"1 जान बची!", livesLeft:n=>`${n} जान बची`,
     gameOver:"गेम ओवर", finalStreak:"फाइनल स्ट्रीक",
@@ -575,7 +583,7 @@ function newRound() {
     target.forEach(i => dotEl(i).classList.remove('lit'));
     grid.classList.remove('locked');
     phase = 'play';
-    setStatus(T().tap, 'go');
+    setTapStatus();
   }, showTime);
 }
 
@@ -588,8 +596,11 @@ function tapDot(i) {
     // Correct
     found.push(i);
     el.classList.add('correct');
+    el.setAttribute('data-num', found.length);   // show tap order number
     if (found.length === target.length) {
       roundWon();
+    } else {
+      setTapStatus();                              // update "X of Y"
     }
   } else {
     // Wrong
@@ -627,7 +638,7 @@ function loseLife(wrongIdx) {
     setStatus(lives === 1 ? T().lifeLeft : T().livesLeft(lives), '');
     setTimeout(() => {
       if (wrongIdx != null) dotEl(wrongIdx).classList.remove('wrong');
-      setStatus(T().tap, 'go');
+      setTapStatus();
     }, 600);
   }
 }
@@ -674,7 +685,7 @@ function useHint() {
     toShow.forEach(i => dotEl(i).classList.remove('lit'));
     grid.classList.remove('locked');
     phase = 'play';
-    setStatus(T().tap, 'go');
+    setTapStatus();
   }, REVEAL_MS[level]);
 }
 
@@ -686,7 +697,12 @@ function dotEl(i) { return document.querySelector(`.dot[data-idx="${i}"]`); }
 function clearDots() {
   document.querySelectorAll('.dot').forEach(d => {
     d.classList.remove('lit', 'correct', 'wrong');
+    d.removeAttribute('data-num');
   });
+}
+
+function setTapStatus() {
+  setStatus(T().tap(found.length, target.length), 'go');
 }
 
 function setStatus(text, cls) {
