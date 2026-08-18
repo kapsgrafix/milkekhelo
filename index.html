@@ -268,9 +268,14 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
 .g-back:active { background:rgba(255,80,80,.2); }
 .g-back-arrow {
-  width:32px; height:32px; padding:0;
-  border-radius:50%; font-size:18px; font-weight:900;
-  justify-content:center; line-height:1; gap:0;
+  width:30px; height:30px; padding:0;
+  border-radius:50%; font-size:17px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  line-height:1; gap:0;
+}
+.g-back-arrow::before {
+  content:'←'; display:block; line-height:1;
+  transform:translateY(-1px);
 }
 .g-help {
   width:30px; height:30px; border-radius:50%;
@@ -600,71 +605,6 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 body.has-strip #launcher { padding-top:52px; }
 
 
-/* ══ HOME 2x2 GRID ══ */
-.gc-grid {
-  width:100%; max-width:440px;
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-.gc-cell {
-  position:relative;
-  aspect-ratio:1/1;
-  border-radius:24px;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:8px; padding:16px 12px;
-  overflow:hidden;
-}
-.gc-cell-img {
-  width:96px; height:96px; object-fit:contain;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
-  user-select:none; -webkit-user-drag:none;
-}
-.gc-cell-icon {
-  width:96px; height:96px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:72px; line-height:1;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
-}
-.gc-cell-name {
-  font-family:'Baloo 2',cursive;
-  font-size:20px; font-weight:800; color:#fff;
-  text-align:center; line-height:1.15;
-}
-.gc-first { background:#8B5CF6; box-shadow:0 8px 22px rgba(139,92,246,.3); }
-.gc-snl   { background:#F68A2F; box-shadow:0 8px 22px rgba(246,138,47,.3); }
-.gc-ty    { background:#22C55E; box-shadow:0 8px 22px rgba(34,197,94,.3); }
-.gc-wt    { background:#3B82F6; box-shadow:0 8px 22px rgba(59,130,246,.3); }
-
-/* Coming soon */
-.gc-soon { cursor:default; }
-.gc-soon .gc-cell-icon, .gc-soon .gc-cell-name { opacity:.72; }
-.gc-soon-tag {
-  position:absolute; top:10px; left:50%;
-  transform:translateX(-50%);
-  background:#fbbf24; color:#3b2503;
-  font-family:'Nunito Sans',sans-serif;
-  font-size:10px; font-weight:900; letter-spacing:.6px;
-  text-transform:uppercase;
-  padding:4px 12px; border-radius:50px;
-  white-space:nowrap;
-  box-shadow:0 2px 6px rgba(0,0,0,.25);
-  z-index:2;
-}
-.gc-tooltip {
-  position:absolute; bottom:12px; left:50%;
-  transform:translateX(-50%) translateY(8px);
-  background:rgba(10,18,40,.96);
-  border:1px solid rgba(255,255,255,.2);
-  color:#fff; font-size:12px; font-weight:700;
-  padding:7px 14px; border-radius:50px;
-  white-space:nowrap; opacity:0; pointer-events:none;
-  transition:opacity .2s, transform .2s;
-  box-shadow:0 4px 14px rgba(0,0,0,.4);
-}
-.gc-tooltip.show {
-  opacity:1; transform:translateX(-50%) translateY(0);
-}
 
 
 .first-prompt {
@@ -676,6 +616,86 @@ body.has-strip #launcher { padding-top:52px; }
   padding:14px 20px 4px;
   letter-spacing:.2px;
 }
+
+
+/* ══ HOME CARDS (2 rows) ══ */
+.home-cards {
+  width:100%; max-width:460px;
+  display:flex; flex-direction:column; gap:16px;
+  flex-shrink:0; padding-bottom:6px;
+}
+@media (max-width:480px) {
+  .home-cards { max-width:100%; }
+}
+
+/* Row 1 — big cards */
+.gc-big-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+}
+.gc-big {
+  aspect-ratio:1/1;
+  border-radius:16px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:6px; padding:18px 14px;
+  cursor:pointer; transition:transform .12s;
+  position:relative; overflow:hidden;
+}
+.gc-big:active { transform:scale(.97); }
+.gc-big-img {
+  width:60%; max-width:150px; height:auto; object-fit:contain;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,.32));
+  user-select:none; -webkit-user-drag:none;
+}
+.gc-big-name {
+  font-family:'Baloo 2',cursive; font-size:21px; font-weight:800;
+  color:#fff; text-align:center; line-height:1.1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
+}
+
+/* Row 2 — horizontal scroll */
+.gc-scroll-row {
+  display:flex; gap:14px;
+  overflow-x:auto; overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity;
+  margin-right:-20px;          /* bleed off the right edge for the peek */
+  padding:2px 20px 8px 0;      /* left flush with big row, right room to scroll */
+  scrollbar-width:none;
+}
+.gc-scroll-row::-webkit-scrollbar { display:none; }
+.gc-mini {
+  flex:0 0 auto;
+  width:41%; max-width:190px;
+  aspect-ratio:1/1;
+  border-radius:16px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:4px; padding:14px 10px;
+  cursor:pointer; transition:transform .12s;
+  scroll-snap-align:start;
+  position:relative; overflow:hidden;
+}
+.gc-mini:active { transform:scale(.96); }
+.gc-mini-img {
+  width:62%; max-width:110px; height:auto; object-fit:contain;
+  filter:drop-shadow(0 5px 12px rgba(0,0,0,.3));
+  user-select:none; -webkit-user-drag:none;
+}
+.gc-mini-name {
+  font-family:'Baloo 2',cursive; font-size:17px; font-weight:800;
+  color:#fff; text-align:center; line-height:1.1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
+}
+
+/* Card colours */
+.gc-snl   { background:#3B82F6; box-shadow:0 8px 22px rgba(59,130,246,.3); }
+.gc-mg    { background:#22C55E; box-shadow:0 8px 22px rgba(34,197,94,.3); }
+.gc-first { background:#8B5CF6; }
+.gc-ty    { background:#8B5CF6; }
+.gc-wt    { background:#F68A2F; }
 
 </style>
 <body>
@@ -719,31 +739,35 @@ body.has-strip #launcher { padding-top:52px; }
 
   <!-- game cards -->
   <div class="home-cards">
-    <div class="gc-grid">
 
-      <div class="game-card gc-cell gc-first" onclick="startGame()">
-        <img src="first-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-first">First</div>
+    <!-- Row 1: big cards -->
+    <div class="gc-big-row">
+      <div class="game-card gc-big gc-snl" onclick="startSnlGame()">
+        <img src="sns-home.png" class="gc-big-img" width="320" height="320" loading="eager" alt="Steps and Slides — dice board game" draggable="false">
+        <div class="gc-big-name" id="gc-name-snl">Steps &amp; Slides</div>
       </div>
-
-      <div class="game-card gc-cell gc-snl" onclick="startSnlGame()">
-        <img src="sns-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Steps and Slides — dice board game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-snl">Steps &amp; Slides</div>
+      <div class="game-card gc-big gc-mg" onclick="openMemoryGrid()">
+        <img src="memorygrid-home.png" class="gc-big-img" width="320" height="320" loading="eager" alt="Memory Grid — memory pattern game" draggable="false">
+        <div class="gc-big-name" id="gc-name-mg">Memory Grid</div>
       </div>
-
-      <div class="game-card gc-cell gc-ty" onclick="startTyGame()">
-        <img src="thankyou-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-ty">Thank You</div>
-      </div>
-
-      <div class="game-card gc-cell gc-wt gc-soon" onclick="showSoon(event)">
-        <div class="gc-soon-tag" id="wt-soon-tag">Coming Soon</div>
-        <div class="gc-cell-icon">🕵️</div>
-        <div class="gc-cell-name" id="gc-name-wt">Who's That?</div>
-        <div class="gc-tooltip" id="wt-tooltip">Will be live soon :)</div>
-      </div>
-
     </div>
+
+    <!-- Row 2: horizontally scrollable -->
+    <div class="gc-scroll-row">
+      <div class="game-card gc-mini gc-first" onclick="startGame()">
+        <img src="first-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
+        <div class="gc-mini-name" id="gc-name-first">First</div>
+      </div>
+      <div class="game-card gc-mini gc-wt" onclick="openWhosThat()">
+        <img src="whosthat-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="Who's That — party guessing game" draggable="false">
+        <div class="gc-mini-name" id="gc-name-wt">Who's That?</div>
+      </div>
+      <div class="game-card gc-mini gc-ty" onclick="startTyGame()">
+        <img src="thankyou-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
+        <div class="gc-mini-name" id="gc-name-ty">Thank You</div>
+      </div>
+    </div>
+
   </div>
 
 </div><!-- /launcher -->
@@ -753,7 +777,7 @@ body.has-strip #launcher { padding-top:52px; }
 <div id="game">
   <div class="g-header">
     <div class="hdr-left">
-      <button class="g-back g-back-arrow" id="g-back" onclick="exitGame()" aria-label="Back">←</button>
+      <button class="g-back g-back-arrow" id="g-back" onclick="exitGame()" aria-label="Back"></button>
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
@@ -975,13 +999,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // ── LANGUAGE ──
 let lang = 'en';
 
-function showSoon(e) {
-  e.stopPropagation();
-  const tip = document.getElementById('wt-tooltip');
-  if (!tip) return;
-  tip.classList.add('show');
-  clearTimeout(tip._t);
-  tip._t = setTimeout(() => tip.classList.remove('show'), 2200);
+function openMemoryGrid() {
+  window.location.href = 'memorygrid.html';
+}
+function openWhosThat() {
+  window.location.href = 'whosthat.html';
 }
 
 function toggleLang() {
@@ -1000,10 +1022,9 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
   if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
   if (_el('first-prompt')) _el('first-prompt').textContent = hi ? 'अपनी कहानी बताएं...' : 'Share the story of your...';
   if (_el('gc-name-snl'))   _el('gc-name-snl').textContent  = hi ? 'स्टेप्स एंड स्लाइड्स' : 'Steps & Slides';
+  if (_el('gc-name-mg'))    _el('gc-name-mg').textContent   = hi ? 'मेमोरी ग्रिड' : 'Memory Grid';
   if (_el('gc-name-ty'))    _el('gc-name-ty').textContent   = hi ? 'थैंक यू' : 'Thank You';
   if (_el('gc-name-wt'))    _el('gc-name-wt').textContent   = hi ? 'हूज़ दैट?' : "Who's That?";
-  if (_el('wt-soon-tag'))   _el('wt-soon-tag').textContent  = hi ? 'जल्द आ रहा' : 'Coming Soon';
-  if (_el('wt-tooltip'))    _el('wt-tooltip').textContent   = hi ? 'जल्द ही लाइव होगा :)' : 'Will be live soon :)';
 
   // ── In-game headers (transliterated names) ──
   if (_el('g-logo-first')) _el('g-logo-first').innerHTML = hi ? 'फर्स्ट<span>!</span>' : 'FIRST<span>!</span>';
@@ -1843,7 +1864,7 @@ if ('serviceWorker' in navigator) {
 <div id="ty-game">
   <div class="g-header">
     <div class="hdr-left">
-      <button class="g-back g-back-arrow" onclick="exitTyGame()" aria-label="Back">←</button>
+      <button class="g-back g-back-arrow" onclick="exitTyGame()" aria-label="Back"></button>
       <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
@@ -1920,7 +1941,7 @@ if ('serviceWorker' in navigator) {
 <div id="snl-game">
   <div class="snl-topbar">
     <div class="hdr-left">
-      <button class="g-back g-back-arrow" onclick="exitSnlGame()" aria-label="Back">←</button>
+      <button class="g-back g-back-arrow" onclick="exitSnlGame()" aria-label="Back"></button>
       <button class="g-help" onclick="openSnlHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
