@@ -512,7 +512,7 @@ body {
 }
 .sticky-foot {
   flex-shrink:0; width:100%; max-width:340px;
-  padding:12px 0 4px;
+  padding:12px 0 calc(24px + env(safe-area-inset-bottom,0px));
   position:sticky; bottom:0;
   background:linear-gradient(to top, var(--bg-3) 55%, transparent);
   margin-top:auto;
@@ -754,12 +754,12 @@ body {
         <div class="players-count" id="lobby-count">0</div>
       </div>
       <div id="lobby-players"></div>
-      <div class="waiting-msg" id="lobby-wait">Waiting for players<span class="dots"></span></div>
     </div>
   </div>
 
   <div class="sticky-foot">
     <button class="btn btn-gold" id="btn-start" onclick="startGame()" disabled>Start Game</button>
+    <div class="waiting-msg" id="lobby-wait">Waiting for players<span class="dots"></span></div>
   </div>
 </div>
 
