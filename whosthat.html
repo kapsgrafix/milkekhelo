@@ -527,12 +527,10 @@ body {
 #confetti.on { display:block; }
 
 /* ══ ANSWERED TICK ══ */
-.opt-tick {
-  width:20px; height:20px; border-radius:50%;
-  background:var(--green); color:#052e16;
-  font-size:11px; font-weight:900;
-  display:inline-flex; align-items:center; justify-content:center;
-  flex-shrink:0; animation:popIn .3s cubic-bezier(.34,1.5,.64,1);
+.opt-answered {
+  font-size:12px; font-weight:800; color:var(--green);
+  flex-shrink:0; letter-spacing:.2px;
+  animation:popIn .3s cubic-bezier(.34,1.5,.64,1);
 }
 .reveal-sub.plus { color:var(--green); font-weight:800; }
 
@@ -543,6 +541,29 @@ body {
   align-items:center; justify-content:center;
 }
 .end-wrap .scr-sub { margin-bottom:0; }
+
+.empty-slot { opacity:.5; border-style:dashed !important; background:rgba(255,255,255,.03) !important; }
+.empty-avatar {
+  background:rgba(255,255,255,.08) !important;
+  color:rgba(255,255,255,.4) !important;
+  font-size:13px !important;
+}
+.empty-name { color:rgba(255,255,255,.35) !important; font-weight:700 !important; font-style:italic; }
+
+.btn-stacked {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  line-height:1.15; padding:12px 0;
+}
+.btn-stacked .btn-main { font-size:18px; font-weight:700; }
+.btn-stacked .btn-sub {
+  font-size:11px; font-weight:600; opacity:.75;
+  font-family:'Nunito Sans',sans-serif; letter-spacing:.3px;
+}
+
+.cta-note {
+  text-align:center; font-size:12px; font-weight:700;
+  color:rgba(255,255,255,.4); margin-top:10px;
+}
 
 /* ── TOAST ── */
 #toast {
@@ -605,7 +626,10 @@ body {
       <div class="logo-sub" id="home-tagline">How well do you know each other?</div>
     </div>
     <div class="btn-stack">
-      <button class="btn btn-primary" id="btn-create" onclick="goCreate()">Create Game</button>
+      <button class="btn btn-primary btn-stacked" id="btn-create" onclick="goCreate()">
+        <span class="btn-main" id="btn-create-home-main">Create Game</span>
+        <span class="btn-sub" id="cta-note-home">Maximum 10 players</span>
+      </button>
       <button class="btn btn-ghost" id="btn-join" onclick="goJoin()">Join Game</button>
     </div>
   </div>
@@ -658,7 +682,10 @@ body {
       </div>
     </div>
 
-    <button class="btn btn-primary" id="btn-create-go" onclick="createGame()">Create Game</button>
+    <button class="btn btn-primary btn-stacked" id="btn-create-go" onclick="createGame()">
+      <span class="btn-main" id="btn-create-main">Create Game</span>
+      <span class="btn-sub" id="cta-note-max">Maximum 10 players</span>
+    </button>
   </div>
 </div>
 
@@ -1188,6 +1215,7 @@ const T = {
     score:"Score", remaining:"Remaining",
     qNum:(a,b)=>`Question ${a} of ${b}`,
     locked:"Answer locked in — waiting for everyone else",
+    answered:"Answered!", maxPlayers:"Maximum 10 players", waitingSlot:"Waiting for player…",
     wellDone:"Well done!", missed:"Missed!",
     plusOne:"+1 point", noPoint:"No point this round",
     everyonePicked:n=>`Everyone picked ${n}`,
@@ -1228,6 +1256,7 @@ const T = {
     score:"स्कोर", remaining:"बाकी",
     qNum:(a,b)=>`सवाल ${a} / ${b}`,
     locked:"जवाब दर्ज — बाकी सबका इंतज़ार",
+    answered:"जवाब दिया!", maxPlayers:"अधिकतम 10 खिलाड़ी", waitingSlot:"खिलाड़ी का इंतज़ार…",
     wellDone:"शाबाश!", missed:"चूक गए!",
     plusOne:"+1 अंक", noPoint:"इस बार कोई अंक नहीं",
     everyonePicked:n=>`सबने ${n} को चुना`,
@@ -1274,7 +1303,8 @@ function applyLang() {
 
   // Home
   setTxt('home-tagline', L.tagline);
-  setTxt('btn-create', L.create);
+  setTxt('btn-create-home-main', L.create);
+  setTxt('cta-note-home', L.maxPlayers);
   setTxt('btn-join', L.join);
 
   // Create form
@@ -1282,7 +1312,8 @@ function applyLang() {
   setTxt('l-qcount', L.lQCount);
   setTxt('l-target', L.lTarget);
   setTxt('l-host', L.lName);
-  setTxt('btn-create-go', L.create);
+  setTxt('btn-create-main', L.create);
+  setTxt('cta-note-max', L.maxPlayers);
   const hostIn = el('in-host'); if (hostIn) hostIn.placeholder = L.phName;
   const qSel = el('in-qcount');
   if (qSel) [...qSel.options].forEach(o => o.textContent = L.qOpt(o.value));
@@ -1707,13 +1738,22 @@ function renderLobby(s, players) {
   document.getElementById('lobby-count').textContent = players.length + ' / 10';
 
   const list = document.getElementById('lobby-players');
-  list.innerHTML = players.map(p => `
+  let rows = players.map(p => `
     <div class="player-chip">
       <div class="player-avatar" style="background:${avatarColor(p.id)}">${escapeHtml(p.name.charAt(0).toUpperCase())}</div>
       <div class="player-name">${escapeHtml(p.name)}${p.id === myId ? ' (you)' : ''}</div>
       ${p.isHost ? '<div class="player-tag">Host</div>' : ''}
     </div>
   `).join('');
+  // Fill up to 10 with empty slots
+  for (let i = players.length; i < 10; i++) {
+    rows += `
+    <div class="player-chip empty-slot">
+      <div class="player-avatar empty-avatar">${i + 1}</div>
+      <div class="player-name empty-name">${t().waitingSlot}</div>
+    </div>`;
+  }
+  list.innerHTML = rows;
 
   const enough = players.length >= 2;
   const wait = document.getElementById('lobby-wait');
@@ -1752,7 +1792,7 @@ function renderQuestion(s, players) {
       <div class="player-avatar" style="background:${avatarColor(p.id)}">${escapeHtml(p.name.charAt(0).toUpperCase())}</div>
       <div class="opt-namewrap">
         <span class="opt-name">${escapeHtml(p.name)}${p.id === myId ? ' (you)' : ''}</span>
-        ${hasAnswered ? '<span class="opt-tick">✓</span>' : ''}
+        ${hasAnswered ? `<span class="opt-answered">${t().answered}</span>` : ''}
       </div>
       <div class="opt-check">${myAnswer === p.id ? '✓' : ''}</div>
     </div>`;
