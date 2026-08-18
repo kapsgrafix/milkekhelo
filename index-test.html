@@ -624,6 +624,9 @@ body.has-strip #launcher { padding-top:52px; }
   display:flex; flex-direction:column; gap:16px;
   flex-shrink:0; padding-bottom:6px;
 }
+@media (max-width:480px) {
+  .home-cards { max-width:100%; }
+}
 
 /* Row 1 — big cards */
 .gc-big-row {
@@ -655,7 +658,8 @@ body.has-strip #launcher { padding-top:52px; }
   overflow-x:auto; overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
   scroll-snap-type:x proximity;
-  padding:2px 0 8px;
+  margin:0 -20px;              /* bleed past launcher side padding */
+  padding:2px 20px 8px;        /* re-add so first/last cards align */
   scrollbar-width:none;
 }
 .gc-scroll-row::-webkit-scrollbar { display:none; }
@@ -685,9 +689,9 @@ body.has-strip #launcher { padding-top:52px; }
 /* Card colours */
 .gc-snl   { background:#3B82F6; box-shadow:0 8px 22px rgba(59,130,246,.3); }
 .gc-mg    { background:#22C55E; box-shadow:0 8px 22px rgba(34,197,94,.3); }
-.gc-first { background:#8B5CF6; box-shadow:0 8px 22px rgba(139,92,246,.3); }
-.gc-ty    { background:#F68A2F; box-shadow:0 8px 22px rgba(246,138,47,.3); }
-.gc-wt    { background:#8B5CF6; box-shadow:0 8px 22px rgba(139,92,246,.3); }
+.gc-first { background:#8B5CF6; }
+.gc-ty    { background:#8B5CF6; }
+.gc-wt    { background:#F68A2F; }
 
 </style>
 <body>
@@ -750,13 +754,13 @@ body.has-strip #launcher { padding-top:52px; }
         <img src="first-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
         <div class="gc-mini-name" id="gc-name-first">First</div>
       </div>
+      <div class="game-card gc-mini gc-wt" onclick="openWhosThat()">
+        <img src="whosthat-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="Who's That — party guessing game" draggable="false">
+        <div class="gc-mini-name" id="gc-name-wt">Who's That?</div>
+      </div>
       <div class="game-card gc-mini gc-ty" onclick="startTyGame()">
         <img src="thankyou-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
         <div class="gc-mini-name" id="gc-name-ty">Thank You</div>
-      </div>
-      <div class="game-card gc-mini gc-wt gc-soon" onclick="openWhosThat()">
-        <img src="whosthat-home.png" class="gc-mini-img" width="320" height="320" loading="eager" alt="Who's That — party guessing game" draggable="false">
-        <div class="gc-mini-name" id="gc-name-wt">Who's That?</div>
       </div>
     </div>
 
