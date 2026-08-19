@@ -1412,7 +1412,9 @@ function buildWrapper() {
     onValue: (ref, cb)  => {
       const handler = ref.on('value', cb);
       return () => ref.off('value', handler);
-    }
+    },
+    onDisconnectRemove: (ref) => ref.onDisconnect().remove(),
+    cancelDisconnect:   (ref) => ref.onDisconnect().cancel()
   };
   fbReady = true;
 }
@@ -1577,6 +1579,42 @@ async function ensureReady() {
 // ═══════════════════════════════════════════════════════════════
 //  CREATE GAME
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+//  PRESENCE — auto-remove player if they close/disconnect
+// ═══════════════════════════════════════════════════════════════
+let presenceRef = null;
+let connectedRef = null;
+let connectedHandler = null;
+
+function setupPresence() {
+  if (!db || !currentCode || !myId) return;
+  // The player node we want auto-removed on disconnect
+  presenceRef = db.ref(`whosthat/${currentCode}/players/${myId}`);
+
+  // Watch the special .info/connected node. Every time we (re)connect,
+  // (re)arm the onDisconnect handler so it survives reconnects.
+  connectedRef = db.ref('.info/connected');
+  connectedHandler = connectedRef.on('value', (snap) => {
+    if (snap.val() === true && presenceRef) {
+      // Arm: when this client drops, Firebase server removes the player.
+      presenceRef.onDisconnect().remove();
+    }
+  });
+}
+
+function teardownPresence() {
+  try {
+    if (presenceRef) presenceRef.onDisconnect().cancel();
+  } catch (e) {}
+  if (connectedRef && connectedHandler) {
+    connectedRef.off('value', connectedHandler);
+  }
+  presenceRef = null;
+  connectedRef = null;
+  connectedHandler = null;
+}
+
 window.createGame = async function () {
   if (!(await ensureReady())) return;
 
@@ -1610,6 +1648,7 @@ window.createGame = async function () {
   try {
     gameRef = fb.ref(db, 'whosthat/' + currentCode);
     await fb.set(gameRef, initial);
+    setupPresence();
     attachListener();
     go('scr-lobby');
   } catch (err) {
@@ -1689,6 +1728,7 @@ window.joinGame = async function () {
       name, isHost: false, joinedAt: Date.now()
     });
 
+    setupPresence();
     attachListener();
     go('scr-lobby');
   } catch (err) {
@@ -1715,6 +1755,7 @@ function attachListener() {
 }
 
 function cleanup() {
+  teardownPresence();
   if (unsub) { unsub(); unsub = null; }
   gameRef = null; gameState = null;
   myId = null; isHost = false; currentCode = '';
@@ -1821,8 +1862,9 @@ function renderQuestion(s, players) {
   note.style.display = myAnswer ? 'block' : 'none';
   note.innerHTML = L.locked + '<span class="dots"></span>';
 
-  const answeredCount = Object.keys(answers).length;
-  if (isHost && answeredCount === players.length && players.length >= 2) {
+  const playerIds = players.map(p => p.id);
+  const validAnswers = playerIds.filter(id => answers[id] != null);
+  if (isHost && validAnswers.length === players.length && players.length >= 2) {
     setTimeout(() => resolveRound(), 600);
   }
 }
@@ -1854,9 +1896,13 @@ async function resolveRound() {
 
   const players = playersArray(s);
   const answers = s.answers || {};
-  if (Object.keys(answers).length < players.length) return;
+  const playerIds = players.map(p => p.id);
 
-  const values = Object.values(answers);
+  // Only count answers from players still connected (drop stale ones)
+  const values = playerIds.map(id => answers[id]).filter(v => v != null);
+  if (players.length < 2) return;              // need a real group
+  if (values.length < players.length) return;  // not everyone answered yet
+
   const unanimous = values.every(v => v === values[0]);
   const newScore = s.score + (unanimous ? 1 : 0);
   const hitTarget = newScore >= s.target;
@@ -2013,6 +2059,7 @@ window.playAgain = async function () {
 };
 
 window.leaveGame = async function () {
+  try { if (presenceRef) presenceRef.onDisconnect().cancel(); } catch (e) {}
   try {
     if (gameRef && myId) {
       if (isHost) {
