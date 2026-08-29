@@ -643,24 +643,42 @@ body.has-strip #launcher { padding-top:52px; }
 }
 .gc-big {
   aspect-ratio:1/1;
-  border-radius:16px;
+  border-radius:22px;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  gap:6px; padding:18px 14px;
+  gap:6px; padding:20px 16px;
   cursor:pointer; transition:transform .12s;
   position:relative; overflow:hidden;
+  /* outer border: light top → dark bottom (outermost layer) */
+  background:linear-gradient(180deg,#F6D22F 0%,#FD750C 100%);
+}
+.gc-big::before {
+  /* inner border ring: dark top → light bottom, inset by outer border width */
+  content:''; position:absolute; inset:4px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#FD750C 0%,#F6D22F 100%);
+  z-index:0;
+}
+.gc-big::after {
+  /* card fill: base colour top → darker bottom, inset by both borders */
+  content:''; position:absolute; inset:7px;
+  border-radius:15px;
+  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  z-index:1;
 }
 .gc-big:active { transform:scale(.97); }
 .gc-big-img {
   width:60%; max-width:150px; height:auto; object-fit:contain;
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.32));
   user-select:none; -webkit-user-drag:none;
+  position:relative; z-index:3;
 }
 .gc-big-name {
   font-family:'Baloo 2',cursive; font-size:21px; font-weight:800;
   color:#fff; text-align:center; line-height:1.1;
   -webkit-text-stroke:4px rgba(0,0,0,.2);
   paint-order:stroke fill;
+  position:relative; z-index:3;
 }
 
 /* Row 2 — horizontal scroll */
@@ -678,33 +696,48 @@ body.has-strip #launcher { padding-top:52px; }
   flex:0 0 auto;
   width:41%; max-width:190px;
   aspect-ratio:1/1;
-  border-radius:16px;
+  border-radius:20px;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  gap:4px; padding:14px 10px;
+  gap:4px; padding:16px 12px;
   cursor:pointer; transition:transform .12s;
   scroll-snap-align:start;
   position:relative; overflow:hidden;
+  background:linear-gradient(180deg,#F6D22F 0%,#FD750C 100%);
+}
+.gc-mini::before {
+  content:''; position:absolute; inset:4px;
+  border-radius:16px;
+  background:linear-gradient(180deg,#FD750C 0%,#F6D22F 100%);
+  z-index:0;
+}
+.gc-mini::after {
+  content:''; position:absolute; inset:7px;
+  border-radius:13px;
+  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  z-index:1;
 }
 .gc-mini:active { transform:scale(.96); }
 .gc-mini-img {
   width:62%; max-width:110px; height:auto; object-fit:contain;
   filter:drop-shadow(0 5px 12px rgba(0,0,0,.3));
   user-select:none; -webkit-user-drag:none;
+  position:relative; z-index:3;
 }
 .gc-mini-name {
   font-family:'Baloo 2',cursive; font-size:17px; font-weight:800;
   color:#fff; text-align:center; line-height:1.1;
   -webkit-text-stroke:4px rgba(0,0,0,.2);
   paint-order:stroke fill;
+  position:relative; z-index:3;
 }
 
 /* Card colours */
-.gc-snl   { background:#3B82F6; box-shadow:0 8px 22px rgba(59,130,246,.3); }
-.gc-mg    { background:#22C55E; box-shadow:0 8px 22px rgba(34,197,94,.3); }
-.gc-first { background:#8B5CF6; }
-.gc-ty    { background:#8B5CF6; }
-.gc-wt    { background:#F68A2F; }
+.gc-snl   { --c:#3B82F6; --cd:#1e4fa0; box-shadow:0 8px 22px rgba(59,130,246,.3); }
+.gc-mg    { --c:#22C55E; --cd:#12813a; box-shadow:0 8px 22px rgba(34,197,94,.3); }
+.gc-first { --c:#8B5CF6; --cd:#5b32b0; }
+.gc-ty    { --c:#8B5CF6; --cd:#5b32b0; }
+.gc-wt    { --c:#F68A2F; --cd:#c25f12; }
 
 </style>
 <body>
