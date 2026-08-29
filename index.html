@@ -515,7 +515,25 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .home-lang-row {
   width:100%; display:flex; justify-content:center;
   padding:22px 0 0; flex-shrink:0;
+  position:relative;
 }
+.hamburger {
+  position:absolute; right:2px; bottom:0;
+  width:38px; height:34px; border-radius:12px;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+  cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px;
+  transition:background .15s;
+}
+.hamburger:active { background:rgba(255,255,255,.24); }
+.hamburger span {
+  display:block; width:18px; height:2px; border-radius:2px;
+  background:rgba(255,255,255,.85);
+  transition:transform .25s, opacity .2s;
+}
+.hamburger.open span:nth-child(1) { transform:translateY(6px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
 
 .home-logo-wrap {
   margin:auto 0;
@@ -756,6 +774,101 @@ body.has-strip #launcher { padding-top:52px; }
 .gc-ty    { --c:#8B5CF6; --cd:#5b32b0; }
 .gc-wt    { --c:#F68A2F; --cd:#c25f12; }
 
+
+/* ══ SIDE MENU TRAY ══ */
+.menu-scrim {
+  position:fixed; inset:0; z-index:350;
+  background:transparent;
+  display:none; pointer-events:none;
+}
+.menu-scrim.show { display:block; }
+.menu-scrim .menu-tray { pointer-events:auto; }
+.menu-tray {
+  position:absolute; right:14px;
+  top:calc(56px + env(safe-area-inset-top,0px));
+  width:210px;
+  background:linear-gradient(160deg,#1f3160,#131f42);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  box-shadow:0 14px 40px rgba(0,0,0,.5);
+  padding:10px;
+  transform-origin:top right;
+  transform:scale(.85); opacity:0;
+  transition:transform .22s cubic-bezier(.34,1.4,.64,1), opacity .18s;
+  display:flex; flex-direction:column; gap:6px;
+}
+.menu-scrim.show .menu-tray { transform:scale(1); opacity:1; }
+.menu-head {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px; padding-bottom:14px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.menu-title { font-family:'Baloo 2',cursive; font-size:20px; font-weight:800; color:#fff; }
+.menu-x {
+  width:30px; height:30px; border-radius:50%; border:none;
+  background:rgba(255,255,255,.1); color:#fff; font-size:14px; cursor:pointer;
+}
+.menu-x:active { background:rgba(255,255,255,.22); }
+.menu-item {
+  display:flex; align-items:center; gap:12px;
+  background:transparent; border:none;
+  border-radius:12px; padding:13px 14px; cursor:pointer;
+  font-family:'Nunito Sans',sans-serif; font-size:15px; font-weight:700; color:#fff;
+  text-align:left; transition:background .15s; width:100%;
+}
+.menu-item:active { background:rgba(255,255,255,.14); }
+.menu-ico { font-size:20px; line-height:1; }
+
+/* ══ POLICY / CONTACT PAGES ══ */
+.page-overlay {
+  position:fixed; inset:0; z-index:360;
+  background:linear-gradient(160deg,#14244D,#0d1836);
+  display:none; flex-direction:column;
+  padding:0 0 env(safe-area-inset-bottom,0px);
+}
+.page-overlay.show { display:flex; animation:fadeSlide .3s ease; }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.page-head {
+  display:flex; align-items:center; gap:12px; flex-shrink:0;
+  padding:calc(14px + env(safe-area-inset-top,0px)) 18px 14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:sticky; top:0;
+  background:rgba(20,36,77,.95); backdrop-filter:blur(8px); z-index:2;
+}
+.page-title { font-family:'Baloo 2',cursive; font-size:19px; font-weight:800; color:#fff; }
+.page-body {
+  flex:1; overflow-y:auto; padding:22px 20px 40px;
+  -webkit-overflow-scrolling:touch;
+  position:relative; z-index:1;
+}
+.page-body h2 {
+  font-family:'Baloo 2',cursive; font-size:17px; font-weight:800;
+  color:#FFD54A; margin:22px 0 8px;
+}
+.page-body h2:first-child { margin-top:0; }
+.page-body p, .page-body li {
+  font-size:14px; font-weight:500; line-height:1.6;
+  color:rgba(255,255,255,.8); margin-bottom:10px;
+}
+.page-body ul { padding-left:20px; margin-bottom:12px; }
+.page-body a { color:#7db5ff; font-weight:700; text-decoration:none; }
+.page-body a:active { text-decoration:underline; }
+.page-body .updated { font-size:12px; color:rgba(255,255,255,.4); margin-bottom:18px; }
+.contact-card {
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
+  border-radius:18px; padding:26px 22px; text-align:center; margin-top:8px;
+}
+.contact-card p { color:rgba(255,255,255,.85); font-size:15px; line-height:1.55; margin-bottom:0; }
+.contact-ico { font-size:46px; margin-bottom:12px; }
+.contact-mail {
+  display:inline-block; margin-top:6px;
+  font-family:'Baloo 2',cursive; font-size:19px; font-weight:800;
+  color:#7db5ff; text-decoration:none;
+  background:rgba(125,181,255,.12); border:1px solid rgba(125,181,255,.3);
+  border-radius:50px; padding:12px 24px;
+}
+.contact-mail:active { background:rgba(125,181,255,.24); }
+
 </style>
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
@@ -777,12 +890,15 @@ body.has-strip #launcher { padding-top:52px; }
 <main id="main-content">
 <div id="launcher">
 
-  <!-- lang toggle centered at top -->
+  <!-- lang toggle centered at top + hamburger on right -->
   <div class="home-lang-row">
     <div class="lang-toggle">
       <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
     </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
   <!-- logo -->
@@ -830,6 +946,27 @@ body.has-strip #launcher { padding-top:52px; }
   </div>
 
 </div><!-- /launcher -->
+
+<!-- ══════════ SIDE MENU TRAY ══════════ -->
+<div class="menu-scrim" id="menu-scrim">
+  <div class="menu-tray" id="menu-tray" onclick="event.stopPropagation()">
+    <button class="menu-item" onclick="openPolicy()">
+      <span class="menu-ico">📄</span>
+      <span id="menu-policy">Policy</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ POLICY PAGE ══════════ -->
+<div class="page-overlay" id="policy-page">
+  <div class="page-head">
+    <button class="g-back g-back-arrow" onclick="closePolicy()" aria-label="Back"></button>
+    <div class="page-title" id="policy-title">Privacy Policy &amp; Terms</div>
+  </div>
+  <div class="page-body" id="policy-body"></div>
+</div>
+
+
 </main>
 
 <!-- ══════════ GAME SCREEN ══════════ -->
@@ -1067,6 +1204,142 @@ function openWhosThat() {
   window.location.href = 'whosthat.html';
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  SIDE MENU + POLICY
+// ═══════════════════════════════════════════════════════════════
+function toggleMenu() {
+  const scrim = document.getElementById('menu-scrim');
+  if (scrim.classList.contains('show')) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
+}
+function openMenu() {
+  document.getElementById('menu-scrim').classList.add('show');
+  document.getElementById('hamburger').classList.add('open');
+}
+function closeMenu() {
+  document.getElementById('menu-scrim').classList.remove('show');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+
+// Close menu when clicking/tapping anywhere outside the card + hamburger
+document.addEventListener('click', function (e) {
+  const scrim = document.getElementById('menu-scrim');
+  if (!scrim || !scrim.classList.contains('show')) return;
+  const tray = document.getElementById('menu-tray');
+  const burger = document.getElementById('hamburger');
+  if (tray && tray.contains(e.target)) return;      // clicked inside card
+  if (burger && burger.contains(e.target)) return;  // hamburger toggles itself
+  closeMenu();
+});
+
+function openPolicy() {
+  closeMenu();
+  renderPolicy();
+  document.getElementById('policy-page').classList.add('show');
+}
+function closePolicy() {
+  document.getElementById('policy-page').classList.remove('show');
+}
+
+function renderPolicy() {
+  const hi = (typeof lang !== 'undefined' && lang === 'hi');
+  document.getElementById('policy-title').textContent = hi ? 'गोपनीयता नीति और शर्तें' : 'Privacy Policy & Terms';
+  document.getElementById('policy-body').innerHTML = hi ? POLICY_HI : POLICY_EN;
+}
+
+const POLICY_EN = `
+  <div class="updated">Last updated: August 2026</div>
+
+  <h2>Introduction</h2>
+  <p>Mil ke Khelo ("we", "our", "the app") provides free party games playable in your browser at milkekhelo.com. This page explains how we handle your information, and the terms under which you use our games. By using the app, you agree to this policy.</p>
+
+  <h2>Information We Collect</h2>
+  <p>We aim to collect as little as possible. Depending on how you use the app:</p>
+  <ul>
+    <li><strong>Name you enter:</strong> In multiplayer games like "Who's That?", the display name you type is shared with other players in your game session and stored temporarily to run the game.</li>
+    <li><strong>Gameplay data:</strong> Temporary game data (your answers, scores, game codes) is stored briefly to make multiplayer work, and is not tied to your real identity.</li>
+    <li><strong>Analytics:</strong> We use Google Analytics to understand general, anonymous usage (such as how many people play and which games are popular). This may include device type, approximate region, and pages visited.</li>
+    <li><strong>Local storage:</strong> Some games save your best score on your own device so you can beat it later. This never leaves your device.</li>
+  </ul>
+
+  <h2>Information We Do NOT Collect</h2>
+  <p>We do not ask for or store your email, phone number, address, passwords, or payment information. We do not sell your data to anyone.</p>
+
+  <h2>Multiplayer & Firebase</h2>
+  <p>Multiplayer games use Google Firebase to sync players in real time. The names and temporary game data are stored on Firebase servers only for the duration needed to run a game session, and old sessions are cleared automatically.</p>
+
+  <h2>Children's Privacy</h2>
+  <p>Our games are family-friendly. We do not knowingly collect personal information from children. Since we don't collect emails or accounts, the app can be enjoyed without sharing personal details. If you believe a child has shared personal information, contact us and we'll remove it.</p>
+
+  <h2>Cookies & Tracking</h2>
+  <p>We use Google Analytics, which may set cookies to measure anonymous usage. We do not use advertising cookies or sell data to advertisers.</p>
+
+  <h2>Data Security</h2>
+  <p>We rely on trusted providers (Google Firebase, Google Analytics) that use industry-standard security. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+
+  <h2>Your Choices</h2>
+  <p>You can play most games without entering any personal detail. You can clear your device's local storage at any time through your browser settings. You may decline analytics using browser privacy tools or extensions.</p>
+
+  <h2>Terms of Use</h2>
+  <p>Mil ke Khelo is provided free, "as is", for personal entertainment. Please play respectfully with others. Do not misuse the app, attempt to disrupt its services, or use it for any unlawful purpose. We may update or discontinue games at any time.</p>
+
+  <h2>Changes to This Policy</h2>
+  <p>We may update this policy from time to time. Any changes will be posted on this page with an updated date.</p>
+
+  <h2>Contact</h2>
+  <p>For any questions about this policy or your data, email us at <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a>.</p>
+`;
+
+const POLICY_HI = `
+  <div class="updated">अंतिम अपडेट: अगस्त 2026</div>
+
+  <h2>परिचय</h2>
+  <p>Mil ke Khelo ("हम", "हमारा", "ऐप") milkekhelo.com पर आपके ब्राउज़र में खेले जाने वाले मुफ़्त पार्टी गेम प्रदान करता है। यह पेज बताता है कि हम आपकी जानकारी कैसे संभालते हैं और आप किन शर्तों पर हमारे गेम इस्तेमाल करते हैं। ऐप का उपयोग करके, आप इस नीति से सहमत होते हैं।</p>
+
+  <h2>हम कौन सी जानकारी लेते हैं</h2>
+  <p>हम जितना कम हो सके उतना ही लेने की कोशिश करते हैं:</p>
+  <ul>
+    <li><strong>आपका दर्ज नाम:</strong> "हूज़ दैट?" जैसे मल्टीप्लेयर गेम में, आपका डाला हुआ नाम आपके गेम सेशन के अन्य खिलाड़ियों के साथ साझा होता है और गेम चलाने के लिए अस्थायी रूप से संग्रहीत होता है।</li>
+    <li><strong>गेमप्ले डेटा:</strong> अस्थायी गेम डेटा (आपके जवाब, स्कोर, गेम कोड) मल्टीप्लेयर चलाने के लिए थोड़ी देर संग्रहीत होता है और आपकी असली पहचान से नहीं जुड़ा होता।</li>
+    <li><strong>एनालिटिक्स:</strong> हम सामान्य, गुमनाम उपयोग समझने के लिए Google Analytics का उपयोग करते हैं (जैसे कितने लोग खेलते हैं और कौन-से गेम लोकप्रिय हैं)।</li>
+    <li><strong>लोकल स्टोरेज:</strong> कुछ गेम आपका बेस्ट स्कोर आपके ही डिवाइस पर सहेजते हैं। यह कभी आपके डिवाइस से बाहर नहीं जाता।</li>
+  </ul>
+
+  <h2>जो जानकारी हम नहीं लेते</h2>
+  <p>हम आपका ईमेल, फोन नंबर, पता, पासवर्ड या भुगतान जानकारी नहीं मांगते या संग्रहीत नहीं करते। हम आपका डेटा किसी को नहीं बेचते।</p>
+
+  <h2>मल्टीप्लेयर और Firebase</h2>
+  <p>मल्टीप्लेयर गेम रियल-टाइम में खिलाड़ियों को जोड़ने के लिए Google Firebase का उपयोग करते हैं। नाम और अस्थायी गेम डेटा केवल गेम सेशन चलाने के लिए ज़रूरी समय तक Firebase सर्वर पर रहते हैं, और पुराने सेशन अपने आप साफ़ हो जाते हैं।</p>
+
+  <h2>बच्चों की गोपनीयता</h2>
+  <p>हमारे गेम परिवार के अनुकूल हैं। हम जानबूझकर बच्चों से व्यक्तिगत जानकारी एकत्र नहीं करते। चूंकि हम ईमेल या अकाउंट नहीं लेते, ऐप बिना व्यक्तिगत विवरण साझा किए खेला जा सकता है।</p>
+
+  <h2>कुकीज़ और ट्रैकिंग</h2>
+  <p>हम Google Analytics का उपयोग करते हैं, जो गुमनाम उपयोग मापने के लिए कुकीज़ सेट कर सकता है। हम विज्ञापन कुकीज़ का उपयोग नहीं करते या विज्ञापनदाताओं को डेटा नहीं बेचते।</p>
+
+  <h2>डेटा सुरक्षा</h2>
+  <p>हम भरोसेमंद प्रदाताओं (Google Firebase, Google Analytics) पर निर्भर हैं जो उद्योग-मानक सुरक्षा का उपयोग करते हैं। हालांकि, इंटरनेट पर कोई भी तरीका 100% सुरक्षित नहीं है।</p>
+
+  <h2>आपके विकल्प</h2>
+  <p>आप ज़्यादातर गेम बिना कोई व्यक्तिगत विवरण डाले खेल सकते हैं। आप अपने ब्राउज़र सेटिंग्स से कभी भी अपने डिवाइस का लोकल स्टोरेज साफ़ कर सकते हैं।</p>
+
+  <h2>उपयोग की शर्तें</h2>
+  <p>Mil ke Khelo व्यक्तिगत मनोरंजन के लिए मुफ़्त, "जैसा है" प्रदान किया जाता है। कृपया दूसरों के साथ सम्मानपूर्वक खेलें। ऐप का दुरुपयोग न करें या किसी गैरकानूनी उद्देश्य के लिए इसका उपयोग न करें।</p>
+
+  <h2>इस नीति में बदलाव</h2>
+  <p>हम समय-समय पर इस नीति को अपडेट कर सकते हैं। कोई भी बदलाव इस पेज पर अपडेट तारीख के साथ पोस्ट किया जाएगा।</p>
+
+  <h2>संपर्क</h2>
+  <p>इस नीति या आपके डेटा के बारे में किसी भी प्रश्न के लिए, हमें <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a> पर ईमेल करें।</p>
+`;
+
+
+
+
 function toggleLang() {
   setLang(lang === 'en' ? 'hi' : 'en');
 }
@@ -1086,6 +1359,8 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
   if (_el('gc-name-mg'))    _el('gc-name-mg').textContent   = hi ? 'मेमोरी ग्रिड' : 'Memory Grid';
   if (_el('gc-name-ty'))    _el('gc-name-ty').textContent   = hi ? 'थैंक यू' : 'Thank You';
   if (_el('gc-name-wt'))    _el('gc-name-wt').textContent   = hi ? 'हूज़ दैट?' : "Who's That?";
+  if (_el('menu-title'))    _el('menu-title').textContent   = hi ? 'मेन्यू' : 'Menu';
+  if (_el('menu-policy'))   _el('menu-policy').textContent  = hi ? 'नीति' : 'Policy';
 
   // ── In-game headers (transliterated names) ──
   if (_el('g-logo-first')) _el('g-logo-first').innerHTML = hi ? 'फर्स्ट<span>!</span>' : 'FIRST<span>!</span>';
