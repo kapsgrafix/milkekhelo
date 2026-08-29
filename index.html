@@ -968,12 +968,14 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('end-screen').classList.remove('show');
       g.classList.remove('active');
       document.getElementById('launcher').classList.remove('hidden');
+  refreshInstallStrip();
       return;
     }
     if (ty && ty.classList.contains('active')) {
       document.getElementById('ty-end-screen').classList.remove('show');
       ty.classList.remove('active');
       document.getElementById('launcher').classList.remove('hidden');
+  refreshInstallStrip();
       return;
     }
     if (snl && snl.classList.contains('active')) {
@@ -1106,6 +1108,7 @@ function startGame() {
   if (fPrev) fPrev.textContent = lang==='hi' ? '← पिछला' : '← Prev';
   renderCard(idx, false);
   document.getElementById('launcher').classList.add('hidden');
+  hideInstallStrip();
   document.getElementById('game').classList.add('active');
   history.pushState({ view: 'first-game' }, '');
 }
@@ -1114,6 +1117,7 @@ function exitGame() {
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
+  refreshInstallStrip();
 }
 
 function renderCard(i, animate, dir) {
@@ -1238,6 +1242,7 @@ function startTyGame(){
   tyDeck=shuffleArr(TY_CARDS); tyIdx=0;
   applyTyCard(tyDeck[0], false);
   document.getElementById('launcher').classList.add('hidden');
+  hideInstallStrip();
   document.getElementById('ty-game').classList.add('active');
   history.pushState({ view: 'ty-game' }, '');
   // Localise TY game UI
@@ -1261,6 +1266,7 @@ function exitTyGame(){
   document.getElementById('ty-end-screen').classList.remove('show');
   document.getElementById('ty-game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
+  refreshInstallStrip();
 }
 
 function applyTyCard(c, animate, dir){
@@ -1539,6 +1545,7 @@ function startSnlGame(isRestart) {
 
   document.getElementById('snl-end-screen').classList.remove('show');
   document.getElementById('launcher').classList.add('hidden');
+  hideInstallStrip();
   document.getElementById('snl-game').classList.add('active');
   if (!isRestart) history.pushState({ view: 'snl-game' }, '');
 
@@ -1611,6 +1618,7 @@ function exitSnlGame() {
   document.getElementById('snl-game').classList.remove('active');
   document.getElementById('snl-end-screen').classList.remove('show');
   document.getElementById('launcher').classList.remove('hidden');
+  refreshInstallStrip();
 }
 
 function rollSnlDice() {
@@ -1778,10 +1786,33 @@ function showInstallStrip() {
   if (!isAndroid()) return;                                  // Android only
   if (isStandalone()) return;                                // already installed
   if (sessionStorage.getItem('mkk-install-hidden')) return;  // dismissed this session
+  if (!isHomeVisible()) return;                              // home page only
+  if (!deferredPrompt && !installReady) return;              // prompt not ready yet
   const strip = document.getElementById('install-strip');
   if (!strip) return;
   strip.classList.add('show');
   document.body.classList.add('has-strip');
+}
+
+// True only when the launcher (home) is showing and no game is active
+function isHomeVisible() {
+  const launcher = document.getElementById('launcher');
+  if (!launcher || launcher.classList.contains('hidden')) return false;
+  // Any active game screen means we're not on home
+  const games = ['game', 'ty-game', 'snl-game'];
+  return !games.some(id => {
+    const el = document.getElementById(id);
+    return el && el.classList.contains('active');
+  });
+}
+
+// Call whenever we navigate between home and a game
+function refreshInstallStrip() {
+  if (isHomeVisible()) {
+    showInstallStrip();
+  } else {
+    hideInstallStrip();
+  }
 }
 
 function hideInstallStrip() {
@@ -1823,9 +1854,11 @@ async function refreshAppCache() {
   } catch (e) { /* non-fatal */ }
 }
 
+let installReady = false;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
+  installReady = true;
   showInstallStrip();
 });
 
