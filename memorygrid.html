@@ -124,21 +124,43 @@ body {
 .level-card {
   border-radius:22px; padding:20px 22px; cursor:pointer;
   display:flex; align-items:center; gap:16px;
-  transition:transform .12s; border:2px solid transparent;
+  transition:transform .12s;
   position:relative; overflow:hidden;
+  /* outer border: light top → dark bottom */
+  background:linear-gradient(180deg,#F6D22F 0%,#FD750C 100%);
+}
+.level-card::before {
+  /* inner border: dark top → light bottom */
+  content:''; position:absolute; inset:4px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#FD750C 0%,#F6D22F 100%);
+  z-index:0;
+}
+.level-card::after {
+  /* card fill: base colour top → darker bottom */
+  content:''; position:absolute; inset:7px;
+  border-radius:15px;
+  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  z-index:1;
 }
 .level-card:active { transform:scale(.97); }
 .level-icon {
   font-size:38px; line-height:1; flex-shrink:0;
   width:56px; height:56px; display:flex; align-items:center; justify-content:center;
   background:rgba(255,255,255,.15); border-radius:16px;
+  position:relative; z-index:2;
 }
-.level-info { flex:1; }
-.level-name { font-family:'Baloo 2',cursive; font-size:22px; font-weight:800; color:#fff; line-height:1.1; }
+.level-info { flex:1; position:relative; z-index:2; }
+.level-name {
+  font-family:'Baloo 2',cursive; font-size:22px; font-weight:800;
+  color:#fff; line-height:1.1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
+}
 .level-desc { font-size:13px; font-weight:700; color:rgba(255,255,255,.85); margin-top:2px; }
-.lc-easy   { background:linear-gradient(135deg,#4ade80,#16a34a); box-shadow:0 8px 22px rgba(34,197,94,.3); }
-.lc-medium { background:linear-gradient(135deg,#fbbf24,#ea580c); box-shadow:0 8px 22px rgba(251,146,60,.3); }
-.lc-hard   { background:linear-gradient(135deg,#f87171,#b91c1c); box-shadow:0 8px 22px rgba(239,68,68,.3); }
+.lc-easy   { --c:#4ade80; --cd:#15803d; box-shadow:0 8px 22px rgba(34,197,94,.3); }
+.lc-medium { --c:#fbbf24; --cd:#c2530a; box-shadow:0 8px 22px rgba(251,146,60,.3); }
+.lc-hard   { --c:#f87171; --cd:#991b1b; box-shadow:0 8px 22px rgba(239,68,68,.3); }
 
 /* ── BUTTONS ── */
 .btn {
