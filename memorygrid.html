@@ -12,7 +12,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0b2e">
+<meta name="theme-color" content="#0a2418">
 
 <title>Memory Grid — Mil ke Khelo</title>
 <meta name="description" content="Memory Grid is a free brain-training memory game. Memorise the lit dots, then tap them all from memory. Easy, Medium and Hard levels with streaks, lives and hints.">
@@ -25,19 +25,19 @@
 
 <style>
 :root {
-  --accent:#a855f7;
-  --accent-2:#c084fc;
+  --accent:#16a34a;
+  --accent-2:#22C55E;
   --gold:#fbbf24;
-  --green:#4ade80;
+  --green:#15a34a;
   --red:#f87171;
-  --dot:#3b2b5e;
-  --dot-lit:#c084fc;
+  --dot:#1f3a2e;
+  --dot-lit:#4ade80;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 body {
   font-family:'Nunito Sans',sans-serif;
-  background:linear-gradient(160deg,#1a0b2e 0%,#2d1b4e 55%,#1a0b2e 100%);
+  background:linear-gradient(160deg,#0a2418 0%,#12442b 55%,#0a2418 100%);
   background-attachment:fixed;
   color:#fff; min-height:100vh; min-height:100dvh;
   overflow-x:hidden; -webkit-font-smoothing:antialiased;
@@ -172,9 +172,9 @@ body {
 .btn:active { transform:translateY(4px); }
 .btn-primary {
   background:linear-gradient(180deg,var(--accent-2),var(--accent));
-  color:#fff; box-shadow:0 6px 0 #6b21a8, 0 10px 26px rgba(168,85,247,.35);
+  color:#fff; box-shadow:0 6px 0 #0f6b32, 0 10px 26px rgba(34,197,94,.35);
 }
-.btn-primary:active { box-shadow:0 2px 0 #6b21a8; }
+.btn-primary:active { box-shadow:0 2px 0 #0f6b32; }
 .btn-ghost {
   background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.2);
   color:rgba(255,255,255,.8); box-shadow:none; font-size:16px;
@@ -235,7 +235,7 @@ body {
 }
 .dot.lit {
   background:var(--dot-lit);
-  box-shadow:0 0 18px rgba(192,132,252,.7), inset 0 1px 2px rgba(255,255,255,.4);
+  box-shadow:0 0 18px rgba(74,222,128,.7), inset 0 1px 2px rgba(255,255,255,.4);
 }
 .dot.correct {
   background:var(--green);
@@ -293,7 +293,7 @@ body {
 .flash-text {
   font-family:'Baloo 2',cursive; font-size:44px; font-weight:800;
   color:#fff;
-  -webkit-text-stroke:2px #9a3412;
+  -webkit-text-stroke:2px #0a3d20;
   paint-order:stroke fill;
   text-shadow:0 3px 10px rgba(0,0,0,.5);
   animation:flashPop .6s cubic-bezier(.34,1.6,.64,1);
@@ -429,14 +429,14 @@ body {
 
 <!-- ══════════ HOW TO PLAY ══════════ -->
 <div id="how-overlay" onclick="closeHow(event)" style="position:fixed;inset:0;z-index:400;background:rgba(15,8,30,.88);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center;">
-  <div class="how-sheet" style="background:linear-gradient(160deg,#2d1b4e,#1a0b2e);border-radius:26px 26px 0 0;border:1px solid rgba(192,132,252,.2);border-bottom:none;width:100%;max-width:520px;padding:14px 22px 34px;max-height:82vh;overflow-y:auto;">
+  <div class="how-sheet" style="background:linear-gradient(160deg,#12442b,#0a2418);border-radius:26px 26px 0 0;border:1px solid rgba(34,197,94,.2);border-bottom:none;width:100%;max-width:520px;padding:14px 22px 34px;max-height:82vh;overflow-y:auto;">
     <div style="width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:0 auto 16px;"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
       <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--accent-2);">How to Play</div>
       <button onclick="closeHow()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;">✕</button>
     </div>
     <div id="how-steps"></div>
-    <div style="background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);border-radius:16px;padding:15px 17px;margin-top:6px;">
+    <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:16px;padding:15px 17px;margin-top:6px;">
       <div style="font-size:14px;font-weight:800;color:var(--accent-2);margin-bottom:5px;">🎯 Goal</div>
       <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.5;">Build the longest streak you can. One wrong tap ends a round — but you have 3 lives per streak, and 3 hints to help.</div>
     </div>
@@ -780,7 +780,7 @@ function fireConfetti(duration = 1400) {
   cv.width = window.innerWidth;
   cv.height = window.innerHeight;
   const ctx = cv.getContext('2d');
-  const colors = ['#c084fc','#fbbf24','#4ade80','#f87171','#60a5fa','#fff'];
+  const colors = ['#22c55e','#fbbf24','#4ade80','#a3e635','#60a5fa','#fff'];
   const bits = [];
   for (let i = 0; i < 90; i++) {
     bits.push({

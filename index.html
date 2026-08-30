@@ -113,6 +113,10 @@
   /* Thank You palette */
   --col-ty1:#1A6B3C; --col-ty2:#0F5A6E; --col-ty3:#5A3A1A;
   --col-ty4:#6E1A5A; --col-ty5:#1A3A6E; --col-ty6:#5A1A1A;
+  /* Primary CTA — always yellow */
+  --cta-grad:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%);
+  --cta-shadow:#B85C00;
+  --cta-text:#1A1A2E;
 }
 html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-serif; overflow:hidden; }
 
@@ -174,16 +178,23 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .game-title span { color:#FFD700; }
 .game-subtitle { font-size:12px; font-weight:700; color:rgba(255,255,255,.48); letter-spacing:2px; text-transform:uppercase; margin-top:5px; margin-bottom:28px; }
 
-.start-btn {
-  width:100%; max-width:280px;
-  background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%);
-  border:none; border-radius:50px; padding:16px 0;
-  font-family:'Montserrat',sans-serif; font-size:16px; font-weight:900; color:#1A1A2E;
-  cursor:pointer; letter-spacing:1px; text-transform:uppercase;
-  box-shadow:0 6px 0 #B85C00, 0 10px 30px rgba(255,165,0,.35);
+/* ══ COMMON PRIMARY CTA (always yellow) ══ */
+.btn-primary-cta, .start-btn {
+  background:var(--cta-grad);
+  color:var(--cta-text);
+  border:none; cursor:pointer;
+  font-family:'Montserrat',sans-serif; font-weight:900;
+  box-shadow:0 6px 0 var(--cta-shadow), 0 10px 30px rgba(255,165,0,.35);
   transition:transform .1s, box-shadow .1s;
 }
-.start-btn:active { transform:translateY(4px); box-shadow:0 2px 0 #B85C00; }
+.btn-primary-cta:active, .start-btn:active {
+  transform:translateY(4px); box-shadow:0 2px 0 var(--cta-shadow);
+}
+.start-btn {
+  width:100%; max-width:280px;
+  border-radius:50px; padding:16px 0;
+  font-size:16px; letter-spacing:1px; text-transform:uppercase;
+}
 
 .card-count-label { margin-top:16px; font-size:11px; font-weight:700; color:rgba(255,255,255,.22); letter-spacing:1.5px; text-transform:uppercase; }
 .how-link { font-size:12px; font-weight:800; color:rgba(255,255,255,.38); letter-spacing:1px; text-transform:uppercase; cursor:pointer; border-bottom:1px dashed rgba(255,255,255,.22); padding-bottom:1px; transition:color .2s; margin-top:22px; }
@@ -249,7 +260,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 /* ══ THANK YOU GAME SCREEN ══ */
 #ty-game {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#0A2A1E 0%,#0D4A34 55%,#0A3028 100%);
+  background:linear-gradient(160deg,#1a0b2e 0%,#2d1b4e 55%,#1a0b2e 100%);
   display:none; flex-direction:column;
 }
 #ty-game.active { display:flex; }
@@ -271,7 +282,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 #game.active { display:flex; }
 
 .g-header { background:transparent; padding:20px 16px 10px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.g-logo { font-family:'Montserrat',sans-serif; font-size:21px; font-weight:900; color:#fff; letter-spacing:1px; }
+.g-logo { font-family:'Baloo 2',cursive; font-size:19px; font-weight:800; color:#fff; letter-spacing:.2px; white-space:nowrap; }
 .g-logo span { color:#FFD700; }
 .g-counter { background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 13px; font-size:13px; font-weight:800; color:#FFD700; }
 .g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
@@ -333,7 +344,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 @keyframes flipRightIn  { 0%{transform:rotateY(90deg) scale(.9)} 100%{transform:rotateY(0) scale(1)} }
 
 .g-actions { padding:10px 16px 18px; display:flex; gap:10px; flex-shrink:0; }
-.btn-next { flex:1; background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%); border:none; border-radius:16px; padding:15px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:#1A1A2E; cursor:pointer; letter-spacing:.5px; box-shadow:0 5px 0 #B85C00; transition:transform .1s, box-shadow .1s; text-transform:uppercase; }
+.btn-next { flex:1; background:var(--cta-grad); border:none; border-radius:16px; padding:15px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:var(--cta-text); cursor:pointer; letter-spacing:.5px; box-shadow:0 5px 0 var(--cta-shadow); transition:transform .1s, box-shadow .1s; text-transform:uppercase; }
 .btn-next:active { transform:translateY(4px); box-shadow:0 1px 0 #B85C00; }
 .btn-prev { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); border-radius:16px; padding:11px 18px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:800; color:rgba(255,255,255,.55); cursor:pointer; transition:transform .1s, background .1s; white-space:nowrap; }
 .btn-prev:active { transform:scale(.95); background:rgba(255,255,255,.14); }
@@ -348,8 +359,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 .end-title { font-family:'Montserrat',sans-serif; font-size:30px; font-weight:900; color:#FFD700; margin-bottom:8px; }
 .end-sub { font-size:14px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:28px; line-height:1.5; }
-.btn-play-again { background:linear-gradient(180deg,#FFD700 0%,#FF8C00 100%); border:none; border-radius:50px; padding:15px 40px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:#1A1A2E; cursor:pointer; box-shadow:0 5px 0 #B85C00; text-transform:uppercase; }
-.btn-play-again:active { transform:translateY(4px); box-shadow:0 1px 0 #B85C00; }
+.btn-play-again { background:var(--cta-grad); border:none; border-radius:50px; padding:15px 40px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; color:var(--cta-text); cursor:pointer; box-shadow:0 5px 0 var(--cta-shadow); text-transform:uppercase; }
+.btn-play-again:active { transform:translateY(4px); box-shadow:0 1px 0 var(--cta-shadow); }
 
 .btn-back-home {
   display:inline-block; margin-top:18px;
@@ -375,7 +386,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 #snl-game {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#3d1a02 0%,#7c3a06 55%,#3d1a02 100%);
+  background:linear-gradient(160deg,#0a1e3d 0%,#14448a 55%,#0a1e3d 100%);
   display:none; flex-direction:column;
 }
 #snl-game.active { display:flex; }
@@ -386,10 +397,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .snl-timer {
   font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900;
-  color:#fb923c; letter-spacing:2px;
-  background:rgba(251,146,60,.12); border:1px solid rgba(251,146,60,.35);
+  color:#60a5fa; letter-spacing:2px;
+  background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.35);
   border-radius:50px; padding:4px 20px;
-  text-shadow:0 0 12px rgba(251,146,60,.4);
+  text-shadow:0 0 12px rgba(59,130,246,.4);
 }
 .snl-timer.urgent { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
 
@@ -402,8 +413,8 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   border-radius:14px; padding:8px 12px; transition:all .3s;
 }
 .snl-player.active-turn {
-  border-color:#fb923c; background:rgba(251,146,60,.1);
-  box-shadow:0 0 16px rgba(251,146,60,.25);
+  border-color:#60a5fa; background:rgba(59,130,246,.1);
+  box-shadow:0 0 16px rgba(59,130,246,.25);
 }
 .snl-goti-icon {
   width:26px; height:26px; border-radius:50%;
@@ -600,7 +611,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   position:fixed; top:0; left:0; right:0; z-index:500;
   display:none; align-items:center; justify-content:space-between;
   gap:10px; padding:9px 14px;
-  background:linear-gradient(90deg,#f97316,#ea580c);
+  background:linear-gradient(90deg,#3B82F6,#1e4fa0);
   box-shadow:0 2px 12px rgba(0,0,0,.35);
   font-family:'Baloo 2','Nunito Sans',sans-serif;
   padding-top:calc(9px + env(safe-area-inset-top, 0px));
@@ -618,7 +629,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .is-btn {
   background:#fff; border:none; border-radius:50px;
   padding:7px 18px; font-family:'Baloo 2',sans-serif;
-  font-size:14px; font-weight:700; color:#ea580c;
+  font-size:14px; font-weight:700; color:#3B82F6;
   cursor:pointer; white-space:nowrap;
   box-shadow:0 2px 6px rgba(0,0,0,.2);
   transition:transform .1s;
@@ -1901,7 +1912,7 @@ function endSnlGame(winner100) {
   document.getElementById('snl-dice').disabled = true;
   const t = SNL_T[lang] || SNL_T.en;
   const yp = snlPos.yellow * 2, rp = snlPos.red * 2;
-  let title, icon = '🏆', winnerColor = '#fb923c';
+  let title, icon = '🏆', winnerColor = '#60a5fa';
   if (winner100) {
     const isYellow = winner100 === 'yellow';
     title = t.wins(isYellow ? t.yellow : t.red);
@@ -2016,7 +2027,7 @@ function openSnlHow() {
   document.getElementById('snl-goal-text').textContent = t.goalText;
   document.getElementById('snl-how-steps').innerHTML = t.steps.map((s,i) => `
     <div class="how-step">
-      <div class="step-num" style="background:linear-gradient(135deg,#fb923c,#c2410c);color:#fff;">${i+1}</div>
+      <div class="step-num" style="background:linear-gradient(135deg,#3B82F6,#1e4fa0);color:#fff;">${i+1}</div>
       <div class="step-body">
         <div class="step-title">${s[0]}</div>
         <div class="step-desc">${s[1]}</div>
@@ -2252,14 +2263,14 @@ if ('serviceWorker' in navigator) {
   <div class="card-swipe-hint">Tap card or swipe to flip</div>
   <div class="g-actions">
     <button class="btn-prev" id="ty-btn-prev" onclick="prevTyCard()">← Prev</button>
-    <button class="btn-next" onclick="nextTyCard()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">Next →</button>
+    <button class="btn-next" onclick="nextTyCard()">Next →</button>
     <button class="btn-shuffle" onclick="reshuffleTyDeck()">🔀</button>
   </div>
   <div id="ty-end-screen">
     <div class="end-icon">😇</div>
     <div class="end-title" style="color:#4ADE80;">All Done!</div>
     <div class="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
-    <button class="btn-play-again" onclick="reshuffleTyDeck()" style="background:linear-gradient(180deg,#4ADE80 0%,#16A34A 100%);box-shadow:0 5px 0 #0D6B31;color:#fff;">🔀 &nbsp; Play Again</button>
+    <button class="btn-play-again" onclick="reshuffleTyDeck()">🔀 &nbsp; Play Again</button>
     <div class="btn-back-home" id="ty-back-home" onclick="exitTyGame()">🏠 Back to Home</div>
   </div>
 </div>
@@ -2341,7 +2352,7 @@ if ('serviceWorker' in navigator) {
   <!-- End screen -->
   <div id="snl-end-screen">
     <div class="end-icon" id="snl-end-icon">🏆</div>
-    <div class="end-title" style="color:#fb923c;" id="snl-end-title">Yellow Wins!</div>
+    <div class="end-title" style="color:#60a5fa;" id="snl-end-title">Yellow Wins!</div>
     <div class="end-sub" id="snl-end-sub"></div>
     <button class="btn-play-again" onclick="startSnlGame(true)">🔄 &nbsp; Play Again</button>
     <div class="btn-back-home" id="snl-back-home" onclick="exitSnlGame()">🏠 Back to Home</div>
@@ -2354,12 +2365,12 @@ if ('serviceWorker' in navigator) {
   <div class="how-sheet">
     <div class="how-handle"></div>
     <div class="how-header">
-      <div class="how-title" style="color:#fb923c;" id="snl-how-title">How to Play</div>
+      <div class="how-title" style="color:#60a5fa;" id="snl-how-title">How to Play</div>
       <button class="how-close" onclick="closeSnlHow()">✕</button>
     </div>
     <div class="how-steps" id="snl-how-steps"></div>
-    <div class="how-goal" style="background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.25);">
-      <div class="how-goal-title" style="color:#fb923c;" id="snl-goal-title">🎯 Goal of the Game</div>
+    <div class="how-goal" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.25);">
+      <div class="how-goal-title" style="color:#60a5fa;" id="snl-goal-title">🎯 Goal of the Game</div>
       <div class="how-goal-text" id="snl-goal-text">Score the most points before the 2-minute timer runs out. Each square = 2 points!</div>
     </div>
   </div>
