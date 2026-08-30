@@ -493,23 +493,6 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   overflow-y:auto; overflow-x:hidden;
   padding:0 20px 48px;
 }
-/* Background image as a 40%-opacity layer over the colour */
-#launcher::before {
-  content:'';
-  position:fixed; inset:0;
-  background-image:image-set(url('home-bg.webp') type('image/webp'), url('home-bg.jpg') type('image/jpeg'));
-  background-size:cover;
-  background-position:center top;
-  background-repeat:no-repeat;
-  opacity:.4;                            /* image 60% transparent */
-  pointer-events:none;
-  z-index:0;
-}
-@supports not (background-image: image-set(url('x') type('image/webp'))) {
-  #launcher::before { background-image:url('home-bg.jpg'); }
-}
-/* Keep all launcher content above the image layer */
-#launcher > * { position:relative; z-index:1; }
 #launcher.hidden { display:none; }
 
 .home-lang-row {
