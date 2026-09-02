@@ -537,7 +537,13 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .hamburger.open span:nth-child(2) { opacity:0; }
 .hamburger.open span:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
 
+#logo-particles {
+  position:absolute;
+  top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:0;
+}
 .home-logo-wrap {
+  position:relative; z-index:1;
   margin:auto 0;
   flex-shrink:0;
   width:100%;
@@ -723,7 +729,7 @@ body.has-strip #launcher { padding-top:52px; }
 .menu-scrim.show { display:block; }
 .menu-scrim .menu-tray { pointer-events:auto; }
 .menu-tray {
-  position:absolute; right:14px;
+  position:absolute; left:16px;
   top:calc(56px + env(safe-area-inset-top,0px));
   width:210px;
   background:linear-gradient(160deg,#1f3160,#131f42);
@@ -731,7 +737,7 @@ body.has-strip #launcher { padding-top:52px; }
   border-radius:18px;
   box-shadow:0 14px 40px rgba(0,0,0,.5);
   padding:10px;
-  transform-origin:top right;
+  transform-origin:top left;
   transform:scale(.85); opacity:0;
   transition:transform .22s cubic-bezier(.34,1.4,.64,1), opacity .18s;
   display:flex; flex-direction:column; gap:6px;
@@ -841,6 +847,8 @@ body.has-strip #launcher { padding-top:52px; }
   </div>
 
   <!-- logo -->
+  <canvas id="logo-particles" aria-hidden="true"></canvas>
+
   <h1 class="home-logo-wrap">
     <img src="logo-wordmark-new.png"
          class="home-logo-img"
@@ -2161,6 +2169,76 @@ if ('serviceWorker' in navigator) {
     }).catch(() => {});
   });
 }
+
+// ── Subtle logo-area particles ──
+(function () {
+  const cv = document.getElementById('logo-particles');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  let W, H, particles = [], raf = null;
+  const COLORS = ['#2ec4c4', '#ff7a2f', '#ffffff']; // teal, orange, white (brand)
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function makeParticles() {
+    // Concentrate particles around the vertical middle (logo area)
+    const count = Math.min(22, Math.round(W / 20));
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: H * 0.30 + Math.random() * H * 0.30,   // band around logo
+        r: 1 + Math.random() * 2.2,
+        c: COLORS[Math.floor(Math.random() * COLORS.length)],
+        vx: (-0.15 + Math.random() * 0.3),
+        vy: (-0.12 + Math.random() * 0.24),
+        a: 0.15 + Math.random() * 0.35,
+        tw: Math.random() * Math.PI * 2,            // twinkle phase
+        tws: 0.01 + Math.random() * 0.02
+      });
+    }
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.tw += p.tws;
+      // wrap softly within the band
+      if (p.x < -6) p.x = W + 6; if (p.x > W + 6) p.x = -6;
+      if (p.y < H * 0.20) p.vy = Math.abs(p.vy);
+      if (p.y > H * 0.66) p.vy = -Math.abs(p.vy);
+      const alpha = p.a * (0.6 + 0.4 * Math.sin(p.tw));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = alpha;
+      ctx.shadowColor = p.c;
+      ctx.shadowBlur = 6;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (!cv.clientWidth) { setTimeout(start, 200); return; }
+    resize(); makeParticles();
+    if (raf) cancelAnimationFrame(raf);
+    frame();
+  }
+
+  window.addEventListener('resize', () => { resize(); makeParticles(); });
+  // Respect reduced-motion preference
+  if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    start();
+  }
+})();
+
 </script>
 
 <!-- ══════════ THANK YOU GAME SCREEN ══════════ -->
