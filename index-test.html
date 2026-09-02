@@ -2187,12 +2187,12 @@ if ('serviceWorker' in navigator) {
 
   function makeParticles() {
     // Concentrate particles around the vertical middle (logo area)
-    const count = Math.min(22, Math.round(W / 20));
+    const count = Math.min(28, Math.round(W / 16));
     particles = [];
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * W,
-        y: H * 0.30 + Math.random() * H * 0.30,   // band around logo
+        y: H * 0.05 + Math.random() * H * 0.40,   // top area, around/above logo
         r: 1 + Math.random() * 2.2,
         c: COLORS[Math.floor(Math.random() * COLORS.length)],
         vx: (-0.15 + Math.random() * 0.3),
@@ -2210,8 +2210,8 @@ if ('serviceWorker' in navigator) {
       p.x += p.vx; p.y += p.vy; p.tw += p.tws;
       // wrap softly within the band
       if (p.x < -6) p.x = W + 6; if (p.x > W + 6) p.x = -6;
-      if (p.y < H * 0.20) p.vy = Math.abs(p.vy);
-      if (p.y > H * 0.66) p.vy = -Math.abs(p.vy);
+      if (p.y < H * 0.02) p.vy = Math.abs(p.vy);
+      if (p.y > H * 0.50) p.vy = -Math.abs(p.vy);
       const alpha = p.a * (0.6 + 0.4 * Math.sin(p.tw));
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
