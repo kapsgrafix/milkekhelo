@@ -502,9 +502,19 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   align-items:center; justify-content:flex-start;
   background-color:#0f1a3d;              /* Figma background/screen */
   overflow-y:auto; overflow-x:hidden;
-  padding:0 0 48px;
+  padding:0 0 calc(90px + env(safe-area-inset-bottom,0px));
 }
 #launcher.hidden { display:none; }
+
+/* Ad section — sticks to bottom, pushes cards up */
+.ad-section {
+  position:fixed; left:0; bottom:0;
+  width:100%;
+  height:calc(50px + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:rgba(0,0,0,.2);
+  z-index:20;
+}
 
 .home-lang-row {
   width:100%; display:flex; align-items:center; justify-content:space-between;
@@ -693,6 +703,8 @@ body.has-strip #launcher { padding-top:52px; }
 .gc-cell-name {
   font-family:'Baloo 2',cursive; font-size:16px; font-weight:800;
   color:#fff; text-align:center; line-height:1.25;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
 }
 
 /* Figma card colours: light top → dark bottom, + solid shadow tone */
@@ -868,6 +880,9 @@ body.has-strip #launcher { padding-top:52px; }
       </div>
     </div>
   </div>
+
+  <!-- Ad section (bottom, reserved for ads) -->
+  <div class="ad-section" id="ad-section" aria-hidden="true"></div>
 
 </div><!-- /launcher -->
 
