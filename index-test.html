@@ -67,17 +67,12 @@ html, body {
 
 /* ── HEADER (node 6:140) — flex, 12px padding, full width ── */
 .header {
-  position:absolute; top:0; right:0;
-  width:360px; height:56px;
-  display:flex; align-items:center;
-  padding:var(--space-12);
+  position:absolute; top:0; left:0;
+  width:100%; height:56px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px;
   z-index:10;
 }
-.header-left {
-  display:flex; align-items:center; gap:var(--space-8);
-  width:72px;
-}
-.header-center { flex:1 0 0; height:32px; min-width:0; }
 
 /* Icon/Menu (6:114) — 32px chip, 3 bars */
 .icon-menu {
@@ -131,7 +126,7 @@ html, body {
   align-items:center; gap:6px;
 }
 .logo-wordmark {
-  width:240px; height:auto;
+  width:240px; max-width:calc(100% - 32px); height:auto;
   object-fit:contain;
   display:block;
 }
@@ -149,8 +144,10 @@ html, body {
 
 /* ── GAME CARD GRID (6:160) — left:20, top:308, 320px ── */
 .card-grid {
-  position:absolute; top:308px; left:20px;
-  width:320px;
+  position:absolute; top:308px; left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 32px);
+  max-width:328px;
   display:grid;
   grid-template-columns:repeat(2, 1fr);
   column-gap:16px; row-gap:22px;
@@ -221,14 +218,11 @@ html, body {
 
   <!-- HEADER -->
   <div class="header">
-    <div class="header-left">
-      <div class="icon-menu" aria-label="Menu">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </div>
+    <div class="icon-menu" aria-label="Menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
     </div>
-    <div class="header-center"></div>
     <div class="lang-toggle" aria-label="Language">
       <div class="lang-seg active">EN</div>
       <div class="lang-seg inactive">हिं</div>
@@ -237,7 +231,7 @@ html, body {
 
   <!-- LOGO + TAGLINE -->
   <div class="logo-lockup">
-    <img src="logo-wordmark.png" class="logo-wordmark" alt="milkekhelo.com">
+    <img src="logo-wordmark-new.png" class="logo-wordmark" alt="milkekhelo.com">
     <div class="logo-divider">
       <svg viewBox="0 0 146 10" xmlns="http://www.w3.org/2000/svg">
         <line x1="0" y1="5" x2="63" y2="5" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1"/>
