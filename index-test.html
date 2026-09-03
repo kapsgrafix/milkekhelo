@@ -141,8 +141,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .lang-toggle { display:flex; align-items:center; background:#16234a; border:1px solid #3a4a7a; border-radius:12px; overflow:hidden; padding:4px; height:32px; }
 .lang-btn { padding:0 12px; font-size:15px; font-weight:700; letter-spacing:0; color:#a9b4d6; cursor:pointer; background:transparent; border:none; font-family:'Baloo 2',sans-serif; transition:all .2s; height:100%; display:flex; align-items:center; border-radius:8px; }
 .lang-btn.active { background:#2e6bf2; color:#fff; border-radius:8px; }
-.lang-toggle-sm { flex-shrink:0; }
-.lang-toggle-sm .lang-btn { padding:5px 11px; font-size:11px; }
+.lang-toggle-sm { flex-shrink:0; width:72px; height:32px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:12px; padding:4px; }
+.lang-toggle-sm .lang-btn { flex:1; padding:0; font-size:13px; font-weight:700; height:100%; display:flex; align-items:center; justify-content:center; border-radius:8px; }
+.lang-toggle-sm .lang-btn.active { background:#ffc53d; color:#1b2340; }
 
 
 /* each slide — transparent so #launcher bg shows */
@@ -260,7 +261,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 /* ══ THANK YOU GAME SCREEN ══ */
 #ty-game {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#1a0b2e 0%,#2d1b4e 55%,#1a0b2e 100%);
+  background:#3d1c0f;
   display:none; flex-direction:column;
 }
 #ty-game.active { display:flex; }
@@ -276,20 +277,21 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .card-tap-next { right:0; }
 /* ══ GAME SCREEN ══ */
 #game {
-  position:fixed; inset:0; background:linear-gradient(160deg,#1a0b2e 0%,#2d1b4e 55%,#1a0b2e 100%);
+  position:fixed; inset:0; background:#1b0f3d;
   display:none; flex-direction:column;
 }
 #game.active { display:flex; }
 
 .g-header { background:transparent; padding:20px 16px 10px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.g-logo { font-family:'Baloo 2',cursive; font-size:19px; font-weight:800; color:#fff; letter-spacing:.2px; white-space:nowrap; }
-.g-logo span { color:#FFD700; }
+.g-logo { font-family:'Baloo 2',cursive; font-size:16px; font-weight:800; color:#fff; letter-spacing:.2px; white-space:nowrap; line-height:1.25; }
+.g-logo span { color:#fff; }
 .g-counter { background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.3); border-radius:50px; padding:5px 13px; font-size:13px; font-weight:800; color:#FFD700; }
 .g-back { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:50px; padding:6px 14px; font-size:12px; font-weight:800; color:rgba(255,255,255,.65); cursor:pointer; font-family:'Nunito Sans',sans-serif; display:flex; align-items:center; gap:5px; }
 .g-back:active { background:rgba(255,80,80,.2); }
 .g-back-arrow {
-  width:30px; height:30px; padding:0;
-  border-radius:50%; font-size:17px; font-weight:900;
+  width:32px; height:32px; padding:8px;
+  border-radius:12px; font-size:17px; font-weight:900;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
   display:flex; align-items:center; justify-content:center;
   line-height:1; gap:0;
 }
@@ -298,9 +300,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   transform:translateY(-1px);
 }
 .g-help {
-  width:30px; height:30px; border-radius:50%;
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
-  color:rgba(255,255,255,.75); font-family:'Baloo 2','Nunito Sans',sans-serif;
+  width:32px; height:32px; border-radius:12px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  color:#fff; font-family:'Baloo 2','Nunito Sans',sans-serif;
   font-size:15px; font-weight:800; cursor:pointer; flex-shrink:0;
   display:flex; align-items:center; justify-content:center;
   transition:background .15s;
@@ -386,7 +388,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 #snl-game {
   position:fixed; inset:0;
-  background:linear-gradient(160deg,#0a1e3d 0%,#14448a 55%,#0a1e3d 100%);
+  background:#3d0f1e;
   display:none; flex-direction:column;
 }
 #snl-game.active { display:flex; }
@@ -395,44 +397,53 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   display:flex; align-items:center; justify-content:space-between;
   padding:14px 16px 6px; flex-shrink:0;
 }
-.snl-timer {
-  font-family:'Montserrat',sans-serif; font-size:26px; font-weight:900;
-  color:#60a5fa; letter-spacing:2px;
-  background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.35);
-  border-radius:50px; padding:4px 20px;
-  text-shadow:0 0 12px rgba(59,130,246,.4);
+.snl-play-area {
+  flex:1; min-height:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:24px;              /* 24px between timer, board, dice */
+  padding:8px 0;
 }
-.snl-timer.urgent { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.12); animation:blink 1s infinite; }
+.snl-timer {
+  font-family:'Baloo 2',sans-serif; font-size:32px; font-weight:800;
+  color:#fff; letter-spacing:1px; text-align:center;
+  flex-shrink:0; line-height:1.05;
+}
+.snl-timer.urgent { color:#f87171; animation:blink 1s infinite; }
 
 .snl-scores {
   display:flex; gap:10px; padding:6px 16px 8px; flex-shrink:0;
 }
 .snl-player {
-  flex:1; display:flex; align-items:center; gap:10px;
-  background:rgba(255,255,255,.06); border:2px solid transparent;
-  border-radius:14px; padding:8px 12px; transition:all .3s;
+  flex:1; display:flex; align-items:center; gap:12px;
+  background:rgba(255,255,255,.14);
+  border:2px solid transparent;
+  border-radius:16px; padding:10px 16px;
+  transition:opacity .25s, border-color .25s;
 }
-.snl-player.active-turn {
-  border-color:#60a5fa; background:rgba(59,130,246,.1);
-  box-shadow:0 0 16px rgba(59,130,246,.25);
-}
+/* Each player's border = their own colour (Figma). Inactive dims to 70%. */
+#snl-p-yellow { border-color:#ffc53d; }
+#snl-p-red    { border-color:#ff7a45; }
+.snl-player:not(.active-turn) { opacity:.7; border-color:transparent; }
+.snl-player.active-turn { opacity:1; }
 .snl-goti-icon {
   width:26px; height:26px; border-radius:50%;
   border:3px solid rgba(255,255,255,.85);
   box-shadow:0 2px 6px rgba(0,0,0,.4); flex-shrink:0;
 }
-.snl-p-name { font-size:12px; font-weight:800; color:rgba(255,255,255,.7); }
-.snl-p-pts { font-family:'Montserrat',sans-serif; font-size:17px; font-weight:900; color:#fff; line-height:1.1; }
-.snl-pts-lbl { font-size:10px; font-weight:700; color:rgba(255,255,255,.4); }
+.snl-p-name { font-size:12px; font-weight:700; color:#fff; }
+.snl-p-pts { font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:800; color:#fff; line-height:1.1; }
+.snl-pts-lbl { font-size:11px; font-weight:500; color:#bababa; }
 
 .snl-board-wrap {
-  flex:1; position:relative; margin:4px 12px;
+  flex-shrink:1; position:relative;
+  width:100%; padding:0 20px;
   display:flex; align-items:center; justify-content:center;
   min-height:0;
 }
 .snl-board-inner {
   position:relative;
-  width:min(96vw, 100%, calc(100vh - 320px));
+  width:100%;
   aspect-ratio:1/1;
   max-height:100%;
 }
@@ -454,7 +465,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 .snl-dice-row {
   flex-shrink:0; display:flex; flex-direction:column; align-items:center;
-  gap:6px; padding:6px 16px 16px;
+  gap:10px; padding:0 16px;
 }
 .snl-msg {
   font-size:13px; font-weight:800; color:rgba(255,255,255,.75);
@@ -507,6 +518,19 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 #launcher.hidden { display:none; }
 
 /* Ad section — sticks to bottom, pushes cards up */
+
+/* Game bottom bar (50px, matches home footer / Figma) */
+.game-footer {
+  flex-shrink:0;
+  width:100%;
+  height:calc(50px + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:rgba(255,255,255,.14);
+  margin-top:40px;   /* 40px gap above footer, matching home */
+}
+/* SNL centers its play-area between score & footer, so no extra 40px margin */
+#snl-game .game-footer { margin-top:0; }
+
 .ad-section {
   position:fixed; left:0; bottom:0;
   width:100%;
@@ -714,7 +738,7 @@ body.has-strip #launcher { padding-top:52px; }
 }
 
 /* Figma card colours: light top → dark bottom, + solid shadow tone */
-.gc-snl   { --c:#ff93b3; --cd:#cc2f63; --cs:#701a36; }  /* Steps & Slides — pink */
+.gc-snl   { --c:#ff93b3; --cd:#cc2f63; --cs:#701a36; }  /* Snakes & Ladders — pink */
 .gc-mg    { --c:#6ee0ac; --cd:#1e8a5c; --cs:#114c33; }  /* Memory Grid — green */
 .gc-first { --c:#c3b0f5; --cd:#6a4fc2; --cs:#3a2b6b; }  /* First — purple */
 .gc-ty    { --c:#ffa57d; --cd:#cc4e1e; --cs:#702b11; }  /* Thank You — coral */
@@ -871,8 +895,8 @@ body.has-strip #launcher { padding-top:52px; }
   <div class="home-cards">
     <div class="gc-grid">
       <div class="game-card gc-cell gc-snl" onclick="startSnlGame()">
-        <img src="sns-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Steps and Slides — dice board game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-snl">Steps &amp; Slides</div>
+        <img src="snl-home.png" class="gc-cell-img" width="280" height="280" loading="eager" alt="Snakes and Ladders — dice board game" draggable="false">
+        <div class="gc-cell-name" id="gc-name-snl">Snakes &amp; Ladders</div>
       </div>
       <div class="game-card gc-cell gc-mg" onclick="openMemoryGrid()">
         <img src="memorygrid-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Memory Grid — memory pattern game" draggable="false">
@@ -924,7 +948,7 @@ body.has-strip #launcher { padding-top:52px; }
       <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
-      <div class="g-logo" id="g-logo-first">FIRST<span>!</span></div>
+      <div class="g-logo" id="g-logo-first">First</div>
     </div>
     <div class="hdr-right">
       <div class="lang-toggle lang-toggle-sm">
@@ -969,6 +993,7 @@ body.has-strip #launcher { padding-top:52px; }
     <button class="btn-play-again" id="btn-again" onclick="reshuffleDeck()">🔀 &nbsp; Play Again</button>
     <div class="btn-back-home" id="fh-back-home" onclick="exitGame()">🏠 Back to Home</div>
   </div>
+  <div class="game-footer"></div>
 </div>
 
 <!-- HOW TO PLAY OVERLAY -->
@@ -1200,86 +1225,138 @@ const POLICY_EN = `
   <div class="updated">Last updated: August 2026</div>
 
   <h2>Introduction</h2>
-  <p>Mil ke Khelo ("we", "our", "the app") provides free party games playable in your browser at milkekhelo.com. This page explains how we handle your information, and the terms under which you use our games. By using the app, you agree to this policy.</p>
+  <p>Welcome to MilkeKhelo ("MKK", "we", "our", or "us"). MilkeKhelo is a bilingual social gaming platform offering conversation-based games and interactive experiences designed to encourage meaningful interactions among friends, families, colleagues, and communities.</p>
+  <p>This Privacy Policy explains how we collect, use, store, and protect your information when you use our website, app, and related services. By using MilkeKhelo, you agree to this policy.</p>
+  <p><strong>MilkeKhelo is built to create conversations, not collect them.</strong></p>
 
   <h2>Information We Collect</h2>
-  <p>We aim to collect as little as possible. Depending on how you use the app:</p>
+  <p>We collect as little as possible. You can play most of our games without providing any personal information.</p>
+  <p><strong>Information you provide:</strong></p>
   <ul>
-    <li><strong>Name you enter:</strong> In multiplayer games like "Who's That?", the display name you type is shared with other players in your game session and stored temporarily to run the game.</li>
-    <li><strong>Gameplay data:</strong> Temporary game data (your answers, scores, game codes) is stored briefly to make multiplayer work, and is not tied to your real identity.</li>
-    <li><strong>Analytics:</strong> We use Google Analytics to understand general, anonymous usage (such as how many people play and which games are popular). This may include device type, approximate region, and pages visited.</li>
-    <li><strong>Local storage:</strong> Some games save your best score on your own device so you can beat it later. This never leaves your device.</li>
+    <li><strong>Display name:</strong> In multiplayer games like "Who's That?", the name you type is shared with other players in your game session and stored temporarily to run the game.</li>
+    <li><strong>Feedback:</strong> Any message you choose to send us by email.</li>
+  </ul>
+  <p><strong>Information collected automatically:</strong></p>
+  <ul>
+    <li>Device type, operating system, and browser information</li>
+    <li>Approximate location (derived from IP address)</li>
+    <li>Usage analytics (such as which games are popular)</li>
+    <li>App version and basic diagnostics</li>
   </ul>
 
   <h2>Information We Do NOT Collect</h2>
-  <p>We do not ask for or store your email, phone number, address, passwords, or payment information. We do not sell your data to anyone.</p>
+  <p>We do not require accounts or logins. We do not ask for or store your email address, phone number, home address, passwords, payment information, contacts, precise location, photos, microphone, or SMS. We do not sell your personal information to anyone.</p>
+
+  <h2>How We Use Your Information</h2>
+  <ul>
+    <li>To provide and run the games</li>
+    <li>To save game progress and preferences on your device</li>
+    <li>To understand performance and improve the experience</li>
+    <li>To respond to support requests</li>
+    <li>To prevent misuse and keep the service safe</li>
+  </ul>
 
   <h2>Multiplayer & Firebase</h2>
-  <p>Multiplayer games use Google Firebase to sync players in real time. The names and temporary game data are stored on Firebase servers only for the duration needed to run a game session, and old sessions are cleared automatically.</p>
+  <p>Multiplayer games use Google Firebase to sync players in real time. Display names and temporary game data are stored on Firebase servers only for as long as needed to run a game session, and old sessions are cleared automatically.</p>
+
+  <h2>Local Storage</h2>
+  <p>Some games (like Memory Grid) save your best score on your own device so you can beat it later. This information never leaves your device and is not sent to us.</p>
+
+  <h2>Sharing of Information</h2>
+  <p>We do not sell personal information. We may share limited information with trusted service providers who help us run MilkeKhelo — such as hosting (Google Firebase) and analytics (Google Analytics) — solely to operate the service. We may also disclose information if required by law, regulation, or valid legal process.</p>
+
+  <h2>AI Features</h2>
+  <p>Some MilkeKhelo features may use artificial intelligence to generate conversation prompts or game content. Where this happens, information is processed by trusted AI providers solely to generate the requested output. We do not sell your conversations to third parties.</p>
+
+  <h2>Data Retention</h2>
+  <p>We retain information only as long as necessary to provide the service, meet legal obligations, and resolve any disputes. Temporary multiplayer game data is cleared automatically after a session ends.</p>
 
   <h2>Children's Privacy</h2>
-  <p>Our games are family-friendly. We do not knowingly collect personal information from children. Since we don't collect emails or accounts, the app can be enjoyed without sharing personal details. If you believe a child has shared personal information, contact us and we'll remove it.</p>
+  <p>MilkeKhelo is intended for users above the minimum digital-consent age in their region. Children under 13 should use the service only with parental supervision. We do not knowingly collect personal information from children under 13. Since we don't require emails or accounts, the app can be enjoyed without sharing personal details. If you believe a child has shared personal information, contact us and we will remove it.</p>
 
-  <h2>Cookies & Tracking</h2>
-  <p>We use Google Analytics, which may set cookies to measure anonymous usage. We do not use advertising cookies or sell data to advertisers.</p>
+  <h2>Your Rights</h2>
+  <p>Depending on your region, you may have the right to access, correct, or delete information relating to you, or to withdraw consent. Because we don't operate accounts, most data is either temporary or stored only on your own device. You can clear on-device data anytime through your browser settings. For any request, email us at <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a>.</p>
 
-  <h2>Data Security</h2>
-  <p>We rely on trusted providers (Google Firebase, Google Analytics) that use industry-standard security. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
-
-  <h2>Your Choices</h2>
-  <p>You can play most games without entering any personal detail. You can clear your device's local storage at any time through your browser settings. You may decline analytics using browser privacy tools or extensions.</p>
+  <h2>Security</h2>
+  <p>We use commercially reasonable safeguards and rely on trusted providers (Google Firebase, Google Analytics) that use industry-standard security. However, no method of internet transmission or storage can be guaranteed 100% secure.</p>
 
   <h2>Terms of Use</h2>
-  <p>Mil ke Khelo is provided free, "as is", for personal entertainment. Please play respectfully with others. Do not misuse the app, attempt to disrupt its services, or use it for any unlawful purpose. We may update or discontinue games at any time.</p>
+  <p>MilkeKhelo is provided free, "as is", for personal entertainment. Please play respectfully with others. Do not misuse the app, disrupt its services, or use it for any unlawful purpose. We may update or discontinue games at any time.</p>
 
   <h2>Changes to This Policy</h2>
   <p>We may update this policy from time to time. Any changes will be posted on this page with an updated date.</p>
 
-  <h2>Contact</h2>
-  <p>For any questions about this policy or your data, email us at <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a>.</p>
+  <h2>Contact Us</h2>
+  <p>MilkeKhelo<br>Email: <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a><br>Website: milkekhelo.com</p>
 `;
 
 const POLICY_HI = `
   <div class="updated">अंतिम अपडेट: अगस्त 2026</div>
 
   <h2>परिचय</h2>
-  <p>Mil ke Khelo ("हम", "हमारा", "ऐप") milkekhelo.com पर आपके ब्राउज़र में खेले जाने वाले मुफ़्त पार्टी गेम प्रदान करता है। यह पेज बताता है कि हम आपकी जानकारी कैसे संभालते हैं और आप किन शर्तों पर हमारे गेम इस्तेमाल करते हैं। ऐप का उपयोग करके, आप इस नीति से सहमत होते हैं।</p>
+  <p>MilkeKhelo ("MKK", "हम", "हमारा") में आपका स्वागत है। MilkeKhelo एक द्विभाषी सोशल गेमिंग प्लेटफ़ॉर्म है जो दोस्तों, परिवारों और समुदायों के बीच सार्थक बातचीत को बढ़ावा देने वाले बातचीत-आधारित गेम प्रदान करता है।</p>
+  <p>यह गोपनीयता नीति बताती है कि जब आप हमारी वेबसाइट, ऐप और सेवाओं का उपयोग करते हैं तो हम आपकी जानकारी कैसे एकत्र, उपयोग, संग्रहीत और सुरक्षित करते हैं। MilkeKhelo का उपयोग करके, आप इस नीति से सहमत होते हैं।</p>
+  <p><strong>MilkeKhelo बातचीत बनाने के लिए बना है, उन्हें इकट्ठा करने के लिए नहीं।</strong></p>
 
   <h2>हम कौन सी जानकारी लेते हैं</h2>
-  <p>हम जितना कम हो सके उतना ही लेने की कोशिश करते हैं:</p>
+  <p>हम जितना कम हो सके उतना ही लेते हैं। आप हमारे ज़्यादातर गेम बिना कोई व्यक्तिगत जानकारी दिए खेल सकते हैं।</p>
+  <p><strong>जो जानकारी आप देते हैं:</strong></p>
   <ul>
-    <li><strong>आपका दर्ज नाम:</strong> "हूज़ दैट?" जैसे मल्टीप्लेयर गेम में, आपका डाला हुआ नाम आपके गेम सेशन के अन्य खिलाड़ियों के साथ साझा होता है और गेम चलाने के लिए अस्थायी रूप से संग्रहीत होता है।</li>
-    <li><strong>गेमप्ले डेटा:</strong> अस्थायी गेम डेटा (आपके जवाब, स्कोर, गेम कोड) मल्टीप्लेयर चलाने के लिए थोड़ी देर संग्रहीत होता है और आपकी असली पहचान से नहीं जुड़ा होता।</li>
-    <li><strong>एनालिटिक्स:</strong> हम सामान्य, गुमनाम उपयोग समझने के लिए Google Analytics का उपयोग करते हैं (जैसे कितने लोग खेलते हैं और कौन-से गेम लोकप्रिय हैं)।</li>
-    <li><strong>लोकल स्टोरेज:</strong> कुछ गेम आपका बेस्ट स्कोर आपके ही डिवाइस पर सहेजते हैं। यह कभी आपके डिवाइस से बाहर नहीं जाता।</li>
+    <li><strong>डिस्प्ले नाम:</strong> "हूज़ दैट?" जैसे मल्टीप्लेयर गेम में, आपका डाला हुआ नाम आपके गेम सेशन के अन्य खिलाड़ियों के साथ साझा होता है और गेम चलाने के लिए अस्थायी रूप से संग्रहीत होता है।</li>
+    <li><strong>फ़ीडबैक:</strong> जो भी संदेश आप हमें ईमेल से भेजना चुनते हैं।</li>
+  </ul>
+  <p><strong>जो जानकारी अपने आप एकत्र होती है:</strong></p>
+  <ul>
+    <li>डिवाइस प्रकार, ऑपरेटिंग सिस्टम और ब्राउज़र जानकारी</li>
+    <li>अनुमानित स्थान (IP पते से)</li>
+    <li>उपयोग एनालिटिक्स (जैसे कौन-से गेम लोकप्रिय हैं)</li>
+    <li>ऐप संस्करण और बुनियादी डायग्नोस्टिक्स</li>
   </ul>
 
   <h2>जो जानकारी हम नहीं लेते</h2>
-  <p>हम आपका ईमेल, फोन नंबर, पता, पासवर्ड या भुगतान जानकारी नहीं मांगते या संग्रहीत नहीं करते। हम आपका डेटा किसी को नहीं बेचते।</p>
+  <p>हमें अकाउंट या लॉगिन की ज़रूरत नहीं है। हम आपका ईमेल, फोन नंबर, पता, पासवर्ड, भुगतान जानकारी, संपर्क, सटीक स्थान, फ़ोटो, माइक्रोफ़ोन या SMS नहीं मांगते या संग्रहीत नहीं करते। हम आपकी व्यक्तिगत जानकारी किसी को नहीं बेचते।</p>
+
+  <h2>हम आपकी जानकारी का उपयोग कैसे करते हैं</h2>
+  <ul>
+    <li>गेम प्रदान करने और चलाने के लिए</li>
+    <li>आपके डिवाइस पर गेम प्रगति और प्राथमिकताएं सहेजने के लिए</li>
+    <li>प्रदर्शन समझने और अनुभव बेहतर करने के लिए</li>
+    <li>सहायता अनुरोधों का जवाब देने के लिए</li>
+    <li>दुरुपयोग रोकने और सेवा को सुरक्षित रखने के लिए</li>
+  </ul>
 
   <h2>मल्टीप्लेयर और Firebase</h2>
-  <p>मल्टीप्लेयर गेम रियल-टाइम में खिलाड़ियों को जोड़ने के लिए Google Firebase का उपयोग करते हैं। नाम और अस्थायी गेम डेटा केवल गेम सेशन चलाने के लिए ज़रूरी समय तक Firebase सर्वर पर रहते हैं, और पुराने सेशन अपने आप साफ़ हो जाते हैं।</p>
+  <p>मल्टीप्लेयर गेम रियल-टाइम में खिलाड़ियों को जोड़ने के लिए Google Firebase का उपयोग करते हैं। डिस्प्ले नाम और अस्थायी गेम डेटा केवल गेम सेशन चलाने के लिए ज़रूरी समय तक Firebase सर्वर पर रहते हैं, और पुराने सेशन अपने आप साफ़ हो जाते हैं।</p>
+
+  <h2>लोकल स्टोरेज</h2>
+  <p>कुछ गेम (जैसे मेमोरी ग्रिड) आपका बेस्ट स्कोर आपके ही डिवाइस पर सहेजते हैं। यह जानकारी कभी आपके डिवाइस से बाहर नहीं जाती और हमें नहीं भेजी जाती।</p>
+
+  <h2>जानकारी साझा करना</h2>
+  <p>हम व्यक्तिगत जानकारी नहीं बेचते। हम केवल सेवा चलाने के लिए भरोसेमंद सेवा प्रदाताओं — जैसे होस्टिंग (Google Firebase) और एनालिटिक्स (Google Analytics) — के साथ सीमित जानकारी साझा कर सकते हैं। कानून या वैध कानूनी प्रक्रिया के अनुसार आवश्यक होने पर भी हम जानकारी प्रकट कर सकते हैं।</p>
+
+  <h2>AI सुविधाएं</h2>
+  <p>कुछ MilkeKhelo सुविधाएं बातचीत के सवाल या गेम सामग्री बनाने के लिए आर्टिफ़िशियल इंटेलिजेंस का उपयोग कर सकती हैं। ऐसे में जानकारी केवल अनुरोधित आउटपुट बनाने के लिए भरोसेमंद AI प्रदाताओं द्वारा संसाधित होती है। हम आपकी बातचीत किसी तीसरे पक्ष को नहीं बेचते।</p>
+
+  <h2>डेटा प्रतिधारण</h2>
+  <p>हम जानकारी केवल तब तक रखते हैं जब तक सेवा प्रदान करने, कानूनी दायित्व पूरे करने और विवाद सुलझाने के लिए ज़रूरी हो। अस्थायी मल्टीप्लेयर गेम डेटा सेशन खत्म होने के बाद अपने आप साफ़ हो जाता है।</p>
 
   <h2>बच्चों की गोपनीयता</h2>
-  <p>हमारे गेम परिवार के अनुकूल हैं। हम जानबूझकर बच्चों से व्यक्तिगत जानकारी एकत्र नहीं करते। चूंकि हम ईमेल या अकाउंट नहीं लेते, ऐप बिना व्यक्तिगत विवरण साझा किए खेला जा सकता है।</p>
+  <p>MilkeKhelo उन उपयोगकर्ताओं के लिए है जो अपने क्षेत्र में न्यूनतम डिजिटल-सहमति आयु से ऊपर हैं। 13 साल से कम उम्र के बच्चों को माता-पिता की देखरेख में ही इसका उपयोग करना चाहिए। हम जानबूझकर 13 साल से कम उम्र के बच्चों से व्यक्तिगत जानकारी एकत्र नहीं करते। चूंकि हमें ईमेल या अकाउंट की ज़रूरत नहीं, ऐप बिना व्यक्तिगत विवरण साझा किए खेला जा सकता है।</p>
 
-  <h2>कुकीज़ और ट्रैकिंग</h2>
-  <p>हम Google Analytics का उपयोग करते हैं, जो गुमनाम उपयोग मापने के लिए कुकीज़ सेट कर सकता है। हम विज्ञापन कुकीज़ का उपयोग नहीं करते या विज्ञापनदाताओं को डेटा नहीं बेचते।</p>
+  <h2>आपके अधिकार</h2>
+  <p>आपके क्षेत्र के अनुसार, आपको अपनी जानकारी तक पहुंचने, सुधारने या हटाने, या सहमति वापस लेने का अधिकार हो सकता है। चूंकि हम अकाउंट नहीं चलाते, ज़्यादातर डेटा या तो अस्थायी है या केवल आपके ही डिवाइस पर रहता है। आप अपने ब्राउज़र सेटिंग्स से कभी भी डिवाइस का डेटा साफ़ कर सकते हैं। किसी भी अनुरोध के लिए, हमें <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a> पर ईमेल करें।</p>
 
-  <h2>डेटा सुरक्षा</h2>
-  <p>हम भरोसेमंद प्रदाताओं (Google Firebase, Google Analytics) पर निर्भर हैं जो उद्योग-मानक सुरक्षा का उपयोग करते हैं। हालांकि, इंटरनेट पर कोई भी तरीका 100% सुरक्षित नहीं है।</p>
-
-  <h2>आपके विकल्प</h2>
-  <p>आप ज़्यादातर गेम बिना कोई व्यक्तिगत विवरण डाले खेल सकते हैं। आप अपने ब्राउज़र सेटिंग्स से कभी भी अपने डिवाइस का लोकल स्टोरेज साफ़ कर सकते हैं।</p>
+  <h2>सुरक्षा</h2>
+  <p>हम व्यावसायिक रूप से उचित सुरक्षा उपायों का उपयोग करते हैं और भरोसेमंद प्रदाताओं (Google Firebase, Google Analytics) पर निर्भर हैं जो उद्योग-मानक सुरक्षा का उपयोग करते हैं। हालांकि, इंटरनेट पर कोई भी तरीका 100% सुरक्षित होने की गारंटी नहीं दी जा सकती।</p>
 
   <h2>उपयोग की शर्तें</h2>
-  <p>Mil ke Khelo व्यक्तिगत मनोरंजन के लिए मुफ़्त, "जैसा है" प्रदान किया जाता है। कृपया दूसरों के साथ सम्मानपूर्वक खेलें। ऐप का दुरुपयोग न करें या किसी गैरकानूनी उद्देश्य के लिए इसका उपयोग न करें।</p>
+  <p>MilkeKhelo व्यक्तिगत मनोरंजन के लिए मुफ़्त, "जैसा है" प्रदान किया जाता है। कृपया दूसरों के साथ सम्मानपूर्वक खेलें। ऐप का दुरुपयोग न करें या किसी गैरकानूनी उद्देश्य के लिए इसका उपयोग न करें।</p>
 
   <h2>इस नीति में बदलाव</h2>
   <p>हम समय-समय पर इस नीति को अपडेट कर सकते हैं। कोई भी बदलाव इस पेज पर अपडेट तारीख के साथ पोस्ट किया जाएगा।</p>
 
-  <h2>संपर्क</h2>
-  <p>इस नीति या आपके डेटा के बारे में किसी भी प्रश्न के लिए, हमें <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a> पर ईमेल करें।</p>
+  <h2>संपर्क करें</h2>
+  <p>MilkeKhelo<br>ईमेल: <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a><br>वेबसाइट: milkekhelo.com</p>
 `;
 
 
@@ -1300,15 +1377,16 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
   if (_el('gc-name-first')) _el('gc-name-first').textContent = hi ? 'फर्स्ट' : 'First';
   if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
   if (_el('first-prompt')) _el('first-prompt').textContent = hi ? 'अपनी कहानी बताएं...' : 'Share the story of your...';
-  if (_el('gc-name-snl'))   _el('gc-name-snl').textContent  = hi ? 'स्टेप्स एंड स्लाइड्स' : 'Steps & Slides';
+  if (_el('gc-name-snl'))   _el('gc-name-snl').textContent  = hi ? 'स्नेक्स एंड लैडर्स' : 'Snakes & Ladders';
   if (_el('gc-name-mg'))    _el('gc-name-mg').textContent   = hi ? 'मेमोरी ग्रिड' : 'Memory Grid';
   if (_el('gc-name-ty'))    _el('gc-name-ty').textContent   = hi ? 'थैंक यू' : 'Thank You';
   if (_el('menu-title'))    _el('menu-title').textContent   = hi ? 'मेन्यू' : 'Menu';
   if (_el('menu-policy'))   _el('menu-policy').textContent  = hi ? 'नीति' : 'Policy';
 
   // ── In-game headers (transliterated names) ──
-  if (_el('g-logo-first')) _el('g-logo-first').innerHTML = hi ? 'फर्स्ट<span>!</span>' : 'FIRST<span>!</span>';
-  if (_el('g-logo-ty'))    _el('g-logo-ty').innerHTML    = hi ? 'थैंक <span>यू!</span>' : 'THANK <span>YOU!</span>';
+  if (_el('g-logo-first')) _el('g-logo-first').textContent = hi ? 'फर्स्ट' : 'First';
+  if (_el('g-logo-ty'))    _el('g-logo-ty').textContent = hi ? 'थैंक यू' : 'Thank You';
+  if (_el('g-logo-snl'))   _el('g-logo-snl').textContent = hi ? 'स्नेक्स एंड लैडर्स' : 'Snakes & Ladders';
   if (_el('mini-label-first')) _el('mini-label-first').textContent = hi ? 'फर्स्ट!' : 'FIRST!';
 
   // ── FIRST game UI ──
@@ -2249,7 +2327,7 @@ if ('serviceWorker' in navigator) {
       <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
     </div>
     <div class="hdr-center">
-      <div class="g-logo" id="g-logo-ty" style="font-size:18px;">THANK <span>YOU!</span></div>
+      <div class="g-logo" id="g-logo-ty">Thank You</div>
     </div>
     <div class="hdr-right">
       <div class="lang-toggle lang-toggle-sm">
@@ -2293,6 +2371,7 @@ if ('serviceWorker' in navigator) {
     <button class="btn-play-again" onclick="reshuffleTyDeck()">🔀 &nbsp; Play Again</button>
     <div class="btn-back-home" id="ty-back-home" onclick="exitTyGame()">🏠 Back to Home</div>
   </div>
+  <div class="game-footer"></div>
 </div>
 
 <!-- TY HOW TO PLAY OVERLAY -->
@@ -2325,9 +2404,7 @@ if ('serviceWorker' in navigator) {
       <button class="g-back g-back-arrow" onclick="exitSnlGame()" aria-label="Back"></button>
       <button class="g-help" onclick="openSnlHow()" aria-label="How to play">?</button>
     </div>
-    <div class="hdr-center">
-      <div class="snl-timer" id="snl-timer">2:00</div>
-    </div>
+    <div class="hdr-center"><div class="g-logo" id="g-logo-snl">Snakes &amp; Ladders</div></div>
     <div class="hdr-right">
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
@@ -2354,19 +2431,22 @@ if ('serviceWorker' in navigator) {
     </div>
   </div>
 
-  <!-- Board -->
-  <div class="snl-board-wrap">
-    <div class="snl-board-inner" id="snl-board-inner">
-      <img src="board.png" class="snl-board-img" id="snl-board-img" alt="Steps and Slides board" draggable="false">
-      <div class="snl-goti" id="snl-goti-yellow"></div>
-      <div class="snl-goti" id="snl-goti-red"></div>
-    </div>
-  </div>
+  <!-- Play area: timer + board + dice as one centered section -->
+  <div class="snl-play-area">
+    <div class="snl-timer" id="snl-timer">2:00</div>
 
-  <!-- Dice -->
-  <div class="snl-dice-row">
-    <div class="snl-msg" id="snl-msg">Yellow's turn — tap dice!</div>
-    <button class="snl-dice" id="snl-dice" onclick="rollSnlDice()">🎲</button>
+    <div class="snl-board-wrap">
+      <div class="snl-board-inner" id="snl-board-inner">
+        <img src="board.png" class="snl-board-img" id="snl-board-img" alt="Steps and Slides board" draggable="false">
+        <div class="snl-goti" id="snl-goti-yellow"></div>
+        <div class="snl-goti" id="snl-goti-red"></div>
+      </div>
+    </div>
+
+    <div class="snl-dice-row">
+      <div class="snl-msg" id="snl-msg">Yellow's turn — tap dice!</div>
+      <button class="snl-dice" id="snl-dice" onclick="rollSnlDice()">🎲</button>
+    </div>
   </div>
 
   <!-- End screen -->
@@ -2377,6 +2457,7 @@ if ('serviceWorker' in navigator) {
     <button class="btn-play-again" onclick="startSnlGame(true)">🔄 &nbsp; Play Again</button>
     <div class="btn-back-home" id="snl-back-home" onclick="exitSnlGame()">🏠 Back to Home</div>
   </div>
+  <div class="game-footer"></div>
 </div>
 
 
