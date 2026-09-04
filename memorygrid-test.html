@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8THRWNXLC3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8THRWNXLC3');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f3d28">
+
+<title>Memory Grid — Mil ke Khelo</title>
+<meta name="description" content="Memory Grid is a free brain-training memory game. Memorise the lit dots, then tap them all from memory. Easy, Medium and Hard levels with streaks, lives and hints.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Memory Grid — Memory Party Game">
+<meta property="og:description" content="Memorise the pattern, tap it back. How long can your streak last?">
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --accent:#16a34a;
+  --accent-2:#22C55E;
+  --gold:#fbbf24;
+  --green:#15a34a;
+  --red:#f87171;
+  --dot:#1f3a2e;
+  --dot-lit:#4ade80;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family:'Baloo 2',sans-serif;
+  background:#0f3d28;
+  background-attachment:fixed;
+  color:#fff; min-height:100vh; min-height:100dvh;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display:none; min-height:100vh; min-height:100dvh;
+  flex-direction:column; align-items:center;
+  padding:0 20px calc(20px + env(safe-area-inset-bottom,0px));
+  padding-top:calc(6px + env(safe-area-inset-top,0px));
+}
+.screen.active { display:flex; animation:fadeSlide .4s cubic-bezier(.34,1.2,.64,1); }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── HEADER (standard) ── */
+.mg-header {
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; width:100%; padding:14px 4px 8px; gap:8px; flex-shrink:0;
+}
+.hdr-left  { justify-self:start; display:flex; align-items:center; gap:10px; }
+.hdr-center{ justify-self:center; text-align:center; }
+.hdr-right { justify-self:end; }
+
+.g-back, .g-help {
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  color:#fff; cursor:pointer;
+  width:32px; height:32px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:800;
+  flex-shrink:0; transition:background .15s;
+}
+.g-back:active, .g-help:active { background:rgba(255,255,255,.24); }
+.g-back-arrow::before { content:'←'; display:block; line-height:1; transform:translateY(-1px); font-size:17px; }
+
+.g-logo {
+  font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:800;
+  color:#fff; letter-spacing:.2px; white-space:nowrap; line-height:1.25;
+}
+.g-logo span { color:#fff; }
+
+.lang-toggle {
+  display:flex; align-items:center;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  border-radius:12px; overflow:hidden; padding:4px; height:32px; flex-shrink:0;
+}
+.lang-btn {
+  padding:0 12px; font-size:15px; font-weight:700; letter-spacing:0;
+  color:#a9b4d6; cursor:pointer; background:transparent;
+  border:none; font-family:'Baloo 2',sans-serif; transition:all .2s;
+  height:100%; display:flex; align-items:center; border-radius:8px;
+}
+.lang-btn.active { background:#ffc53d; color:#1b2340; border-radius:8px; }
+
+/* ── HOME ── */
+.home-picker {
+  justify-content:flex-start;
+}
+.picker-logo {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; width:100%;
+}
+.picker-modes {
+  width:100%; display:flex; flex-direction:column;
+  align-items:center; gap:24px;
+  padding-bottom:6px;
+}
+.home-center {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  width:100%; gap:28px; padding:10px 0;
+}
+.home-art { font-size:clamp(58px,17vw,80px); line-height:1; }
+.home-art-img {
+  width:clamp(120px,34vw,160px); height:auto; object-fit:contain;
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,.35));
+  margin-bottom:10px; user-select:none; -webkit-user-drag:none;
+}
+.game-logo {
+  font-family:'Baloo 2',sans-serif; font-size:clamp(34px,10vw,46px);
+  font-weight:800; line-height:1; text-align:center;
+}
+.game-logo .l1 { color:#fff; }
+.game-logo .l2 { color:var(--accent-2); }
+.logo-sub {
+  font-family:'Baloo 2',sans-serif;
+  font-size:15px; font-weight:500; letter-spacing:.2px;
+  color:rgba(255,255,255,.7); text-transform:none;
+  text-align:center; margin-top:8px;
+}
+
+.scr-title {
+  font-family:'Baloo 2',sans-serif; font-size:26px; font-weight:800;
+  text-align:center; margin-bottom:6px;
+}
+.scr-sub {
+  font-size:14px; font-weight:600; color:rgba(255,255,255,.55);
+  text-align:center; margin-bottom:6px; line-height:1.45;
+}
+
+/* ── LEVEL SELECT ── */
+.level-cards { width:100%; max-width:360px; display:flex; flex-direction:column; gap:14px; }
+.level-card {
+  border-radius:22px; padding:20px 22px; cursor:pointer;
+  display:flex; align-items:center; gap:16px;
+  transition:transform .12s;
+  position:relative; overflow:hidden;
+  /* outer border: light top → dark bottom */
+  background:linear-gradient(180deg,#F6D22F 0%,#FD750C 100%);
+}
+.level-card::before {
+  /* inner border: dark top → light bottom */
+  content:''; position:absolute; inset:4px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#FD750C 0%,#F6D22F 100%);
+  z-index:0;
+}
+.level-card::after {
+  /* card fill: base colour top → darker bottom */
+  content:''; position:absolute; inset:7px;
+  border-radius:15px;
+  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  z-index:1;
+}
+.level-card:active { transform:scale(.97); }
+.level-icon {
+  font-size:38px; line-height:1; flex-shrink:0;
+  width:56px; height:56px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.15); border-radius:16px;
+  position:relative; z-index:2;
+}
+.level-info { flex:1; position:relative; z-index:2; }
+.level-name {
+  font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800;
+  color:#fff; line-height:1.1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  paint-order:stroke fill;
+}
+.level-desc { font-size:13px; font-weight:700; color:rgba(255,255,255,.85); margin-top:2px; }
+.lc-easy   { --c:#4ade80; --cd:#15803d; box-shadow:0 8px 22px rgba(34,197,94,.3); }
+.lc-medium { --c:#fbbf24; --cd:#c2530a; box-shadow:0 8px 22px rgba(251,146,60,.3); }
+.lc-hard   { --c:#f87171; --cd:#991b1b; box-shadow:0 8px 22px rgba(239,68,68,.3); }
+
+/* ── BUTTONS ── */
+.btn {
+  width:100%; max-width:340px; border:none; border-radius:16px; height:48px; padding:0;
+  font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700;
+  cursor:pointer; letter-spacing:.2px; display:flex; align-items:center; justify-content:center; margin:0 auto;
+  transition:transform .12s, box-shadow .12s;
+}
+
+.btn-primary {
+  background:linear-gradient(180deg,#ffe08a 0%,#c97f00 100%);
+  color:#1b2340; box-shadow:0 4px 0 #7a4b00;
+}
+.btn-primary:active { transform:translateY(3px); box-shadow:0 1px 0 #7a4b00; }
+.btn-ghost {
+  background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.8); box-shadow:none; font-size:16px;
+}
+.btn-ghost:active { background:rgba(255,255,255,.14); }
+.link-back {
+  margin-top:20px; font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:700;
+  color:#bababa; cursor:pointer; text-align:center;
+  align-self:center;
+}
+.link-back:active { color:rgba(255,255,255,.9); }
+
+/* ── GAME STATUS BAR (score + lives) ── */
+.mg-status {
+  width:100%; max-width:460px;
+  display:flex; justify-content:center; align-items:stretch;
+  gap:12px; padding:2px 4px 0; flex-shrink:0;
+}
+.pscore {
+  flex:1; max-width:170px;
+  background:rgba(255,255,255,.14); border:2px solid transparent;
+  border-radius:16px; padding:10px 16px; text-align:center;
+  transition:opacity .25s, border-color .25s;
+}
+.pscore-name { font-size:12px; font-weight:700; color:#fff; margin-bottom:2px; }
+.pscore-val { font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:800; color:#fff; line-height:1.1; }
+/* Per-player colour border; inactive dims to 70% (matches index) */
+.pscore-1.active { border-color:#4ade80; }
+.pscore-2.active { border-color:#fbbf24; }
+.pscore:not(.active) { opacity:.55; border-color:transparent; }
+.pscore.active { opacity:1; }
+
+
+
+
+
+
+/* ── GRID ── */
+.grid-wrap {
+  flex:1; width:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px; min-height:0;
+}
+.grid-status {
+  font-family:'Baloo 2',sans-serif; font-size:24px; font-weight:800;
+  color:rgba(255,255,255,.9); text-align:center; min-height:22px;
+  transition:color .2s;
+}
+.grid-status.go { color:#4ade80; }
+.grid-status.go2 { color:#fbbf24; }
+.grid-status.show { color:var(--accent-2); }
+.mg-grid {
+  display:grid; gap:min(4.5vw,26px);
+  touch-action:manipulation;
+}
+.dot {
+  width:100%; aspect-ratio:1/1; border-radius:14%;
+  background:rgba(255,255,255,.2);
+  cursor:pointer; position:relative;
+  transition:background .18s, transform .12s, box-shadow .18s;
+}
+.dot::after {
+  content:''; position:absolute; inset:22%;
+  border-radius:14%; background:transparent; transition:background .18s;
+}
+.dot.lit {
+  background:var(--dot-lit);
+  box-shadow:0 0 18px rgba(74,222,128,.7), inset 0 1px 2px rgba(255,255,255,.4);
+}
+.dot.correct {
+  background:var(--green);
+  box-shadow:0 0 18px rgba(74,222,128,.7), inset 0 1px 2px rgba(255,255,255,.4);
+  animation:pop .3s cubic-bezier(.34,1.6,.64,1);
+}
+.dot.correct[data-num]::before {
+  content:attr(data-num);
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',sans-serif; font-weight:800;
+  font-size:min(5vw,26px); color:#052e16;
+  text-shadow:0 1px 1px rgba(255,255,255,.4);
+}
+.dot.wrong {
+  background:var(--red);
+  box-shadow:0 0 18px rgba(248,113,113,.8);
+  animation:shake .4s;
+}
+@keyframes pop { 0%{transform:scale(.7)} 60%{transform:scale(1.15)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.mg-grid.locked .dot { pointer-events:none; }
+
+
+
+/* ── HINT BUTTON ── */
+.mg-bottom {
+  width:100%; max-width:460px; display:flex; justify-content:flex-end;
+  padding:8px 4px 4px; flex-shrink:0;
+}
+.hint-btn {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(251,191,36,.15); border:1px solid rgba(251,191,36,.4);
+  border-radius:50px; padding:10px 18px; cursor:pointer;
+  font-family:'Baloo 2',sans-serif; font-size:14px; font-weight:700; color:var(--gold);
+  transition:transform .1s, opacity .2s;
+}
+.hint-btn:active { transform:scale(.95); }
+.hint-btn:disabled { opacity:.35; cursor:not-allowed; }
+.hint-count {
+  background:var(--gold); color:#3b2503;
+  border-radius:50px; font-size:11px; font-weight:900;
+  padding:1px 7px; min-width:20px; text-align:center;
+}
+
+/* ── WELL DONE FLASH ── */
+#flash {
+  position:fixed; inset:0; z-index:500; display:none;
+  align-items:center; justify-content:center; pointer-events:none;
+}
+#flash.show { display:flex; }
+.flash-text {
+  font-family:'Baloo 2',sans-serif; font-size:44px; font-weight:800;
+  color:#fff;
+  -webkit-text-stroke:2px #0a3d20;
+  paint-order:stroke fill;
+  text-shadow:0 3px 10px rgba(0,0,0,.5);
+  animation:flashPop .6s cubic-bezier(.34,1.6,.64,1);
+}
+@keyframes flashPop { 0%{transform:scale(.5);opacity:0} 40%{transform:scale(1.1);opacity:1} 100%{transform:scale(1);opacity:1} }
+
+/* ── GAME OVER OVERLAY ── */
+#gameover {
+  position:fixed; inset:0; z-index:450;
+  background:rgba(26,11,46,.95); backdrop-filter:blur(6px);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  padding:32px; text-align:center;
+}
+#gameover.show { display:flex; animation:fadeSlide .4s ease; }
+.go-icon { font-size:70px; line-height:1; margin-bottom:12px; }
+.go-title { font-family:'Baloo 2',sans-serif; font-size:28px; font-weight:800; color:#fff; margin-bottom:6px; }
+.go-sub { font-family:'Baloo 2',sans-serif; font-size:14px; font-weight:500; color:#bababa; margin-bottom:24px; }
+.go-finalscores {
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  margin-bottom:26px;
+}
+.fs-box {
+  background:rgba(255,255,255,.06); border:2px solid rgba(255,255,255,.12);
+  border-radius:18px; padding:16px 22px; min-width:96px;
+}
+.fs-box.winner { border-color:var(--gold); background:rgba(251,191,36,.14); }
+.fs-name { font-family:'Baloo 2',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase; color:#bababa; margin-bottom:4px; }
+.fs-val { font-family:'Baloo 2',sans-serif; font-size:38px; font-weight:800; color:#fff; line-height:1; }
+.fs-vs { font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:700; color:rgba(255,255,255,.4); }
+.go-score-big { font-family:'Baloo 2',sans-serif; font-size:54px; font-weight:800; color:var(--gold); line-height:1; }
+.go-score-lbl { font-family:'Baloo 2',sans-serif; font-size:12px; font-weight:700; letter-spacing:1px; color:#bababa; text-transform:uppercase; margin-top:4px; }
+.go-best { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:14px; }
+
+#confetti { position:fixed; inset:0; pointer-events:none; z-index:600; display:none; }
+#confetti.on { display:block; }
+
+/* ══ MODE PICKER ══ */
+.mode-section { width:100%; max-width:400px; }
+.mode-heading {
+  font-family:'Baloo 2',sans-serif;
+  font-size:15px; font-weight:500; letter-spacing:.3px;
+  color:rgba(255,255,255,.7); text-transform:none;
+  text-align:center; margin-bottom:12px;
+}
+.solo-row { display:flex; gap:12px; justify-content:center; }
+.solo-card {
+  flex:1; max-width:120px;
+  border-radius:24px; padding:16px 8px 14px;
+  cursor:pointer; transition:transform .1s;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  position:relative;
+  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  box-shadow:0 6px 0 0 var(--cs);
+}
+.solo-label { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.solo-card:active { transform:translateY(3px); box-shadow:0 3px 0 0 var(--cs); }
+.sc-easy   { --c:#4ade80; --cd:#15803d; --cs:#0d5228; }
+.sc-medium { --c:#fbbf24; --cd:#c2530a; --cs:#7a3406; }
+.sc-hard   { --c:#f87171; --cd:#991b1b; --cs:#5c1010; }
+
+/* mini grid icon (number of blocks) */
+.solo-grid {
+  display:grid; gap:3px;
+  width:46px; height:46px;
+}
+.solo-grid.sg-3 { grid-template-columns:repeat(3,1fr); }
+.solo-grid.sg-4 { grid-template-columns:repeat(4,1fr); gap:2.5px; }
+.solo-grid.sg-5 { grid-template-columns:repeat(5,1fr); gap:2px; }
+.solo-grid span {
+  aspect-ratio:1/1; border-radius:2px;
+  background:rgba(255,255,255,.85);
+}
+.solo-name {
+  font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800;
+  color:#fff; line-height:1;
+  -webkit-text-stroke:4px rgba(0,0,0,.2); paint-order:stroke fill;
+}
+.solo-sub { font-family:'Baloo 2',sans-serif; font-size:10px; font-weight:600; color:rgba(255,255,255,.85); white-space:nowrap; }
+
+/* Full-width 2-player card */
+.duel-card {
+  --c:#c3b0f5; --cd:#6a4fc2; --cs:#3a2b6b;
+  width:100%; border:none; cursor:pointer;
+  border-radius:24px; padding:18px 20px;
+  display:flex; align-items:center; gap:16px;
+  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  box-shadow:0 6px 0 0 var(--cs);
+  transition:transform .1s;
+  text-align:left; position:relative;
+}
+.duel-card:active { transform:translateY(3px); box-shadow:0 3px 0 0 var(--cs); }
+.duel-card:active { transform:scale(.97); }
+.duel-ico {
+  font-size:34px; line-height:1; flex-shrink:0;
+  width:52px; height:52px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.18); border-radius:14px;
+}
+.duel-text { display:flex; flex-direction:column; gap:2px; }
+.duel-name {
+  font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800; color:#fff;
+  -webkit-text-stroke:4px rgba(0,0,0,.2); paint-order:stroke fill;
+}
+.duel-sub { font-size:12px; font-weight:600; color:rgba(255,255,255,.85); }
+
+
+/* ══ SOLO STATUS (streak + lives) ══ */
+.solo-status { justify-content:center; align-items:stretch; gap:12px; }
+.solo-card-score {
+  flex:1; max-width:170px;
+  background:rgba(255,255,255,.14); border:2px solid transparent;
+  border-radius:16px; padding:10px 16px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+}
+.score-val { font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800; color:#fff; line-height:1; }
+.score-lbl { font-size:12px; font-weight:700; letter-spacing:.5px; color:#bababa; text-transform:uppercase; }
+.lives-box { display:flex; gap:6px; align-items:center; justify-content:center; }
+.life { font-size:20px; line-height:1; transition:transform .3s, opacity .3s; }
+.life.lost { opacity:.25; transform:scale(.8); filter:grayscale(1); }
+.mode-label {
+  font-size:11px; font-weight:800; letter-spacing:1.5px;
+  color:rgba(255,255,255,.35); text-transform:uppercase; text-align:center;
+}
+.go-scorecard {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+  border-radius:20px; padding:22px 28px; margin-bottom:26px; min-width:220px; text-align:center;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="screen active" id="scr-home">
+  <div class="mg-header">
+    <div class="hdr-left">
+      <button class="g-back g-back-arrow" onclick="exitToSite()" aria-label="Back"></button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
+    <div class="hdr-center"></div>
+    <div class="hdr-right">
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-center home-picker">
+    <div class="picker-logo">
+      <img src="memorygrid-home.png" class="home-art-img" alt="Memory Grid" width="200" height="200" draggable="false">
+      <div class="game-logo"><span class="l1">Memory</span> <span class="l2">Grid</span></div>
+      <div class="logo-sub" id="mg-tagline">Memorise, Tap, and Win!</div>
+    </div>
+
+    <div class="picker-modes">
+      <div class="mode-section">
+        <div class="mode-heading" id="duel-heading">Play With a Friend</div>
+        <button class="duel-card" onclick="startGame()">
+          <span class="duel-ico">👥</span>
+          <span class="duel-text">
+            <span class="duel-name" id="duel-name">2 Player Offline</span>
+            <span class="duel-sub" id="duel-sub">Take turns · highest score wins</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="mode-section">
+        <div class="mode-heading" id="solo-heading">Solo — Beat Your Streak</div>
+        <div class="solo-row">
+        <div class="solo-card sc-easy" onclick="startLevel('easy')">
+          <div class="solo-grid sg-3" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+          <div class="solo-label">
+            <div class="solo-name" id="sc-easy-name">Easy</div>
+            <div class="solo-sub">3×3 grid · 4 dots</div>
+          </div>
+        </div>
+        <div class="solo-card sc-medium" onclick="startLevel('medium')">
+          <div class="solo-grid sg-4" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="solo-label">
+            <div class="solo-name" id="sc-medium-name">Medium</div>
+            <div class="solo-sub">4×4 grid · 7 dots</div>
+          </div>
+        </div>
+        <div class="solo-card sc-hard" onclick="startLevel('hard')">
+          <div class="solo-grid sg-5" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="solo-label">
+            <div class="solo-name" id="sc-hard-name">Hard</div>
+            <div class="solo-sub">5×5 grid · 10 dots</div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ GAME ══════════ -->
+<div class="screen" id="scr-game">
+  <div class="mg-header">
+    <div class="hdr-left">
+      <button class="g-back g-back-arrow" onclick="quitGame()" aria-label="Back"></button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+    </div>
+    <div class="hdr-center"><div class="g-logo">MEMORY <span>GRID</span></div></div>
+    <div class="hdr-right">
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solo status: streak + lives -->
+  <div class="mg-status solo-status" id="solo-status">
+    <div class="solo-card-score">
+      <div class="score-val" id="score-val">0</div>
+      <div class="score-lbl" id="streak-lbl">Streak</div>
+    </div>
+    <div class="solo-card-score">
+      <div class="lives-box" id="lives-box"></div>
+      <div class="score-lbl">Lives</div>
+    </div>
+  </div>
+
+  <!-- Duel status: two player scores -->
+  <div class="mg-status duel-status" id="duel-status" style="display:none">
+    <div class="pscore pscore-1" id="pscore-1">
+      <div class="pscore-name" id="p1-name">Tommy</div>
+      <div class="pscore-val" id="p1-val">0</div>
+    </div>
+    <div class="pscore pscore-2" id="pscore-2">
+      <div class="pscore-name" id="p2-name">Jeremy</div>
+      <div class="pscore-val" id="p2-val">0</div>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="grid-status" id="grid-status">Memorise!</div>
+    <div class="mg-grid" id="mg-grid"></div>
+    <div class="mode-label" id="mode-label" style="display:none">Easy Mode</div>
+  </div>
+
+  <div class="mg-bottom">
+    <button class="hint-btn" id="hint-btn" onclick="useHint()">
+      💡 <span id="hint-label">Hint</span> <span class="hint-count" id="hint-count" style="display:none">3</span>
+    </button>
+  </div>
+
+  <!-- Well done flash -->
+  <div id="flash"><div class="flash-text" id="flash-text">Well done!</div></div>
+
+  <!-- Game over -->
+  <div id="gameover">
+    <div class="go-icon" id="go-icon">🏆</div>
+    <div class="go-title" id="go-title">Game Over</div>
+    <div class="go-sub" id="go-sub">Great memory!</div>
+
+    <!-- Solo scorecard -->
+    <div class="go-scorecard" id="go-solo">
+      <div class="go-score-big" id="go-score">0</div>
+      <div class="go-score-lbl" id="go-score-lbl">Final Streak</div>
+      <div class="go-best" id="go-best"></div>
+    </div>
+
+    <!-- Duel scorecard -->
+    <div class="go-finalscores" id="go-duel" style="display:none">
+      <div class="fs-box fs-1"><div class="fs-name" id="fs1-name">Tommy</div><div class="fs-val" id="fs1-val">0</div></div>
+      <div class="fs-vs">vs</div>
+      <div class="fs-box fs-2"><div class="fs-name" id="fs2-name">Jeremy</div><div class="fs-val" id="fs2-val">0</div></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="playAgain()" id="go-again">Play Again</button>
+    <div class="link-back" onclick="quitToPicker()" id="go-home">🏠 Back to Home</div>
+  </div>
+</div>
+
+<!-- ══════════ HOW TO PLAY ══════════ -->
+<div id="how-overlay" onclick="closeHow(event)" style="position:fixed;inset:0;z-index:400;background:rgba(15,8,30,.88);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center;">
+  <div class="how-sheet" style="background:linear-gradient(160deg,#12442b,#0a2418);border-radius:26px 26px 0 0;border:1px solid rgba(34,197,94,.2);border-bottom:none;width:100%;max-width:520px;padding:14px 22px 34px;max-height:82vh;overflow-y:auto;">
+    <div style="width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:0 auto 16px;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-family:'Baloo 2',sans-serif;font-size:22px;font-weight:800;color:var(--accent-2);">How to Play</div>
+      <button onclick="closeHow()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;">✕</button>
+    </div>
+    <div id="how-steps"></div>
+    <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:16px;padding:15px 17px;margin-top:6px;">
+      <div style="font-size:14px;font-weight:800;color:var(--accent-2);margin-bottom:5px;">🎯 Goal</div>
+      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.5;">Out-remember your opponent! Find more correct dots than they do to win the duel.</div>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+
+// ═══════════════════════════════════════════════════════════════
+//  LANGUAGE
+// ═══════════════════════════════════════════════════════════════
+let lang = 'en';
+const MG_T = {
+  en: {
+    sub:"Memorise · Tap · Repeat",
+    soloHeading:"Solo — Beat Your Streak",
+    duelHeading:"Play With a Friend",
+    easy:"Easy", medium:"Medium", hard:"Hard",
+    duelName:"2 Player Offline", duelSub:"Take turns · highest score wins",
+    p1:"Tommy", p2:"Jeremy",
+    p1turn:"Tommy's turn", p2turn:"Jeremy's turn",
+    memorise:"Memorise!", hereThey:"Here they are!",
+    hint:"Hint", streak:"Streak",
+    mode:m=>({easy:'Easy Mode',medium:'Medium Mode',hard:'Hard Mode'}[m]),
+    tap:(a,b)=>`Tap the dots — ${a} of ${b}`,
+    outLives:"Out of lives!", lifeLeft:"1 life left!", livesLeft:n=>`${n} lives left`,
+    gameOver:"Game Over", finalStreak:"Final Streak",
+    reachedStreak:n=>`You reached a streak of ${n}`, betterLuck:"Better luck this time!",
+    bestStreak:n=>`Best streak: ${n}`,
+    wins:(n)=>`${n===1?"Tommy":"Jeremy"} Wins!`, winSub:"Great memory!",
+    tie:"It's a Tie!", tieSub:"Evenly matched!",
+    playAgain:"Play Again", backHome:"🏠 Back to Home",
+    praise:['Well done!','Nailed it!','Perfect!','Sharp memory!','Brilliant!','On fire! 🔥']
+  },
+  hi: {
+    sub:"याद करो · दबाओ · दोहराओ",
+    soloHeading:"सोलो — अपनी स्ट्रीक बढ़ाओ",
+    duelHeading:"दोस्त के साथ खेलो",
+    easy:"आसान", medium:"मध्यम", hard:"कठिन",
+    duelName:"2 खिलाड़ी ऑफलाइन", duelSub:"बारी-बारी · ज़्यादा स्कोर जीतता है",
+    p1:"टॉमी", p2:"जेरेमी",
+    p1turn:"टॉमी की बारी", p2turn:"जेरेमी की बारी",
+    memorise:"याद करो!", hereThey:"ये रहे!",
+    hint:"हिंट", streak:"स्ट्रीक",
+    mode:m=>({easy:'आसान मोड',medium:'मध्यम मोड',hard:'कठिन मोड'}[m]),
+    tap:(a,b)=>`डॉट दबाओ — ${a} / ${b}`,
+    outLives:"जान खत्म!", lifeLeft:"1 जान बची!", livesLeft:n=>`${n} जान बची`,
+    gameOver:"गेम ओवर", finalStreak:"फाइनल स्ट्रीक",
+    reachedStreak:n=>`आपकी स्ट्रीक ${n} तक पहुंची`, betterLuck:"अगली बार बेहतर!",
+    bestStreak:n=>`बेस्ट स्ट्रीक: ${n}`,
+    wins:(n)=>`${n===1?"टॉमी":"जेरेमी"} जीता!`, winSub:"बढ़िया याददाश्त!",
+    tie:"बराबरी!", tieSub:"दोनों बराबर!",
+    playAgain:"फिर खेलें", backHome:"🏠 होम पर जाएं",
+    praise:['शाबाश!','बढ़िया!','परफेक्ट!','तेज़ याददाश्त!','कमाल!','आग! 🔥']
+  }
+};
+function T() { return MG_T[lang]; }
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lb-en').forEach(e => e.classList.toggle('active', l === 'en'));
+  document.querySelectorAll('.lb-hi').forEach(e => e.classList.toggle('active', l === 'hi'));
+  applyLang();
+}
+
+function applyLang() {
+  const t = T();
+  const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  // Home / picker
+  set('solo-heading', t.soloHeading);
+  set('duel-heading', t.duelHeading);
+  set('sc-easy-name', t.easy);
+  set('sc-medium-name', t.medium);
+  set('sc-hard-name', t.hard);
+  set('duel-name', t.duelName);
+  set('duel-sub', t.duelSub);
+  // Scoreboard names + labels
+  set('p1-name', t.p1);
+  set('p2-name', t.p2);
+  set('streak-lbl', t.streak);
+  set('hint-label', t.hint);
+  // Win screen buttons
+  set('go-again', t.playAgain);
+  set('go-home', t.backHome);
+  // Live in-game text
+  if (gameMode === 'solo' && document.getElementById('mode-label')) {
+    document.getElementById('mode-label').textContent = t.mode(level);
+  }
+  if (phase === 'play') {
+    if (gameMode === 'duel') setTurnStatus();
+    else setSoloTapStatus();
+  }
+}
+
+
+function mkkTrack(n,p){try{if(typeof gtag==='function')gtag('event',n,p||{});}catch(e){}}
+
+// ═══════════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════════
+// Solo levels (old rules)
+const LEVELS = {
+  easy:   { size:3, dots:4,  label:'Easy Mode' },
+  medium: { size:4, dots:7,  label:'Medium Mode' },
+  hard:   { size:5, dots:10, label:'Hard Mode' }
+};
+const REVEAL_MS = { easy:500, medium:1000, hard:1500 }; // solo show + hint timing
+const MAX_LIVES = 3;
+const MAX_HINTS = 3;
+
+// Duel config
+const DUEL_SIZE = 5;      // 5x5
+const DUEL_DOTS = 10;
+const DUEL_SHOW_MS = 2500;
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+let gameMode = 'solo';    // 'solo' | 'duel'
+let gridSize = 5, dotCount = 10;
+let target = [];
+let found = [];
+let phase = 'idle';       // idle | showing | play | resolving | over
+
+// solo state
+let level = 'easy';
+let score = 0;            // streak
+let lives = MAX_LIVES;
+let hints = MAX_HINTS;
+let best = 0;
+
+// duel state
+let scores = [0, 0];
+let current = 0;
+
+try { best = parseInt(localStorage.getItem('mg-best') || '0', 10) || 0; } catch(e){}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickTarget() {
+  const total = gridSize * gridSize;
+  const all = Array.from({ length: total }, (_, i) => i);
+  return shuffle(all).slice(0, dotCount).sort((a, b) => a - b);
+}
+
+function buildGrid() {
+  const grid = document.getElementById('mg-grid');
+  grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+  const gap = Math.min(window.innerWidth * 0.02, 10);
+  grid.style.gap = gap + 'px';
+  grid.style.width = Math.min(window.innerWidth - 40, 440, (window.innerHeight - 320)) + 'px';
+  grid.innerHTML = '';
+  const total = gridSize * gridSize;
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.dataset.idx = i;
+    d.addEventListener('click', () => tapDot(i));
+    grid.appendChild(d);
+  }
+}
+
+// Toggle which status bar / scorecard shows for the active mode
+function applyModeUI() {
+  const solo = gameMode === 'solo';
+  document.getElementById('solo-status').style.display = solo ? 'flex' : 'none';
+  document.getElementById('duel-status').style.display = solo ? 'none' : 'flex';
+  document.getElementById('mode-label').style.display  = solo ? 'block' : 'none';
+  document.getElementById('hint-count').style.display  = solo ? 'inline-block' : 'none';
+  document.getElementById('go-solo').style.display = solo ? 'block' : 'none';
+  document.getElementById('go-duel').style.display = solo ? 'none' : 'flex';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SOLO GAME
+// ═══════════════════════════════════════════════════════════════
+function startLevel(lv) {
+  mkkTrack('mg_start', { mode:'solo', level:lv });
+  gameMode = 'solo';
+  level = lv;
+  gridSize = LEVELS[lv].size;
+  dotCount = LEVELS[lv].dots;
+  score = 0; lives = MAX_LIVES; hints = MAX_HINTS;
+  applyModeUI();
+  document.getElementById('mode-label').textContent = T().mode(lv);
+  go('scr-game');
+  buildGrid();
+  renderLives(); renderHint(); updateScore();
+  document.getElementById('gameover').classList.remove('show');
+  soloNewRound();
+}
+
+function soloNewRound() {
+  found = [];
+  target = pickTarget();
+  phase = 'showing';
+  clearDots();
+  const grid = document.getElementById('mg-grid');
+  grid.classList.add('locked');
+  setStatus(T().memorise, 'show');
+  target.forEach(i => dotEl(i).classList.add('lit'));
+  setTimeout(() => {
+    target.forEach(i => dotEl(i).classList.remove('lit'));
+    grid.classList.remove('locked');
+    phase = 'play';
+    setSoloTapStatus();
+  }, REVEAL_MS[level]);
+}
+
+function soloTap(i) {
+  const el = dotEl(i);
+  if (target.includes(i)) {
+    found.push(i);
+    el.classList.add('correct');
+    el.setAttribute('data-num', found.length);
+    if (found.length === target.length) {
+      soloRoundWon();
+    } else {
+      setSoloTapStatus();
+    }
+  } else {
+    el.classList.add('wrong');
+    soloLoseLife(i);
+  }
+}
+
+function soloRoundWon() {
+  phase = 'idle';
+  score++;
+  mkkTrack('mg_round_win', { mode:'solo', streak:score });
+  updateScore();
+  if (score > best) {
+    best = score;
+    try { localStorage.setItem('mg-best', String(best)); } catch(e){}
+  }
+  fireConfetti(1400);
+  flash(pickPraise());
+  setTimeout(soloNewRound, 1500);
+}
+
+function soloLoseLife(wrongIdx) {
+  lives--;
+  renderLives();
+  if (lives <= 0) {
+    phase = 'over';
+    document.getElementById('mg-grid').classList.add('locked');
+    target.forEach(i => { if (!found.includes(i)) dotEl(i).classList.add('lit'); });
+    setStatus(T().outLives, '');
+    setTimeout(showSoloGameOver, 1000);
+  } else {
+    setStatus(lives === 1 ? T().lifeLeft : T().livesLeft(lives), '');
+    setTimeout(() => {
+      if (wrongIdx != null) dotEl(wrongIdx).classList.remove('wrong');
+      setSoloTapStatus();
+    }, 600);
+  }
+}
+
+function showSoloGameOver() {
+  const L = T();
+  document.getElementById('go-icon').textContent = '🧠';
+  document.getElementById('go-title').textContent = L.gameOver;
+  document.getElementById('go-sub').textContent = score === 0 ? L.betterLuck : L.reachedStreak(score);
+  document.getElementById('go-score').textContent = score;
+  document.getElementById('go-score-lbl').textContent = L.finalStreak;
+  document.getElementById('go-best').textContent = best > 0 ? L.bestStreak(best) : '';
+  document.getElementById('gameover').classList.add('show');
+}
+
+function setSoloTapStatus() {
+  setStatus(T().tap(found.length, target.length), 'go');
+}
+
+function soloHint() {
+  if (phase !== 'play' || hints <= 0) return;
+  hints--;
+  renderHint();
+  const grid = document.getElementById('mg-grid');
+  grid.classList.add('locked');
+  phase = 'showing';
+  setStatus(T().hereThey, 'show');
+  const toShow = target.filter(i => !found.includes(i));
+  toShow.forEach(i => dotEl(i).classList.add('lit'));
+  setTimeout(() => {
+    toShow.forEach(i => dotEl(i).classList.remove('lit'));
+    grid.classList.remove('locked');
+    phase = 'play';
+    setSoloTapStatus();
+  }, REVEAL_MS[level]);
+}
+
+function renderLives() {
+  const box = document.getElementById('lives-box');
+  box.innerHTML = '';
+  for (let i = 0; i < MAX_LIVES; i++) {
+    const s = document.createElement('span');
+    s.className = 'life' + (i >= lives ? ' lost' : '');
+    s.textContent = '❤️';
+    box.appendChild(s);
+  }
+}
+function renderHint() {
+  document.getElementById('hint-count').textContent = hints;
+  document.getElementById('hint-btn').disabled = (gameMode === 'solo' && hints <= 0);
+}
+function updateScore() {
+  document.getElementById('score-val').textContent = score;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DUEL GAME (2 player)
+// ═══════════════════════════════════════════════════════════════
+function startGame() {
+  mkkTrack('mg_start', { mode:'2player' });
+  gameMode = 'duel';
+  gridSize = DUEL_SIZE;
+  dotCount = DUEL_DOTS;
+  scores = [0, 0]; current = 0; found = [];
+  applyModeUI();
+  updateScores();
+  go('scr-game');
+  buildGrid();
+  document.getElementById('gameover').classList.remove('show');
+  document.getElementById('hint-btn').disabled = false;
+  duelStartRound();
+}
+
+function duelStartRound() {
+  found = [];
+  target = pickTarget();
+  phase = 'showing';
+  clearDots();
+  const grid = document.getElementById('mg-grid');
+  grid.classList.add('locked');
+  setStatus(T().memorise, 'show');
+  setActivePlayer(-1);
+  target.forEach(i => dotEl(i).classList.add('lit'));
+  setTimeout(() => {
+    target.forEach(i => dotEl(i).classList.remove('lit'));
+    grid.classList.remove('locked');
+    phase = 'play';
+    current = 0;
+    setActivePlayer(current);
+    setTurnStatus();
+  }, DUEL_SHOW_MS);
+}
+
+function duelTap(i) {
+  const el = dotEl(i);
+  phase = 'resolving';
+  if (target.includes(i)) {
+    found.push(i);
+    el.classList.add('correct');
+    el.setAttribute('data-num', found.length);
+    scores[current]++;
+    updateScores();
+    if (found.length === target.length) {
+      setTimeout(duelEnd, 700);
+      return;
+    }
+    setTimeout(switchTurn, 650);
+  } else {
+    el.classList.add('wrong');
+    setTimeout(() => { el.classList.remove('wrong'); switchTurn(); }, 650);
+  }
+}
+
+function switchTurn() {
+  current = 1 - current;
+  phase = 'play';
+  setActivePlayer(current);
+  setTurnStatus();
+}
+
+function duelEnd() {
+  phase = 'over';
+  mkkTrack('mg_duel_end', { p1:scores[0], p2:scores[1] });
+  document.getElementById('mg-grid').classList.add('locked');
+  fireConfetti(1800);
+  showWinner();
+}
+
+function showWinner() {
+  const L = T();
+  const p1 = scores[0], p2 = scores[1];
+  document.getElementById('fs1-name').textContent = L.p1;
+  document.getElementById('fs2-name').textContent = L.p2;
+  document.getElementById('fs1-val').textContent = p1;
+  document.getElementById('fs2-val').textContent = p2;
+  const b1 = document.querySelector('.fs-1');
+  const b2 = document.querySelector('.fs-2');
+  b1.classList.remove('winner'); b2.classList.remove('winner');
+  const icon = document.getElementById('go-icon');
+  const title = document.getElementById('go-title');
+  const sub = document.getElementById('go-sub');
+  if (p1 === p2) {
+    icon.textContent = '🤝'; title.textContent = L.tie; sub.textContent = L.tieSub;
+  } else {
+    const winner = p1 > p2 ? 1 : 2;
+    icon.textContent = '🏆'; title.textContent = L.wins(winner); sub.textContent = L.winSub;
+    (winner === 1 ? b1 : b2).classList.add('winner');
+  }
+  document.getElementById('gameover').classList.add('show');
+}
+
+function updateScores() {
+  document.getElementById('p1-val').textContent = scores[0];
+  document.getElementById('p2-val').textContent = scores[1];
+}
+function setActivePlayer(idx) {
+  document.getElementById('pscore-1').classList.toggle('active', idx === 0);
+  document.getElementById('pscore-2').classList.toggle('active', idx === 1);
+}
+function setTurnStatus() {
+  const L = T();
+  setStatus(current === 0 ? L.p1turn : L.p2turn, current === 0 ? 'go' : 'go2');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SHARED TAP + HINT dispatch
+// ═══════════════════════════════════════════════════════════════
+function tapDot(i) {
+  if (phase !== 'play') return;
+  if (found.includes(i)) return;
+  if (gameMode === 'solo') soloTap(i);
+  else duelTap(i);
+}
+
+function useHint() {
+  if (gameMode === 'solo') soloHint();
+  else duelHint();
+}
+
+function duelHint() {
+  if (phase !== 'play') return;
+  const grid = document.getElementById('mg-grid');
+  grid.classList.add('locked');
+  const saved = current;
+  phase = 'showing';
+  setStatus(T().hereThey, 'show');
+  const toShow = target.filter(i => !found.includes(i));
+  toShow.forEach(i => dotEl(i).classList.add('lit'));
+  setTimeout(() => {
+    toShow.forEach(i => dotEl(i).classList.remove('lit'));
+    grid.classList.remove('locked');
+    phase = 'play';
+    current = saved;
+    setActivePlayer(current);
+    setTurnStatus();
+  }, 1200);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NAV
+// ═══════════════════════════════════════════════════════════════
+function playAgain() {
+  document.getElementById('gameover').classList.remove('show');
+  if (gameMode === 'solo') startLevel(level);
+  else startGame();
+}
+function quitGame() { go('scr-home'); }
+function quitToPicker() {
+  document.getElementById('gameover').classList.remove('show');
+  go('scr-home');
+}
+function exitToSite() { window.location.href = 'index.html'; }
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════════════════════════════
+function dotEl(i) { return document.querySelector(`.dot[data-idx="${i}"]`); }
+
+function clearDots() {
+  document.querySelectorAll('.dot').forEach(d => {
+    d.classList.remove('lit', 'correct', 'wrong');
+    d.removeAttribute('data-num');
+  });
+}
+
+function setStatus(text, cls) {
+  const el = document.getElementById('grid-status');
+  el.textContent = text;
+  el.className = 'grid-status' + (cls ? ' ' + cls : '');
+}
+
+function pickPraise() { const p = T().praise; return p[Math.floor(Math.random() * p.length)]; }
+
+function flash(text) {
+  const f = document.getElementById('flash');
+  document.getElementById('flash-text').textContent = text;
+  f.classList.add('show');
+  setTimeout(() => f.classList.remove('show'), 1400);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════════════════
+function fireConfetti(duration = 1400) {
+  const cv = document.getElementById('confetti');
+  cv.classList.add('on');
+  cv.width = window.innerWidth;
+  cv.height = window.innerHeight;
+  const ctx = cv.getContext('2d');
+  const colors = ['#22c55e','#fbbf24','#4ade80','#a3e635','#60a5fa','#fff'];
+  const bits = [];
+  for (let i = 0; i < 90; i++) {
+    bits.push({
+      x: Math.random() * cv.width, y: Math.random() * -cv.height * 0.5,
+      w: 6 + Math.random() * 6, h: 9 + Math.random() * 8,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      vy: 2.6 + Math.random() * 3.2, vx: -1.2 + Math.random() * 2.4,
+      rot: Math.random() * 360, vr: -7 + Math.random() * 14
+    });
+  }
+  const start = performance.now();
+  (function frame(now) {
+    const elapsed = now - start;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    bits.forEach(b => {
+      b.y += b.vy; b.x += b.vx; b.rot += b.vr;
+      ctx.save();
+      ctx.translate(b.x, b.y); ctx.rotate(b.rot * Math.PI / 180);
+      ctx.fillStyle = b.c;
+      ctx.globalAlpha = elapsed > duration - 400 ? Math.max(0, (duration - elapsed) / 400) : 1;
+      ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h);
+      ctx.restore();
+    });
+    if (elapsed < duration) requestAnimationFrame(frame);
+    else { ctx.clearRect(0, 0, cv.width, cv.height); cv.classList.remove('on'); }
+  })(start);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HOW TO PLAY
+// ═══════════════════════════════════════════════════════════════
+const HOW_STEPS_SOLO = [
+  ['Watch Closely','Some dots light up briefly at the start. Memorise them.'],
+  ['Tap From Memory','After they vanish, tap every dot that was lit.'],
+  ['Build a Streak','Clear all dots to score. Each cleared round grows your streak.'],
+  ['Mind Your Lives','A wrong tap costs a life — you get 3 per streak.'],
+  ['Use Hints','Stuck? Tap Hint to flash the pattern — 3 hints per streak.']
+];
+const HOW_STEPS_DUEL = [
+  ['Memorise Together','10 dots light up at the start. Both players memorise them.'],
+  ['Take Turns','Players tap one dot per turn — Tommy goes first.'],
+  ['Score a Point','A correct dot earns 1 point. Wrong flashes red — no point.'],
+  ['Turn Passes','Right or wrong, the turn passes after each tap.'],
+  ['Unlimited Hints','Either player can tap Hint to reveal remaining dots.'],
+  ['Win the Duel','When all dots are found, the higher score wins!']
+];
+function openHow() {
+  const steps = (gameMode === 'duel') ? HOW_STEPS_DUEL : HOW_STEPS_SOLO;
+  document.getElementById('how-steps').innerHTML = steps.map((s, i) => `
+    <div style="display:flex;gap:13px;margin-bottom:16px;">
+      <div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;font-family:'Baloo 2',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;">${i+1}</div>
+      <div><div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:2px;">${s[0]}</div>
+      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.6);line-height:1.5;">${s[1]}</div></div>
+    </div>`).join('');
+  const o = document.getElementById('how-overlay');
+  o.style.display = 'flex';
+}
+function closeHow(e) {
+  if (e && e.target !== document.getElementById('how-overlay')) return;
+  document.getElementById('how-overlay').style.display = 'none';
+}
+
+// Rebuild grid on resize/orientation change
+window.addEventListener('resize', () => {
+  if (document.getElementById('scr-game').classList.contains('active')) {
+    const grid = document.getElementById('mg-grid');
+    grid.style.width = Math.min(window.innerWidth - 40, 440, (window.innerHeight - 320)) + 'px';
+    grid.style.gap = Math.min(window.innerWidth * 0.02, 10) + 'px';
+  }
+});
+
+// Apply language on load (sets names, labels, etc.)
+applyLang();
+</script>
+
+</body>
+</html>
