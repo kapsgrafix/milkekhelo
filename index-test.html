@@ -138,12 +138,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .mkk-logo { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:#fff; letter-spacing:.3px; }
 .mkk-logo span { color:#FFD700; }
-.lang-toggle { display:flex; align-items:center; background:#16234a; border:1px solid #3a4a7a; border-radius:12px; overflow:hidden; padding:4px; height:32px; }
+.lang-toggle { display:flex; align-items:center; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:12px; overflow:hidden; padding:4px; height:32px; }
 .lang-btn { padding:0 12px; font-size:15px; font-weight:700; letter-spacing:0; color:#a9b4d6; cursor:pointer; background:transparent; border:none; font-family:'Baloo 2',sans-serif; transition:all .2s; height:100%; display:flex; align-items:center; border-radius:8px; }
-.lang-btn.active { background:#2e6bf2; color:#fff; border-radius:8px; }
-.lang-toggle-sm { flex-shrink:0; width:72px; height:32px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:12px; padding:4px; }
-.lang-toggle-sm .lang-btn { flex:1; padding:0; font-size:13px; font-weight:700; height:100%; display:flex; align-items:center; justify-content:center; border-radius:8px; }
-.lang-toggle-sm .lang-btn.active { background:#ffc53d; color:#1b2340; }
+.lang-btn.active { background:#ffc53d; color:#1b2340; border-radius:8px; }
+.lang-toggle-sm { flex-shrink:0; }
 
 
 /* each slide — transparent so #launcher bg shows */
@@ -317,7 +315,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .card-swipe-hint { text-align:center; padding:2px 0 8px; font-size:11px; font-weight:700; color:rgba(255,255,255,.28); letter-spacing:1px; flex-shrink:0; }
 .card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:6px 14px 12px; perspective:1000px; overflow:hidden; touch-action:pan-y; }
 
-.playing-card { width:min(275px,calc(100vw - 40px)); max-height:calc(100vh - 250px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 10px 26px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
+.playing-card { width:min(260px,calc(100vw - 48px)); max-height:calc(100vh - 330px); aspect-ratio:2/3; border-radius:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 0 rgba(255,255,255,.15) inset,0 -2px 0 rgba(0,0,0,.2) inset,0 10px 26px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.1); user-select:none; cursor:pointer; transition:transform .12s ease; }
 .playing-card:active { transform:scale(.98); }
 .c-ent{background:var(--col-ent);} .c-adv{background:var(--col-adv);} .c-rel{background:var(--col-rel);} .c-mil{background:var(--col-mil);} .c-sch{background:var(--col-sch);}
 .c-ty1{background:var(--col-ty1);} .c-ty2{background:var(--col-ty2);} .c-ty3{background:var(--col-ty3);}
@@ -513,32 +511,9 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   align-items:center; justify-content:flex-start;
   background-color:#0f1a3d;              /* Figma background/screen */
   overflow-y:auto; overflow-x:hidden;
-  padding:0 0 calc(90px + env(safe-area-inset-bottom,0px));
+  padding:0 0 calc(24px + env(safe-area-inset-bottom,0px));
 }
 #launcher.hidden { display:none; }
-
-/* Ad section — sticks to bottom, pushes cards up */
-
-/* Game bottom bar (50px, matches home footer / Figma) */
-.game-footer {
-  flex-shrink:0;
-  width:100%;
-  height:calc(50px + env(safe-area-inset-bottom,0px));
-  padding-bottom:env(safe-area-inset-bottom,0px);
-  background:rgba(255,255,255,.14);
-  margin-top:40px;   /* 40px gap above footer, matching home */
-}
-/* SNL centers its play-area between score & footer, so no extra 40px margin */
-#snl-game .game-footer { margin-top:0; }
-
-.ad-section {
-  position:fixed; left:0; bottom:0;
-  width:100%;
-  height:calc(50px + env(safe-area-inset-bottom,0px));
-  padding-bottom:env(safe-area-inset-bottom,0px);
-  background:rgba(0,0,0,.2);
-  z-index:20;
-}
 
 .home-lang-row {
   width:100%; display:flex; align-items:center; justify-content:space-between;
@@ -913,8 +888,6 @@ body.has-strip #launcher { padding-top:52px; }
     </div>
   </div>
 
-  <!-- Ad section (bottom, reserved for ads) -->
-  <div class="ad-section" id="ad-section" aria-hidden="true"></div>
 
 </div><!-- /launcher -->
 
@@ -953,7 +926,7 @@ body.has-strip #launcher { padding-top:52px; }
     <div class="hdr-right">
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
       </div>
     </div>
   </div>
@@ -993,7 +966,6 @@ body.has-strip #launcher { padding-top:52px; }
     <button class="btn-play-again" id="btn-again" onclick="reshuffleDeck()">🔀 &nbsp; Play Again</button>
     <div class="btn-back-home" id="fh-back-home" onclick="exitGame()">🏠 Back to Home</div>
   </div>
-  <div class="game-footer"></div>
 </div>
 
 <!-- HOW TO PLAY OVERLAY -->
@@ -2332,7 +2304,7 @@ if ('serviceWorker' in navigator) {
     <div class="hdr-right">
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
       </div>
     </div>
   </div>
@@ -2371,7 +2343,6 @@ if ('serviceWorker' in navigator) {
     <button class="btn-play-again" onclick="reshuffleTyDeck()">🔀 &nbsp; Play Again</button>
     <div class="btn-back-home" id="ty-back-home" onclick="exitTyGame()">🏠 Back to Home</div>
   </div>
-  <div class="game-footer"></div>
 </div>
 
 <!-- TY HOW TO PLAY OVERLAY -->
@@ -2408,7 +2379,7 @@ if ('serviceWorker' in navigator) {
     <div class="hdr-right">
       <div class="lang-toggle lang-toggle-sm">
         <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
       </div>
     </div>
   </div>
@@ -2457,7 +2428,6 @@ if ('serviceWorker' in navigator) {
     <button class="btn-play-again" onclick="startSnlGame(true)">🔄 &nbsp; Play Again</button>
     <div class="btn-back-home" id="snl-back-home" onclick="exitSnlGame()">🏠 Back to Home</div>
   </div>
-  <div class="game-footer"></div>
 </div>
 
 
