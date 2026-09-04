@@ -1148,9 +1148,38 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── LANGUAGE ──
+
+// ═══════════════════════════════════════════════════════════════
+//  ANALYTICS (GA4 custom events)
+// ═══════════════════════════════════════════════════════════════
+let mkkGameTimers = {};   // { gameName: startTimestamp }
+
+function mkkTrack(eventName, params) {
+  try {
+    if (typeof gtag === 'function') gtag('event', eventName, params || {});
+  } catch (e) {}
+}
+
+// Called when a game opens — logs the click + starts the timer
+function mkkGameStart(game) {
+  mkkGameTimers[game] = Date.now();
+  mkkTrack('game_open', { game_name: game });
+}
+
+// Called when a game closes — logs time spent
+function mkkGameEnd(game) {
+  const start = mkkGameTimers[game];
+  if (start) {
+    const seconds = Math.round((Date.now() - start) / 1000);
+    mkkTrack('game_time', { game_name: game, seconds: seconds });
+    delete mkkGameTimers[game];
+  }
+}
+
 let lang = 'en';
 
 function openMemoryGrid() {
+  mkkTrack('game_open', { game_name:'Memory Grid' });
   window.location.href = 'memorygrid.html';
 }
 
@@ -1424,6 +1453,7 @@ function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.fl
 let deck=[], idx=0, isAnimating=false;
 
 function startGame() {
+  mkkGameStart('First');
   deck = shuffle(CARDS); idx = 0;
   const t = T[lang];
   document.getElementById('card-swipe-hint').textContent = t.swipeHint;
@@ -1440,6 +1470,7 @@ function startGame() {
 }
 
 function exitGame() {
+  mkkGameEnd('First');
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
@@ -1470,6 +1501,7 @@ function applyCard(c) {
 }
 
 function nextCard() {
+  mkkTrack('card_next', { game_name:'First' });
   if(isAnimating)return;
   if(idx>=deck.length-1){document.getElementById('end-screen').classList.add('show');return;}
   isAnimating=true; idx++;
@@ -1565,6 +1597,7 @@ let tyDeck=[], tyIdx=0, tyAnimating=false;
 function shuffleArr(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
 function startTyGame(){
+  mkkGameStart('Thank You');
   tyDeck=shuffleArr(TY_CARDS); tyIdx=0;
   applyTyCard(tyDeck[0], false);
   document.getElementById('launcher').classList.add('hidden');
@@ -1587,6 +1620,7 @@ function startTyGame(){
 }
 
 function exitTyGame(){
+  mkkGameEnd('Thank You');
   document.getElementById('ty-end-screen').classList.remove('show');
   document.getElementById('ty-game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
@@ -1863,6 +1897,7 @@ function updateSnlTurnUI() {
 }
 
 function startSnlGame(isRestart) {
+  if (!isRestart) mkkGameStart('Snakes & Ladders');
   const t = SNL_T[lang] || SNL_T.en;
   snlPos = { yellow: 0, red: 0 };
   snlTurn = 'yellow';
@@ -1916,6 +1951,7 @@ function startSnlTimer() {
 
 function endSnlGame(winner100) {
   snlGameOver = true;
+  mkkTrack('snl_win', { game_name:'Snakes & Ladders' });
   clearInterval(snlTimerInt);
   document.getElementById('snl-dice').disabled = true;
   const t = SNL_T[lang] || SNL_T.en;
@@ -1941,6 +1977,7 @@ function endSnlGame(winner100) {
 }
 
 function exitSnlGame() {
+  mkkGameEnd('Snakes & Ladders');
   clearInterval(snlTimerInt);
   document.getElementById('snl-game').classList.remove('active');
   document.getElementById('snl-end-screen').classList.remove('show');
@@ -1950,6 +1987,7 @@ function exitSnlGame() {
 
 function rollSnlDice() {
   if (snlRolling || snlBusy || snlGameOver) return;
+  mkkTrack('snl_roll', { game_name:'Snakes & Ladders' });
   snlRolling = true; snlBusy = true;
   const t = SNL_T[lang] || SNL_T.en;
   const dice = document.getElementById('snl-dice');
