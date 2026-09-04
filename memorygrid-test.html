@@ -102,7 +102,7 @@ body {
   margin-right:calc(-50vw + 50%);
   margin-top:calc(-6px - env(safe-area-inset-top,0px));
   padding:calc(6px + env(safe-area-inset-top,0px)) 20px 0;
-  height:40vh; min-height:40vh;
+  height:44vh; min-height:44vh;
   background:rgba(0,0,0,.25);
   border-bottom:1px solid rgba(255,255,255,.06);
   border-radius:0 0 28px 28px;
@@ -129,10 +129,10 @@ body {
 .home-art-img {
   width:clamp(96px,26vw,120px); height:auto; object-fit:contain;
   filter:drop-shadow(0 6px 16px rgba(0,0,0,.35));
-  margin-bottom:8px; user-select:none; -webkit-user-drag:none;
+  margin-top:12px; user-select:none; -webkit-user-drag:none;
 }
 .game-logo {
-  font-family:'Baloo 2',sans-serif; font-size:clamp(34px,10vw,46px);
+  font-family:'Baloo 2',sans-serif; font-size:clamp(26px,7.5vw,34px);
   font-weight:800; line-height:1; text-align:center;
 }
 .game-logo .l1 { color:#fff; }
@@ -375,7 +375,7 @@ body {
   color:rgba(255,255,255,.7); text-transform:none;
   text-align:left; margin-bottom:12px;
 }
-.solo-row { display:flex; gap:12px; justify-content:center; }
+.solo-row { display:flex; gap:12px; justify-content:center; padding-bottom:8px; }
 .solo-card {
   flex:1; max-width:120px;
   border-radius:24px; padding:16px 8px 14px;
@@ -479,14 +479,57 @@ body {
       </div>
     </div>
     <div class="picker-logo">
-      <img src="memorygrid-home.png" class="home-art-img" alt="Memory Grid" width="200" height="200" draggable="false">
       <div class="game-logo"><span class="l1">Memory</span> <span class="l2">Grid</span></div>
       <div class="logo-sub" id="mg-tagline">Memorise, Tap, and Win!</div>
+      <img src="memorygrid-home.png" class="home-art-img" alt="Memory Grid" width="200" height="200" draggable="false">
     </div>
   </div>
 
   <div class="home-center home-picker">
     <div class="picker-modes">
+
+      <div class="mode-section">
+        <div class="mode-heading" id="solo-heading">Solo — Beat Your Streak</div>
+        <div class="solo-row">
+          <div class="solo-card sc-easy" onclick="startLevel('easy')">
+            <div class="solo-grid sg-3" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+            </div>
+            <div class="solo-label">
+              <div class="solo-name" id="sc-easy-name">Easy</div>
+              <div class="solo-sub">3×3 grid · 4 dots</div>
+            </div>
+          </div>
+          <div class="solo-card sc-medium" onclick="startLevel('medium')">
+            <div class="solo-grid sg-4" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="solo-label">
+              <div class="solo-name" id="sc-medium-name">Medium</div>
+              <div class="solo-sub">4×4 grid · 7 dots</div>
+            </div>
+          </div>
+          <div class="solo-card sc-hard" onclick="startLevel('hard')">
+            <div class="solo-grid sg-5" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="solo-label">
+              <div class="solo-name" id="sc-hard-name">Hard</div>
+              <div class="solo-sub">5×5 grid · 10 dots</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="mode-section">
         <div class="mode-heading" id="duel-heading">Play With a Friend</div>
         <button class="duel-card" onclick="startGame()">
@@ -498,47 +541,6 @@ body {
         </button>
       </div>
 
-      <div class="mode-section">
-        <div class="mode-heading" id="solo-heading">Solo — Beat Your Streak</div>
-        <div class="solo-row">
-        <div class="solo-card sc-easy" onclick="startLevel('easy')">
-          <div class="solo-grid sg-3" aria-hidden="true">
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-          </div>
-          <div class="solo-label">
-            <div class="solo-name" id="sc-easy-name">Easy</div>
-            <div class="solo-sub">3×3 grid · 4 dots</div>
-          </div>
-        </div>
-        <div class="solo-card sc-medium" onclick="startLevel('medium')">
-          <div class="solo-grid sg-4" aria-hidden="true">
-            <span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <div class="solo-label">
-            <div class="solo-name" id="sc-medium-name">Medium</div>
-            <div class="solo-sub">4×4 grid · 7 dots</div>
-          </div>
-        </div>
-        <div class="solo-card sc-hard" onclick="startLevel('hard')">
-          <div class="solo-grid sg-5" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <div class="solo-label">
-            <div class="solo-name" id="sc-hard-name">Hard</div>
-            <div class="solo-sub">5×5 grid · 10 dots</div>
-          </div>
-        </div>
-      </div>
-      </div>
     </div>
   </div>
 </div>
