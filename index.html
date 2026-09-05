@@ -500,6 +500,22 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .snl-dice:disabled { opacity:.5; cursor:not-allowed; }
 
+/* ── PRE-GAME COUNTDOWN (shown once, before the board/dice appear) ── */
+.snl-pre-countdown {
+  display:none; flex-direction:column; align-items:center; gap:2px;
+}
+.snl-pre-countdown.show { display:flex; }
+.snl-countdown-label {
+  font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700;
+  color:rgba(255,255,255,.5); letter-spacing:.3px; text-align:center;
+}
+.snl-countdown-num {
+  font-family:'Baloo 2',sans-serif; font-size:104px; font-weight:800;
+  color:#fff; line-height:1; text-align:center;
+  animation:snlCountPop .55s cubic-bezier(.34,1.6,.64,1);
+}
+@keyframes snlCountPop { 0%{transform:scale(.6);opacity:0} 60%{transform:scale(1.15);opacity:1} 100%{transform:scale(1);opacity:1} }
+
 #snl-end-screen {
   position:absolute; inset:0; background:rgba(61,26,2,.97);
   display:none; flex-direction:column; align-items:center;
@@ -1148,38 +1164,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── LANGUAGE ──
-
-// ═══════════════════════════════════════════════════════════════
-//  ANALYTICS (GA4 custom events)
-// ═══════════════════════════════════════════════════════════════
-let mkkGameTimers = {};   // { gameName: startTimestamp }
-
-function mkkTrack(eventName, params) {
-  try {
-    if (typeof gtag === 'function') gtag('event', eventName, params || {});
-  } catch (e) {}
-}
-
-// Called when a game opens — logs the click + starts the timer
-function mkkGameStart(game) {
-  mkkGameTimers[game] = Date.now();
-  mkkTrack('game_open', { game_name: game });
-}
-
-// Called when a game closes — logs time spent
-function mkkGameEnd(game) {
-  const start = mkkGameTimers[game];
-  if (start) {
-    const seconds = Math.round((Date.now() - start) / 1000);
-    mkkTrack('game_time', { game_name: game, seconds: seconds });
-    delete mkkGameTimers[game];
-  }
-}
-
 let lang = 'en';
 
 function openMemoryGrid() {
-  mkkTrack('game_open', { game_name:'Memory Grid' });
   window.location.href = 'memorygrid.html';
 }
 
@@ -1453,7 +1440,6 @@ function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.fl
 let deck=[], idx=0, isAnimating=false;
 
 function startGame() {
-  mkkGameStart('First');
   deck = shuffle(CARDS); idx = 0;
   const t = T[lang];
   document.getElementById('card-swipe-hint').textContent = t.swipeHint;
@@ -1470,7 +1456,6 @@ function startGame() {
 }
 
 function exitGame() {
-  mkkGameEnd('First');
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
@@ -1501,7 +1486,6 @@ function applyCard(c) {
 }
 
 function nextCard() {
-  mkkTrack('card_next', { game_name:'First' });
   if(isAnimating)return;
   if(idx>=deck.length-1){document.getElementById('end-screen').classList.add('show');return;}
   isAnimating=true; idx++;
@@ -1597,7 +1581,6 @@ let tyDeck=[], tyIdx=0, tyAnimating=false;
 function shuffleArr(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
 function startTyGame(){
-  mkkGameStart('Thank You');
   tyDeck=shuffleArr(TY_CARDS); tyIdx=0;
   applyTyCard(tyDeck[0], false);
   document.getElementById('launcher').classList.add('hidden');
@@ -1620,7 +1603,6 @@ function startTyGame(){
 }
 
 function exitTyGame(){
-  mkkGameEnd('Thank You');
   document.getElementById('ty-end-screen').classList.remove('show');
   document.getElementById('ty-game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
@@ -1758,6 +1740,7 @@ const SNL_CELL_COLORS = ['#0ea5e9','#f97316','#e11d90','#8b5cf6','#22c55e','#eab
 const SNL_T = {
   en: {
     tagline: "Race the clock, climb to victory",
+    getReadyIn: "Get Ready in",
     startBtn: "▶ &nbsp; Start Game",
     howLink: "How to Play",
     turnMsg: n => n + "'s turn — tap dice!",
@@ -1784,6 +1767,7 @@ const SNL_T = {
   },
   hi: {
     tagline: "समय से दौड़, जीत की चढ़ाई",
+    getReadyIn: "तैयार हो जाओ",
     startBtn: "▶ &nbsp; खेल शुरू करें",
     howLink: "कैसे खेलें",
     turnMsg: n => n + " की बारी — पासा दबाएं!",
@@ -1897,13 +1881,24 @@ function updateSnlTurnUI() {
 }
 
 function startSnlGame(isRestart) {
-  if (!isRestart) mkkGameStart('Snakes & Ladders');
   const t = SNL_T[lang] || SNL_T.en;
   snlPos = { yellow: 0, red: 0 };
   snlTurn = 'yellow';
   snlRolling = false; snlBusy = false; snlGameOver = false;
   snlTimeLeft = 120;
   clearInterval(snlTimerInt);
+
+  // Hide the timer/board/dice and show the pre-game countdown BEFORE the
+  // screen is made visible, so the old board/timer never flashes on screen.
+  const timerEl = document.getElementById('snl-timer');
+  const boardEl = document.getElementById('snl-board-inner').closest('.snl-board-wrap');
+  const diceRow = document.getElementById('snl-dice').closest('.snl-dice-row');
+  timerEl.style.display = 'none';
+  boardEl.style.display = 'none';
+  diceRow.style.display = 'none';
+  document.getElementById('snl-countdown-label').textContent = t.getReadyIn;
+  document.getElementById('snl-countdown-num').textContent = '3';
+  document.getElementById('snl-pre-countdown').classList.add('show');
 
   document.getElementById('snl-end-screen').classList.remove('show');
   document.getElementById('launcher').classList.add('hidden');
@@ -1921,8 +1916,8 @@ function startSnlGame(isRestart) {
 
   document.getElementById('snl-dice').disabled = false;
   const _d = document.getElementById('snl-dice'); _d.textContent = '🎲'; _d.classList.remove('turn-red'); _d.classList.add('turn-yellow');
-  document.getElementById('snl-timer').textContent = '2:00';
-  document.getElementById('snl-timer').classList.remove('urgent');
+  timerEl.textContent = '2:00';
+  timerEl.classList.remove('urgent');
 
   setTimeout(() => {
     buildSnlBoard();
@@ -1930,8 +1925,37 @@ function startSnlGame(isRestart) {
     placeGoti('red', 0, true);
     updateSnlScores();
     updateSnlTurnUI();
-    startSnlTimer();
+    runSnlCountdown(startSnlTimer);
   }, 100);
+}
+
+// Pre-game countdown: ticks "3, 2, 1" — the label, number and hidden state
+// were already set up in startSnlGame before the screen was shown, so this
+// just runs the tick and reveals the timer/board/dice once it's done.
+function runSnlCountdown(onDone) {
+  const wrap = document.getElementById('snl-pre-countdown');
+  const num = document.getElementById('snl-countdown-num');
+  const timerEl = document.getElementById('snl-timer');
+  const boardEl = document.getElementById('snl-board-inner').closest('.snl-board-wrap');
+  const diceRow = document.getElementById('snl-dice').closest('.snl-dice-row');
+
+  let n = 3;
+  const timer = setInterval(() => {
+    n--;
+    if (n <= 0) {
+      clearInterval(timer);
+      wrap.classList.remove('show');
+      timerEl.style.display = '';
+      boardEl.style.display = '';
+      diceRow.style.display = '';
+      onDone();
+    } else {
+      num.textContent = n;
+      num.style.animation = 'none';
+      void num.offsetWidth;
+      num.style.animation = '';
+    }
+  }, 700);
 }
 
 function startSnlTimer() {
@@ -1951,7 +1975,6 @@ function startSnlTimer() {
 
 function endSnlGame(winner100) {
   snlGameOver = true;
-  mkkTrack('snl_win', { game_name:'Snakes & Ladders' });
   clearInterval(snlTimerInt);
   document.getElementById('snl-dice').disabled = true;
   const t = SNL_T[lang] || SNL_T.en;
@@ -1977,7 +2000,6 @@ function endSnlGame(winner100) {
 }
 
 function exitSnlGame() {
-  mkkGameEnd('Snakes & Ladders');
   clearInterval(snlTimerInt);
   document.getElementById('snl-game').classList.remove('active');
   document.getElementById('snl-end-screen').classList.remove('show');
@@ -1987,7 +2009,6 @@ function exitSnlGame() {
 
 function rollSnlDice() {
   if (snlRolling || snlBusy || snlGameOver) return;
-  mkkTrack('snl_roll', { game_name:'Snakes & Ladders' });
   snlRolling = true; snlBusy = true;
   const t = SNL_T[lang] || SNL_T.en;
   const dice = document.getElementById('snl-dice');
@@ -2453,6 +2474,10 @@ if ('serviceWorker' in navigator) {
 
   <!-- Play area: timer + board + dice as one centered section -->
   <div class="snl-play-area">
+    <div class="snl-pre-countdown" id="snl-pre-countdown">
+      <div class="snl-countdown-label" id="snl-countdown-label">Get Ready in</div>
+      <div class="snl-countdown-num" id="snl-countdown-num">3</div>
+    </div>
     <div class="snl-timer" id="snl-timer">2:00</div>
 
     <div class="snl-board-wrap">
