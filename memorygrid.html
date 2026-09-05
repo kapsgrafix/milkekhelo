@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#0f3d28">
 
 <title>Memory Grid — Mil ke Khelo</title>
-<meta name="description" content="Memory Grid is a free brain-training memory game. Memorise the lit dots, then tap them all from memory. Easy, Medium and Hard levels with streaks, lives and hints.">
+<meta name="description" content="Memory Grid is a free brain-training memory game. Memorise the lit blocks, then tap them all from memory. Easy, Medium and Hard levels with streaks, lives and hints.">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Memory Grid — Memory Party Game">
@@ -236,6 +236,22 @@ body {
 .grid-status.go { color:#4ade80; }
 .grid-status.go2 { color:#fbbf24; }
 .grid-status.show { color:var(--accent-2); }
+
+/* ── PRE-GAME COUNTDOWN ── */
+.pre-countdown {
+  display:none; flex-direction:column; align-items:center; gap:2px;
+}
+.pre-countdown.show { display:flex; }
+.countdown-label {
+  font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700;
+  color:rgba(255,255,255,.5); letter-spacing:.3px; text-align:center;
+}
+.countdown-num {
+  font-family:'Baloo 2',sans-serif; font-size:104px; font-weight:800;
+  color:var(--accent-2); line-height:1; text-align:center;
+  animation:countPop .55s cubic-bezier(.34,1.6,.64,1);
+}
+@keyframes countPop { 0%{transform:scale(.6);opacity:0} 60%{transform:scale(1.15);opacity:1} 100%{transform:scale(1);opacity:1} }
 .mg-grid {
   display:grid; gap:min(4.5vw,26px);
   touch-action:manipulation;
@@ -507,7 +523,7 @@ body {
                 <span></span><span></span><span></span>
               </div>
               <div class="level-name" id="sc-easy-name">Easy</div>
-              <div class="level-desc-lines">4 dots</div>
+              <div class="level-desc-lines">4 blocks</div>
             </div>
             <div class="level-divider"></div>
             <div class="level-play">Play <span aria-hidden="true">→</span></div>
@@ -521,7 +537,7 @@ body {
                 <span></span><span></span><span></span><span></span>
               </div>
               <div class="level-name" id="sc-medium-name">Medium</div>
-              <div class="level-desc-lines">7 dots</div>
+              <div class="level-desc-lines">7 blocks</div>
             </div>
             <div class="level-divider"></div>
             <div class="level-play">Play <span aria-hidden="true">→</span></div>
@@ -536,7 +552,7 @@ body {
                 <span></span><span></span><span></span><span></span><span></span>
               </div>
               <div class="level-name" id="sc-hard-name">Hard</div>
-              <div class="level-desc-lines">10 dots</div>
+              <div class="level-desc-lines">10 blocks</div>
             </div>
             <div class="level-divider"></div>
             <div class="level-play">Play <span aria-hidden="true">→</span></div>
@@ -605,6 +621,10 @@ body {
   </div>
 
   <div class="grid-wrap">
+    <div class="pre-countdown" id="pre-countdown">
+      <div class="countdown-label" id="countdown-label">Memorize in</div>
+      <div class="countdown-num" id="countdown-num">3</div>
+    </div>
     <div class="grid-status" id="grid-status">Memorise!</div>
     <div class="mg-grid" id="mg-grid"></div>
     <div class="mode-label" id="mode-label" style="display:none">Easy Mode</div>
@@ -655,7 +675,7 @@ body {
     <div id="how-steps"></div>
     <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:16px;padding:15px 17px;margin-top:6px;">
       <div style="font-size:14px;font-weight:800;color:var(--accent-2);margin-bottom:5px;">🎯 Goal</div>
-      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.5;">Out-remember your opponent! Find more correct dots than they do to win the duel.</div>
+      <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.5;">Out-remember your opponent! Find more correct blocks than they do to win the duel.</div>
     </div>
   </div>
 </div>
@@ -678,10 +698,10 @@ const MG_T = {
     duelName:"2 Players Offline", duelSub:"Same device. Take turns. Highest score wins",
     p1:"Player 1", p2:"Player 2",
     p1turn:"Player 1's turn", p2turn:"Player 2's turn",
-    memorise:"Memorise!", hereThey:"Here they are!",
+    memorise:"Memorise!", hereThey:"Here they are!", memorizeIn:"Memorize in",
     hint:"Hint", streak:"Streak",
     mode:m=>({easy:'Easy Mode',medium:'Medium Mode',hard:'Hard Mode'}[m]),
-    tap:(a,b)=>`Tap the dots — ${a} of ${b}`,
+    tap:(a,b)=>`Tap the blocks — ${a} of ${b}`,
     outLives:"Out of lives!", lifeLeft:"1 life left!", livesLeft:n=>`${n} lives left`,
     gameOver:"Game Over", finalStreak:"Final Streak",
     reachedStreak:n=>`You reached a streak of ${n}`, betterLuck:"Better luck this time!",
@@ -700,10 +720,10 @@ const MG_T = {
     duelName:"2 खिलाड़ी ऑफलाइन", duelSub:"एक ही डिवाइस पर बारी-बारी से खेलें, ज़्यादा स्कोर जीतता है",
     p1:"खिलाड़ी 1", p2:"खिलाड़ी 2",
     p1turn:"खिलाड़ी 1 की बारी", p2turn:"खिलाड़ी 2 की बारी",
-    memorise:"याद करो!", hereThey:"ये रहे!",
+    memorise:"याद करो!", hereThey:"ये रहे!", memorizeIn:"याद करो",
     hint:"हिंट", streak:"स्ट्रीक",
     mode:m=>({easy:'आसान मोड',medium:'मध्यम मोड',hard:'कठिन मोड'}[m]),
-    tap:(a,b)=>`डॉट दबाओ — ${a} / ${b}`,
+    tap:(a,b)=>`ब्लॉक दबाओ — ${a} / ${b}`,
     outLives:"जान खत्म!", lifeLeft:"1 जान बची!", livesLeft:n=>`${n} जान बची`,
     gameOver:"गेम ओवर", finalStreak:"फाइनल स्ट्रीक",
     reachedStreak:n=>`आपकी स्ट्रीक ${n} तक पहुंची`, betterLuck:"अगली बार बेहतर!",
@@ -790,6 +810,7 @@ let score = 0;            // streak
 let lives = MAX_LIVES;
 let hints = MAX_HINTS;
 let best = 0;
+let firstEasyRound = false; // true only for the very first reveal of a fresh Easy session
 
 // duel state
 let scores = [0, 0];
@@ -838,6 +859,46 @@ function buildGrid() {
   }
 }
 
+// Pre-game countdown: "Memorize in / 3, 2, 1" shown in the empty grid area
+// before the first round of a level/game starts. Runs once, then calls onDone.
+function runCountdown(onDone) {
+  const wrap = document.getElementById('pre-countdown');
+  const label = document.getElementById('countdown-label');
+  const num = document.getElementById('countdown-num');
+  const statusEl = document.getElementById('grid-status');
+  const gridEl = document.getElementById('mg-grid');
+  const modeEl = document.getElementById('mode-label');
+  const prevStatusDisplay = statusEl.style.display;
+  const prevGridDisplay = gridEl.style.display;
+  const prevModeDisplay = modeEl.style.display;
+
+  statusEl.style.display = 'none';
+  gridEl.style.display = 'none';
+  modeEl.style.display = 'none';
+  label.textContent = T().memorizeIn;
+
+  let n = 3;
+  num.textContent = n;
+  wrap.classList.add('show');
+
+  const timer = setInterval(() => {
+    n--;
+    if (n <= 0) {
+      clearInterval(timer);
+      wrap.classList.remove('show');
+      statusEl.style.display = prevStatusDisplay;
+      gridEl.style.display = prevGridDisplay;
+      modeEl.style.display = prevModeDisplay;
+      onDone();
+    } else {
+      num.textContent = n;
+      num.style.animation = 'none';
+      void num.offsetWidth;
+      num.style.animation = '';
+    }
+  }, 700);
+}
+
 // Toggle which status bar / scorecard shows for the active mode
 function applyModeUI() {
   const solo = gameMode === 'solo';
@@ -859,13 +920,14 @@ function startLevel(lv) {
   gridSize = LEVELS[lv].size;
   dotCount = LEVELS[lv].dots;
   score = 0; lives = MAX_LIVES; hints = MAX_HINTS;
+  firstEasyRound = (lv === 'easy');
   applyModeUI();
   document.getElementById('mode-label').textContent = T().mode(lv);
   go('scr-game');
   buildGrid();
   renderLives(); renderHint(); updateScore();
   document.getElementById('gameover').classList.remove('show');
-  soloNewRound();
+  runCountdown(soloNewRound);
 }
 
 function soloNewRound() {
@@ -877,12 +939,14 @@ function soloNewRound() {
   grid.classList.add('locked');
   setStatus(T().memorise, 'show');
   target.forEach(i => dotEl(i).classList.add('lit'));
+  const revealMs = firstEasyRound ? REVEAL_MS[level] * 2 : REVEAL_MS[level];
+  firstEasyRound = false; // only the very first Easy reveal of this session gets extra time
   setTimeout(() => {
     target.forEach(i => dotEl(i).classList.remove('lit'));
     grid.classList.remove('locked');
     phase = 'play';
     setSoloTapStatus();
-  }, REVEAL_MS[level]);
+  }, revealMs);
 }
 
 function soloTap(i) {
@@ -1000,7 +1064,7 @@ function startGame() {
   buildGrid();
   document.getElementById('gameover').classList.remove('show');
   document.getElementById('hint-btn').disabled = false;
-  duelStartRound();
+  runCountdown(duelStartRound);
 }
 
 function duelStartRound() {
@@ -1212,19 +1276,19 @@ function fireConfetti(duration = 1400) {
 //  HOW TO PLAY
 // ═══════════════════════════════════════════════════════════════
 const HOW_STEPS_SOLO = [
-  ['Watch Closely','Some dots light up briefly at the start. Memorise them.'],
-  ['Tap From Memory','After they vanish, tap every dot that was lit.'],
-  ['Build a Streak','Clear all dots to score. Each cleared round grows your streak.'],
+  ['Watch Closely','Some blocks light up briefly at the start. Memorise them.'],
+  ['Tap From Memory','After they vanish, tap every block that was lit.'],
+  ['Build a Streak','Clear all blocks to score. Each cleared round grows your streak.'],
   ['Mind Your Lives','A wrong tap costs a life — you get 3 per streak.'],
   ['Use Hints','Stuck? Tap Hint to flash the pattern — 3 hints per streak.']
 ];
 const HOW_STEPS_DUEL = [
-  ['Memorise Together','10 dots light up at the start. Both players memorise them.'],
-  ['Take Turns','Players tap one dot per turn — Player 1 goes first.'],
-  ['Score a Point','A correct dot earns 1 point. Wrong flashes red — no point.'],
+  ['Memorise Together','10 blocks light up at the start. Both players memorise them.'],
+  ['Take Turns','Players tap one block per turn — Player 1 goes first.'],
+  ['Score a Point','A correct block earns 1 point. Wrong flashes red — no point.'],
   ['Turn Passes','Right or wrong, the turn passes after each tap.'],
-  ['Unlimited Hints','Either player can tap Hint to reveal remaining dots.'],
-  ['Win the Duel','When all dots are found, the higher score wins!']
+  ['Unlimited Hints','Either player can tap Hint to reveal remaining blocks.'],
+  ['Win the Duel','When all blocks are found, the higher score wins!']
 ];
 function openHow() {
   const steps = (gameMode === 'duel') ? HOW_STEPS_DUEL : HOW_STEPS_SOLO;
