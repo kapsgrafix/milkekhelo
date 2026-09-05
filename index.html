@@ -429,11 +429,11 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
   border-radius:16px; padding:10px 16px;
   transition:opacity .25s, border-color .25s;
 }
-/* Each player's border = their own colour (Figma). Inactive dims to 70%. */
-#snl-p-yellow { border-color:#ffc53d; }
-#snl-p-red    { border-color:#ff7a45; }
-.snl-player:not(.active-turn) { opacity:.7; border-color:transparent; }
+/* Each player's border = their own colour (Figma), shown only on their turn. Inactive dims to 70% with no border colour. */
+.snl-player:not(.active-turn) { opacity:.7; }
 .snl-player.active-turn { opacity:1; }
+#snl-p-yellow.active-turn { border-color:#ffc53d; }
+#snl-p-red.active-turn    { border-color:#ff7a45; }
 .snl-goti-icon {
   width:26px; height:26px; border-radius:50%;
   border:3px solid rgba(255,255,255,.85);
