@@ -93,43 +93,27 @@ body {
 .lang-btn.active { background:#ffc53d; color:#1b2340; border-radius:8px; }
 
 /* ── HOME ── */
-.home-picker {
-  justify-content:flex-end;
-}
-.mg-banner {
-  width:100vw;
-  margin-left:calc(-50vw + 50%);
-  margin-right:calc(-50vw + 50%);
-  margin-top:calc(-6px - env(safe-area-inset-top,0px));
-  padding:calc(6px + env(safe-area-inset-top,0px)) 20px 0;
-  height:44vh; min-height:44vh;
-  background:rgba(0,0,0,.25);
-  border-bottom:1px solid rgba(255,255,255,.06);
-  border-radius:0 0 28px 28px;
-  margin-bottom:12px;
-  flex-shrink:0;
+.hero {
+  width:100%; flex-shrink:0;
   display:flex; flex-direction:column;
-}
-.picker-logo {
-  flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  text-align:center; width:100%;
+  text-align:center; padding:18px 0 26px;
 }
 .picker-modes {
   width:100%; display:flex; flex-direction:column;
-  align-items:center; gap:24px;
+  align-items:center; gap:26px;
   padding-bottom:6px;
 }
 .home-center {
   flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  width:100%; gap:28px; padding:10px 0;
+  align-items:center; justify-content:flex-start;
+  width:100%; gap:28px; padding:0 0 10px;
 }
 .home-art { font-size:clamp(58px,17vw,80px); line-height:1; }
 .home-art-img {
   width:clamp(96px,26vw,120px); height:auto; object-fit:contain;
   filter:drop-shadow(0 6px 16px rgba(0,0,0,.35));
-  margin-top:12px; user-select:none; -webkit-user-drag:none;
+  margin-bottom:10px; user-select:none; -webkit-user-drag:none;
 }
 .game-logo {
   font-family:'Baloo 2',sans-serif; font-size:clamp(26px,7.5vw,34px);
@@ -153,48 +137,41 @@ body {
   text-align:center; margin-bottom:6px; line-height:1.45;
 }
 
-/* ── LEVEL SELECT ── */
-.level-cards { width:100%; max-width:360px; display:flex; flex-direction:column; gap:14px; }
+/* ── LEVEL SELECT (variant cards — same recipe as the site's .gc-cell game cards:
+   flat gradient fill + solid bottom-offset shadow, no bevel border) ── */
+.level-cards { width:100%; display:flex; gap:12px; align-items:stretch; }
 .level-card {
-  border-radius:22px; padding:20px 22px; cursor:pointer;
-  display:flex; align-items:center; gap:16px;
-  transition:transform .12s;
-  position:relative; overflow:hidden;
-  /* outer border: light top → dark bottom */
-  background:linear-gradient(180deg,#F6D22F 0%,#FD750C 100%);
-}
-.level-card::before {
-  /* inner border: dark top → light bottom */
-  content:''; position:absolute; inset:4px;
-  border-radius:18px;
-  background:linear-gradient(180deg,#FD750C 0%,#F6D22F 100%);
-  z-index:0;
-}
-.level-card::after {
-  /* card fill: base colour top → darker bottom */
-  content:''; position:absolute; inset:7px;
-  border-radius:15px;
+  flex:1; min-width:0; border-radius:24px; padding:0; cursor:pointer;
+  transition:transform .1s, box-shadow .1s;
+  position:relative;
   background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
-  z-index:1;
+  box-shadow:0 6px 0 0 var(--cs);
 }
-.level-card:active { transform:scale(.97); }
-.level-icon {
-  font-size:38px; line-height:1; flex-shrink:0;
-  width:56px; height:56px; display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,.15); border-radius:16px;
-  position:relative; z-index:2;
+.level-card:active { transform:translateY(3px); box-shadow:0 3px 0 0 var(--cs); }
+.level-body {
+  display:flex; flex-direction:column; align-items:center;
+  padding:18px 8px 0;
 }
-.level-info { flex:1; position:relative; z-index:2; }
 .level-name {
-  font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800;
-  color:#fff; line-height:1.1;
-  -webkit-text-stroke:4px rgba(0,0,0,.2);
+  font-family:'Baloo 2',sans-serif; font-size:19px; font-weight:800;
+  color:var(--tc,#fff); line-height:1.1; margin-top:8px; text-align:center;
+  -webkit-text-stroke:4px var(--tc-stroke, rgba(0,0,0,.2));
   paint-order:stroke fill;
 }
-.level-desc { font-size:13px; font-weight:700; color:rgba(255,255,255,.85); margin-top:2px; }
-.lc-easy   { --c:#4ade80; --cd:#15803d; box-shadow:0 8px 22px rgba(34,197,94,.3); }
-.lc-medium { --c:#fbbf24; --cd:#c2530a; box-shadow:0 8px 22px rgba(251,146,60,.3); }
-.lc-hard   { --c:#f87171; --cd:#991b1b; box-shadow:0 8px 22px rgba(239,68,68,.3); }
+.level-desc-lines {
+  font-size:11.5px; font-weight:800; color:rgba(0,0,0,.65);
+  text-align:center; line-height:1.55; margin-top:4px;
+}
+.level-divider { width:72%; height:1px; background:rgba(255,255,255,.2); margin:12px 0 10px; }
+.level-play {
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  font-family:'Baloo 2',sans-serif; font-size:14px; font-weight:800; color:var(--tc,#fff);
+  padding-bottom:16px;
+}
+.lc-easy   { --c:#4ade80; --cd:#15803d; --cs:#0d5228; --tc:#fff; }     /* module/green */
+.lc-medium { --c:#fde68a; --cd:#c2530a; --cs:#7a3406; --tc:#1b2340; --tc-stroke:rgba(255,255,255,.35); } /* module/amber */
+.lc-hard   { --c:#f87171; --cd:#991b1b; --cs:#5c1010; --tc:#fff; }    /* module/red */
+.level-card .solo-grid { width:56px; height:56px; }
 
 /* ── BUTTONS ── */
 .btn {
@@ -371,10 +348,32 @@ body {
 .mode-section { width:100%; max-width:400px; }
 .mode-heading {
   font-family:'Baloo 2',sans-serif;
-  font-size:15px; font-weight:500; letter-spacing:.3px;
-  color:rgba(255,255,255,.7); text-transform:none;
-  text-align:left; margin-bottom:12px;
+  font-size:18px; font-weight:600; letter-spacing:.2px;
+  color:#fff; text-transform:none;
+  text-align:center; margin-bottom:12px;
 }
+
+/* Section divider: flanking lines + dot caps around a heading */
+.section-divider {
+  display:flex; align-items:center; gap:14px;
+  width:100%; margin-bottom:16px;
+}
+.div-line {
+  flex:1; height:1px; position:relative;
+  background:linear-gradient(90deg, rgba(74,222,128,0), rgba(74,222,128,.55));
+}
+.div-line.right { background:linear-gradient(90deg, rgba(74,222,128,.55), rgba(74,222,128,0)); }
+.div-line::after {
+  content:''; position:absolute; top:50%; width:5px; height:5px; border-radius:50%;
+  background:var(--accent-2); transform:translateY(-50%);
+}
+.div-line.left::after { left:0; }
+.div-line.right::after { right:0; }
+.div-label {
+  font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:800;
+  color:#fff; white-space:nowrap; text-align:center;
+}
+
 .solo-row { display:flex; gap:12px; justify-content:center; padding-bottom:8px; }
 .solo-card {
   flex:1; max-width:120px;
@@ -382,14 +381,14 @@ body {
   cursor:pointer; transition:transform .1s;
   display:flex; flex-direction:column; align-items:center; gap:10px;
   position:relative;
-  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  background:var(--c);
   box-shadow:0 6px 0 0 var(--cs);
 }
 .solo-label { display:flex; flex-direction:column; align-items:center; gap:2px; }
 .solo-card:active { transform:translateY(3px); box-shadow:0 3px 0 0 var(--cs); }
-.sc-easy   { --c:#4ade80; --cd:#15803d; --cs:#0d5228; }
-.sc-medium { --c:#fbbf24; --cd:#c2530a; --cs:#7a3406; }
-.sc-hard   { --c:#f87171; --cd:#991b1b; --cs:#5c1010; }
+.sc-easy   { --c:#22C55E; --cs:#0d5228; }  /* module/green */
+.sc-medium { --c:#F59E0B; --cs:#7a3406; }  /* module/amber */
+.sc-hard   { --c:#EF4444; --cs:#5c1010; }  /* module/red */
 
 /* mini grid icon (number of blocks) */
 .solo-grid {
@@ -412,11 +411,11 @@ body {
 
 /* Full-width 2-player card */
 .duel-card {
-  --c:#c3b0f5; --cd:#6a4fc2; --cs:#3a2b6b;
+  --c:#8B5CF6; --cs:#3a2b6b;  /* module/purple */
   width:100%; border:none; cursor:pointer;
-  border-radius:24px; padding:18px 20px;
+  border-radius:24px; padding:20px 22px;
   display:flex; align-items:center; gap:16px;
-  background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
+  background:var(--c);
   box-shadow:0 6px 0 0 var(--cs);
   transition:transform .1s;
   text-align:left; position:relative;
@@ -424,16 +423,22 @@ body {
 .duel-card:active { transform:translateY(3px); box-shadow:0 3px 0 0 var(--cs); }
 .duel-card:active { transform:scale(.97); }
 .duel-ico {
-  font-size:34px; line-height:1; flex-shrink:0;
-  width:52px; height:52px; display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,.18); border-radius:14px;
+  font-size:26px; line-height:1; flex-shrink:0;
+  width:56px; height:56px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.2); border-radius:50%;
 }
-.duel-text { display:flex; flex-direction:column; gap:2px; }
+.duel-text { flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
 .duel-name {
-  font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800; color:#fff;
+  font-family:'Baloo 2',sans-serif; font-size:19px; font-weight:800; color:#fff;
   -webkit-text-stroke:4px rgba(0,0,0,.2); paint-order:stroke fill;
 }
-.duel-sub { font-family:'Baloo 2',sans-serif; font-size:12px; font-weight:600; color:rgba(255,255,255,.85); }
+.duel-sub { font-family:'Baloo 2',sans-serif; font-size:12.5px; font-weight:600; color:rgba(255,255,255,.85); line-height:1.4; }
+.duel-arrow {
+  flex-shrink:0; width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; color:#fff;
+}
 
 
 /* ══ SOLO STATUS (streak + lives) ══ */
@@ -464,80 +469,94 @@ body {
 
 <!-- ══════════ HOME ══════════ -->
 <div class="screen active" id="scr-home">
-  <div class="mg-banner">
-    <div class="mg-header">
-      <div class="hdr-left">
-        <button class="g-back g-back-arrow" onclick="exitToSite()" aria-label="Back"></button>
-        <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
-      </div>
-      <div class="hdr-center"></div>
-      <div class="hdr-right">
-        <div class="lang-toggle">
-          <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
-          <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
-        </div>
-      </div>
+  <div class="mg-header">
+    <div class="hdr-left">
+      <button class="g-back g-back-arrow" onclick="exitToSite()" aria-label="Back"></button>
+      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
     </div>
-    <div class="picker-logo">
-      <div class="game-logo"><span class="l1">Memory</span> <span class="l2">Grid</span></div>
-      <div class="logo-sub" id="mg-tagline">Memorise, Tap, and Win!</div>
-      <img src="memorygrid-home.png" class="home-art-img" alt="Memory Grid" width="200" height="200" draggable="false">
+    <div class="hdr-center"></div>
+    <div class="hdr-right">
+      <div class="lang-toggle">
+        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिंदी</button>
+      </div>
     </div>
   </div>
 
-  <div class="home-center home-picker">
+  <div class="hero">
+    <img src="memorygrid-home.png" class="home-art-img" alt="Memory Grid" width="200" height="200" draggable="false">
+    <div class="game-logo"><span class="l1">Memory</span> <span class="l2">Grid</span></div>
+    <div class="logo-sub" id="mg-tagline">Memorise · Tap · Repeat</div>
+  </div>
+
+  <div class="home-center">
     <div class="picker-modes">
 
       <div class="mode-section">
-        <div class="mode-heading" id="solo-heading">Solo — Beat Your Streak</div>
-        <div class="solo-row">
-          <div class="solo-card sc-easy" onclick="startLevel('easy')">
-            <div class="solo-grid sg-3" aria-hidden="true">
-              <span></span><span></span><span></span>
-              <span></span><span></span><span></span>
-              <span></span><span></span><span></span>
+        <div class="section-divider">
+          <span class="div-line left"></span>
+          <span class="div-label" id="solo-heading">Solo — Beat Your Best</span>
+          <span class="div-line right"></span>
+        </div>
+        <div class="level-cards">
+          <div class="level-card lc-easy" onclick="startLevel('easy')">
+            <div class="level-body">
+              <div class="solo-grid sg-3" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+              </div>
+              <div class="level-name" id="sc-easy-name">Easy</div>
+              <div class="level-desc-lines">3×3 grid<br>4 dots</div>
             </div>
-            <div class="solo-label">
-              <div class="solo-name" id="sc-easy-name">Easy</div>
-              <div class="solo-sub">3×3 grid · 4 dots</div>
-            </div>
+            <div class="level-divider"></div>
+            <div class="level-play">Play <span aria-hidden="true">→</span></div>
           </div>
-          <div class="solo-card sc-medium" onclick="startLevel('medium')">
-            <div class="solo-grid sg-4" aria-hidden="true">
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
+          <div class="level-card lc-medium" onclick="startLevel('medium')">
+            <div class="level-body">
+              <div class="solo-grid sg-4" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="level-name" id="sc-medium-name">Medium</div>
+              <div class="level-desc-lines">4×4 grid<br>7 dots</div>
             </div>
-            <div class="solo-label">
-              <div class="solo-name" id="sc-medium-name">Medium</div>
-              <div class="solo-sub">4×4 grid · 7 dots</div>
-            </div>
+            <div class="level-divider"></div>
+            <div class="level-play">Play <span aria-hidden="true">→</span></div>
           </div>
-          <div class="solo-card sc-hard" onclick="startLevel('hard')">
-            <div class="solo-grid sg-5" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
+          <div class="level-card lc-hard" onclick="startLevel('hard')">
+            <div class="level-body">
+              <div class="solo-grid sg-5" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="level-name" id="sc-hard-name">Hard</div>
+              <div class="level-desc-lines">5×5 grid<br>10 dots</div>
             </div>
-            <div class="solo-label">
-              <div class="solo-name" id="sc-hard-name">Hard</div>
-              <div class="solo-sub">5×5 grid · 10 dots</div>
-            </div>
+            <div class="level-divider"></div>
+            <div class="level-play">Play <span aria-hidden="true">→</span></div>
           </div>
         </div>
       </div>
 
       <div class="mode-section">
-        <div class="mode-heading" id="duel-heading">Play With a Friend</div>
+        <div class="section-divider">
+          <span class="div-line left"></span>
+          <span class="div-label" id="duel-heading">Play Together</span>
+          <span class="div-line right"></span>
+        </div>
         <button class="duel-card" onclick="startGame()">
           <span class="duel-ico">👥</span>
           <span class="duel-text">
-            <span class="duel-name" id="duel-name">2 Player Offline</span>
-            <span class="duel-sub" id="duel-sub">Take turns · Highest score wins</span>
+            <span class="duel-name" id="duel-name">2 Players Offline</span>
+            <span class="duel-sub" id="duel-sub">Same device. Take turns. Highest score wins</span>
           </span>
+          <span class="duel-arrow" aria-hidden="true">→</span>
         </button>
       </div>
 
@@ -652,10 +671,11 @@ let lang = 'en';
 const MG_T = {
   en: {
     sub:"Memorise · Tap · Repeat",
-    soloHeading:"Solo — Beat Your Streak",
-    duelHeading:"Play With a Friend",
+    soloHeading:"Solo — Beat Your Best",
+    duelHeading:"Play Together",
+    offline:"Works offline",
     easy:"Easy", medium:"Medium", hard:"Hard",
-    duelName:"2 Player Offline", duelSub:"Take turns · Highest score wins",
+    duelName:"2 Players Offline", duelSub:"Same device. Take turns. Highest score wins",
     p1:"Player 1", p2:"Player 2",
     p1turn:"Player 1's turn", p2turn:"Player 2's turn",
     memorise:"Memorise!", hereThey:"Here they are!",
@@ -673,10 +693,11 @@ const MG_T = {
   },
   hi: {
     sub:"याद करो · दबाओ · दोहराओ",
-    soloHeading:"सोलो — अपनी स्ट्रीक बढ़ाओ",
-    duelHeading:"दोस्त के साथ खेलो",
+    soloHeading:"सोलो — अपना सर्वश्रेष्ठ करो",
+    duelHeading:"साथ खेलें",
+    offline:"ऑफलाइन काम करता है",
     easy:"आसान", medium:"मध्यम", hard:"कठिन",
-    duelName:"2 खिलाड़ी ऑफलाइन", duelSub:"बारी-बारी · ज़्यादा स्कोर जीतता है",
+    duelName:"2 खिलाड़ी ऑफलाइन", duelSub:"एक ही डिवाइस पर बारी-बारी से खेलें, ज़्यादा स्कोर जीतता है",
     p1:"खिलाड़ी 1", p2:"खिलाड़ी 2",
     p1turn:"खिलाड़ी 1 की बारी", p2turn:"खिलाड़ी 2 की बारी",
     memorise:"याद करो!", hereThey:"ये रहे!",
@@ -706,8 +727,10 @@ function applyLang() {
   const t = T();
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   // Home / picker
+  set('mg-tagline', t.sub);
   set('solo-heading', t.soloHeading);
   set('duel-heading', t.duelHeading);
+  set('offline-lbl', t.offline);
   set('sc-easy-name', t.easy);
   set('sc-medium-name', t.medium);
   set('sc-hard-name', t.hard);
