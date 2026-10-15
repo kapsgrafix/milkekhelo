@@ -1,5 +1,5 @@
 // Bump this version string on every deploy to force a fresh cache
-const CACHE = 'milkekhelo-v8';
+const CACHE = 'milkekhelo-v9';
 
 const ASSETS = [
   './',

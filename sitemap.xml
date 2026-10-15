@@ -9,4 +9,10 @@
     <xhtml:link rel="alternate" hreflang="en-IN" href="https://milkekhelo.com/"/>
     <xhtml:link rel="alternate" hreflang="hi-IN" href="https://milkekhelo.com/"/>
   </url>
+  <url>
+    <loc>https://milkekhelo.com/privacy.html</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
