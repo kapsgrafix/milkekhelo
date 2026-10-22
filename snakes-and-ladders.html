@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mil ke Khelo!">
+<meta name="theme-color" content="#3D0F1E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Snakes &amp; Ladders — Mil ke Khelo!</title>
+<meta name="description" content="Snakes & Ladders: race a friend to square 100 in Classic mode, or rack up points before the clock runs out in Timer mode. Free, in English or Hindi.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://milkekhelo.com/snakes-and-ladders.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://milkekhelo.com/snakes-and-ladders.html">
+<meta property="og:title" content="Snakes & Ladders — Mil ke Khelo!">
+<meta property="og:description" content="Race to square 100 — Classic mode or 2-minute Timer mode. Same device, 2 players.">
+<meta property="og:image" content="https://milkekhelo.com/images/home/card_snl_en.webp">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --screen-bg:#3D0F1E;
+  --surface:rgba(255,255,255,.14);
+  --border-default:rgba(255,255,255,.28);
+  --text-primary:#FFFFFF;
+  --text-on-light:#1B2340;
+  --text-muted:#BABABA;
+  --gold:#FFC53D;
+  --action-primary:#FFC53D;
+  --p1-border:#FFC53D; --p1-swatch:#FBBF24;
+  --p2-border:#FF7A45; --p2-swatch:#EF4444;
+  --cta-top:#FFE08A; --cta-bottom:#C97F00; --cta-shadow:#7A4B00; --cta-pressed:#E1AB3E;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--screen-bg);font-family:'Baloo 2',sans-serif;overscroll-behavior:none;}
+body{overflow:hidden;}
+/* Mobile layout only — even on a wide desktop window the game stays a
+   phone-width column, centered, never stretching to fill the screen. */
+#stack{position:fixed;inset:0;max-width:480px;margin:0 auto;overflow:hidden;background:var(--screen-bg);}
+.view{position:absolute;inset:0;display:none;flex-direction:column;}
+.view.active{display:flex;}
+
+/* ── Header (shared GameHeader) ── */
+.hdr{display:flex;align-items:center;padding:12px;padding-top:max(12px,env(safe-area-inset-top));gap:8px;flex-shrink:0;}
+.hdr-left{display:flex;align-items:center;gap:8px;min-width:72px;}
+.icon-btn{width:32px;height:32px;border-radius:12px;background:var(--surface);border:1px solid var(--border-default);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text-primary);
+  font-size:16px;font-weight:800;touch-action:manipulation;user-select:none;}
+.icon-btn.muted{color:var(--text-muted);}
+.icon-btn svg{width:16px;height:16px;}
+.icon-img{display:block;width:18px;height:18px;flex-shrink:0;pointer-events:none;}
+.hdr-title{flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-primary);}
+.lang-toggle{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border-default);border-radius:12px;overflow:hidden;padding:4px;height:32px;flex-shrink:0;}
+.lang-btn{padding:0 10px;font-size:13px;font-weight:700;color:var(--text-muted);cursor:pointer;background:transparent;border:none;font-family:'Baloo 2',sans-serif;height:100%;display:flex;align-items:center;border-radius:8px;}
+.lang-btn.active{background:var(--gold);color:var(--text-on-light);}
+
+/* ── Landing (GameLandingBody — SnL Home) ── */
+#landing-body{flex:1;overflow:auto;padding:0 24px;}
+#landing-inner{min-height:100%;display:flex;align-items:center;justify-content:center;}
+#landing-stack{padding:24px 0;display:flex;flex-direction:column;align-items:center;width:100%;max-width:312px;margin:0 auto;}
+.snl-hero{width:180px;height:180px;object-fit:contain;display:block;}
+.snl-cards{width:100%;margin-top:48px;display:flex;flex-direction:column;}
+.snl-card-wrap{width:100%;height:86px;position:relative;}
+.snl-card-wrap + .snl-card-wrap{margin-top:26px;}
+.snl-heartbeat{width:100%;height:100%;animation:snlHeartbeat 2.6s ease-in-out infinite;animation-play-state:paused;}
+@keyframes snlHeartbeat{
+  0%{transform:scale(1);}
+  7%{transform:scale(1.03);}
+  15%{transform:scale(1);}
+  21%{transform:scale(1.02);}
+  33%{transform:scale(1);}
+  100%{transform:scale(1);}
+}
+.snl-card{position:relative;width:100%;height:100%;cursor:pointer;touch-action:manipulation;user-select:none;}
+.snl-card-shadow{position:absolute;left:0;right:0;bottom:0;height:80px;border-radius:24px;}
+.snl-card-face{position:absolute;left:0;right:0;top:0;height:80px;border-radius:24px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;transition:top .09s ease-out;overflow:hidden;padding:0 20px;text-align:center;}
+.snl-card.pressed .snl-card-face{top:6px;}
+.snl-card.pressed .snl-card-face::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.18);}
+.snl-card-title{font-size:28px;font-weight:800;line-height:1.15;color:#fff;white-space:nowrap;position:relative;
+  -webkit-text-stroke:3px var(--card-shadow,#000);paint-order:stroke fill;}
+.snl-card-sub{font-size:15px;font-weight:500;line-height:1.4;color:#fff;white-space:nowrap;max-width:100%;margin-top:1px;}
+
+.snl-footer{flex-shrink:0;}
+
+/* ── Score chips (PlayerScoreChip) ── */
+.snl-score-row{display:flex;padding:8px 12px;gap:12px;flex-shrink:0;}
+.snl-chip{flex:1;background:var(--surface);border-radius:16px;padding:10px 16px;display:flex;align-items:center;gap:12px;
+  border:2px solid transparent;transition:opacity .25s;min-width:0;}
+.snl-chip.inactive{opacity:.7;}
+.snl-chip-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:3px solid rgba(255,255,255,.85);}
+.snl-chip-info{min-width:0;flex:1;}
+.snl-chip-name{font-size:12px;font-weight:700;line-height:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.snl-chip-score-row{display:flex;align-items:baseline;gap:4px;margin-top:2px;}
+.snl-chip-score{font-size:18px;font-weight:700;line-height:20px;color:#fff;}
+.snl-chip-unit{font-size:11px;font-weight:500;line-height:12px;color:var(--text-muted);}
+
+/* ── Play area ── */
+#snl-play-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow:hidden;position:relative;}
+#snl-timer{font-size:32px;font-weight:800;line-height:1.05;color:var(--action-primary);}
+#snl-timer.urgent{color:#F87171;}
+@keyframes snlTimerBlink{0%,100%{opacity:1;}50%{opacity:.4;}}
+#snl-timer.urgent{animation:snlTimerBlink 1s ease-in-out infinite;}
+#snl-board-wrap{position:relative;flex-shrink:0;}
+#snl-board-img{display:block;width:100%;height:100%;border-radius:12px;}
+.snl-goti{position:absolute;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.6);
+  transition:left .3s cubic-bezier(.17,.89,.32,1.28), top .3s cubic-bezier(.17,.89,.32,1.28);}
+#snl-goti-yellow{background:radial-gradient(circle at 32% 30%, #FDE68A, #F59E0B);}
+#snl-goti-red{background:radial-gradient(circle at 32% 30%, #FCA5A5, #DC2626);}
+#snl-burst-canvas{position:absolute;inset:0;pointer-events:none;z-index:5;}
+#snl-trophy{position:absolute;font-size:0;line-height:1;pointer-events:none;z-index:6;transform:translate(-50%,-50%) scale(0);opacity:0;}
+#snl-trophy.pop{animation:snlTrophyPop 1.5s cubic-bezier(.2,1.6,.3,1) forwards;}
+@keyframes snlTrophyPop{
+  0%{transform:translate(-50%,-50%) translateY(10px) scale(.3) rotate(-18deg);opacity:0;}
+  24%{transform:translate(-50%,-50%) translateY(-6px) scale(1.25) rotate(10deg);opacity:1;}
+  36%{transform:translate(-50%,-50%) translateY(-6px) scale(1) rotate(0deg);opacity:1;}
+  82%{transform:translate(-50%,-50%) translateY(-6px) scale(1) rotate(0deg);opacity:1;}
+  100%{transform:translate(-50%,-50%) translateY(-22px) scale(1.05) rotate(0deg);opacity:0;}
+}
+#snl-status{height:20px;margin-top:16px;font-size:13px;font-weight:800;letter-spacing:.3px;text-align:center;
+  color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 24px;}
+#snl-dice-wrap{margin-top:10px;margin-bottom:5px;}
+#snl-dice{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;touch-action:manipulation;user-select:none;transition:transform .08s;}
+#snl-dice.disabled{opacity:.5;pointer-events:none;}
+#snl-dice-pips{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:44px;height:44px;}
+.snl-pip{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.snl-pip::after{content:'';width:63%;height:63%;border-radius:50%;background:#111;display:block;}
+.snl-dice-emoji{font-size:34px;}
+@keyframes snlDiceShake{
+  0%{transform:rotate(0deg) scale(1);}
+  25%{transform:rotate(-11deg) scale(1.03);}
+  50%{transform:rotate(0deg) scale(1.06);}
+  75%{transform:rotate(11deg) scale(1.03);}
+  100%{transform:rotate(0deg) scale(1);}
+}
+#snl-dice.rolling{animation:snlDiceShake .5s ease-in-out infinite;}
+
+/* ── Countdown ── */
+#snl-countdown{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.snl-countdown-label{font-size:20px;font-weight:700;color:rgba(255,255,255,.54);}
+.snl-countdown-num{font-size:104px;font-weight:800;line-height:1;color:#fff;margin-top:2px;
+  animation:snlCountPop .4s cubic-bezier(.2,2,.4,1);}
+@keyframes snlCountPop{from{transform:scale(.6);}to{transform:scale(1);}}
+
+/* ── Chunky button ── */
+.chunky-btn{height:48px;min-width:180px;padding:0 24px;border-radius:16px;border:none;cursor:pointer;
+  font-family:'Baloo 2',sans-serif;font-weight:700;font-size:20px;color:var(--text-on-light);
+  background:linear-gradient(180deg,var(--cta-top) 0%,var(--cta-bottom) 100%);
+  box-shadow:0 4px 0 var(--cta-shadow);margin-bottom:4px;transition:none;touch-action:manipulation;}
+.chunky-btn:active{margin-top:4px;margin-bottom:0;box-shadow:none;background:var(--cta-pressed);}
+
+/* ── End screen ── */
+#snl-end-screen{position:absolute;inset:0;background:rgba(61,26,2,.97);display:none;align-items:center;justify-content:center;z-index:60;overflow:auto;}
+#snl-end-screen.show{display:flex;animation:snlFadeScale .4s ease-out;}
+@keyframes snlFadeScale{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.snl-end-inner{text-align:center;padding:32px;max-width:340px;}
+.snl-end-emoji{font-size:72px;}
+.snl-end-title{font-size:30px;font-weight:800;margin-top:12px;}
+.snl-end-sub{font-size:14px;font-weight:600;color:rgba(255,255,255,.7);margin-top:8px;}
+.snl-end-btnwrap{margin-top:28px;}
+.snl-end-back{margin-top:16px;font-size:15px;font-weight:700;color:rgba(255,255,255,.7);cursor:pointer;display:inline-block;touch-action:manipulation;}
+
+/* ── How to play sheet ── */
+#how-overlay{position:fixed;inset:0;z-index:300;background:rgba(5,10,20,.6);display:none;align-items:flex-end;justify-content:center;}
+#how-overlay.open{display:flex;}
+#how-sheet{width:100%;max-width:480px;background:linear-gradient(135deg,#1E1040 0%,#0D2040 100%);
+  border-radius:28px 28px 0 0;padding:16px 24px 32px;padding-bottom:max(32px,env(safe-area-inset-bottom));
+  max-height:80vh;overflow:auto;transform:translateY(100%);transition:transform .32s cubic-bezier(.34,1,.4,1);}
+#how-overlay.open #how-sheet{transform:translateY(0);}
+.how-grabber{width:40px;height:4px;background:rgba(255,255,255,.24);border-radius:2px;margin:0 auto 20px;}
+.how-title{font-size:22px;font-weight:800;color:#60A5FA;}
+.how-step{display:flex;align-items:flex-start;gap:14px;margin-top:16px;}
+.how-step:first-of-type{margin-top:20px;}
+.how-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:13px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3B82F6,#1E4FA0);}
+.how-step-title{font-size:15px;font-weight:700;color:#fff;}
+.how-step-body{font-size:13px;font-weight:600;color:rgba(255,255,255,.6);margin-top:2px;line-height:1.4;}
+.how-goal{margin-top:20px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:16px;}
+.how-goal-title{font-size:15px;font-weight:800;color:#fff;}
+.how-goal-text{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-top:6px;line-height:1.4;}
+</style>
+</head>
+<body>
+<div id="stack">
+
+  <!-- ══════════════ LANDING VIEW (SnL Home) ══════════════ -->
+  <div class="view active" id="landing-view">
+    <div class="hdr">
+      <div class="hdr-left">
+        <button class="icon-btn" id="lv-back" aria-label="Back"><img class="icon-img" src="images/icons/icon-back.webp" alt=""></button>
+        <button class="icon-btn" id="lv-sound" aria-label="Sound"><img class="icon-img" src="images/icons/icon-sound.webp" alt=""></button>
+        <button class="icon-btn" id="lv-help" aria-label="How to play"><img class="icon-img" src="images/icons/icon-help.webp" alt=""></button>
+      </div>
+      <div class="hdr-title"></div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="lv-lb-en">EN</button>
+        <button class="lang-btn" id="lv-lb-hi">हिं</button>
+      </div>
+    </div>
+    <div id="landing-body">
+      <div id="landing-inner">
+        <div id="landing-stack">
+          <img class="snl-hero" id="snl-hero-img" src="images/home/card_snl_en.webp" alt="Snakes &amp; Ladders">
+          <div class="snl-cards" id="snl-cards">
+            <div class="snl-card-wrap"><div class="snl-heartbeat" id="hb-0"><div class="snl-card" id="card-classic" data-timed="0">
+              <div class="snl-card-shadow" style="background:#701A36;"></div>
+              <div class="snl-card-face" style="background:linear-gradient(180deg,#FF93B3,#CC2F63);">
+                <div class="snl-card-title" style="--card-shadow:#701A36;" id="card-classic-title"></div>
+                <div class="snl-card-sub" id="card-classic-sub"></div>
+              </div>
+            </div></div></div>
+            <div class="snl-card-wrap"><div class="snl-heartbeat" id="hb-1"><div class="snl-card" id="card-timer" data-timed="1">
+              <div class="snl-card-shadow" style="background:#3A2B6B;"></div>
+              <div class="snl-card-face" style="background:linear-gradient(180deg,#C3B0F5,#6A4FC2);">
+                <div class="snl-card-title" style="--card-shadow:#3A2B6B;" id="card-timer-title"></div>
+                <div class="snl-card-sub" id="card-timer-sub"></div>
+              </div>
+            </div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="snl-footer" style="height:50px;"></div>
+  </div>
+
+  <!-- ══════════════ GAME VIEW ══════════════ -->
+  <div class="view" id="game-view">
+    <div class="hdr">
+      <div class="hdr-left">
+        <button class="icon-btn" id="gv-back" aria-label="Back"><img class="icon-img" src="images/icons/icon-back.webp" alt=""></button>
+        <button class="icon-btn" id="gv-sound" aria-label="Sound"><img class="icon-img" src="images/icons/icon-sound.webp" alt=""></button>
+        <button class="icon-btn" id="gv-help" aria-label="How to play"><img class="icon-img" src="images/icons/icon-help.webp" alt=""></button>
+      </div>
+      <div class="hdr-title"></div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="gv-lb-en">EN</button>
+        <button class="lang-btn" id="gv-lb-hi">हिं</button>
+      </div>
+    </div>
+
+    <div class="snl-score-row">
+      <div class="snl-chip" id="chip-yellow">
+        <div class="snl-chip-avatar" style="background:#FBBF24;"></div>
+        <div class="snl-chip-info">
+          <div class="snl-chip-name" id="chip-yellow-name"></div>
+          <div class="snl-chip-score-row"><span class="snl-chip-score" id="chip-yellow-score">0</span><span class="snl-chip-unit" id="chip-yellow-unit"></span></div>
+        </div>
+      </div>
+      <div class="snl-chip" id="chip-red">
+        <div class="snl-chip-avatar" style="background:#EF4444;"></div>
+        <div class="snl-chip-info">
+          <div class="snl-chip-name" id="chip-red-name"></div>
+          <div class="snl-chip-score-row"><span class="snl-chip-score" id="chip-red-score">0</span><span class="snl-chip-unit" id="chip-red-unit"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="snl-play-area">
+      <div id="snl-countdown">
+        <div class="snl-countdown-label" id="snl-countdown-label"></div>
+        <div class="snl-countdown-num" id="snl-countdown-num">3</div>
+      </div>
+
+      <div id="snl-play-inner" style="display:none;flex-direction:column;align-items:center;width:100%;">
+        <div id="snl-timer">02:00</div>
+        <div id="snl-board-wrap">
+          <img id="snl-board-img" src="images/snakes_and_ladders/board.webp" alt="Snakes and Ladders board">
+          <canvas id="snl-burst-canvas"></canvas>
+          <div id="snl-trophy">🏆</div>
+          <div class="snl-goti" id="snl-goti-yellow"></div>
+          <div class="snl-goti" id="snl-goti-red"></div>
+        </div>
+        <div id="snl-status"></div>
+        <div id="snl-dice-wrap">
+          <div id="snl-dice">
+            <div class="snl-dice-emoji" id="snl-dice-emoji">🎲</div>
+            <div id="snl-dice-pips" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="snl-end-screen">
+        <div class="snl-end-inner">
+          <div class="snl-end-emoji" id="snl-end-emoji">🏆</div>
+          <div class="snl-end-title" id="snl-end-title"></div>
+          <div class="snl-end-sub" id="snl-end-sub"></div>
+          <div class="snl-end-btnwrap">
+            <button class="chunky-btn" id="btn-play-again"></button>
+          </div>
+          <div class="snl-end-back" id="btn-back-home"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="snl-footer" style="height:50px;"></div>
+  </div>
+
+  <!-- ══════════════ HOW TO PLAY SHEET ══════════════ -->
+  <div id="how-overlay">
+    <div id="how-sheet">
+      <div class="how-grabber"></div>
+      <div class="how-title" id="how-title"></div>
+      <div id="how-steps"></div>
+      <div class="how-goal">
+        <div class="how-goal-title" id="how-goal-title"></div>
+        <div class="how-goal-text" id="how-goal-text"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ─────────────────────────── Data ─────────────────────────── */
+var SNAKES = {99:41, 89:53, 76:58, 66:45, 54:31, 43:18, 40:3, 27:5};
+var LADDERS = {4:25, 13:46, 33:49, 42:63, 50:69, 62:81, 74:92};
+
+/* ─────────────────────────── Translations ─────────────────────────── */
+var T = {
+  en: {
+    title: 'Snakes & Ladders',
+    getReadyIn: 'Get Ready in',
+    yellow: 'Yellow',
+    red: 'Red',
+    pts: 'pts',
+    playAgain: '🔄 Play Again',
+    backToHome: '🏠 Back to Home',
+    draw: "It's a Draw!",
+    howTitle: 'How to Play',
+    goalTitle: '🎯 Goal of the Game',
+    classic: 'Classic',
+    classicSub: 'First to finish wins!',
+    timer: 'Timer',
+    timerSub: '2 minutes. Furthest ahead wins!',
+    classicGoalText: 'Be the first to reach square 100 — that player wins!',
+    goalText: 'Score the most points before the 2-minute timer runs out. Each square = 2 points!',
+    classicSteps: [
+      ['Two Players', 'Yellow and Red take turns. The highlighted player rolls.'],
+      ['Tap the Dice', 'Tap the dice to roll. Your goti moves that many squares.'],
+      ["Ladders Up 🪜", "Land at a ladder's base and climb straight up!"],
+      ['Snakes Down 🐍', "Land on a snake's head and slide down to its tail."],
+      ['Race to 100', 'No timer — the first player to reach 100 wins!'],
+    ],
+    steps: [
+      ['Two Players', 'Yellow and Red take turns. The highlighted player rolls.'],
+      ['Tap the Dice', 'Tap the dice to roll. Your goti moves that many squares.'],
+      ["Ladders Up 🪜", "Land at a ladder's base and climb straight up!"],
+      ['Snakes Down 🐍', "Land on a snake's head and slide down to its tail."],
+      ['Score Points', 'Your square × 2 = your points. Square 40 = 80 points.'],
+      ['Beat the Clock', '2-minute timer! Highest points when time ends wins. Reaching 100 = instant win!'],
+    ],
+    turnMsg: function(n){ return n + "'s turn — tap dice!"; },
+    rolled: function(n,v){ return n + ' rolled ' + v + '!'; },
+    snakeBite: '🐍 Snake bite! Sliding down...',
+    ladderUp: '🪜 Ladder! Climbing up...',
+    reached100: function(n){ return '🎉 ' + n + ' reached 100!'; },
+    wins: function(n){ return n + ' Wins!'; },
+    endSub: function(yp,rp){ return 'Yellow: ' + yp + ' pts · Red: ' + rp + ' pts'; }
+  },
+  hi: {
+    title: 'साँप-सीढ़ी',
+    getReadyIn: 'तैयार हो जाओ',
+    yellow: 'पीला',
+    red: 'लाल',
+    pts: 'अंक',
+    playAgain: '🔄 फिर खेलें',
+    backToHome: '🏠 होम पर जाएं',
+    draw: 'बराबरी!',
+    howTitle: 'कैसे खेलें',
+    goalTitle: '🎯 खेल का मकसद',
+    classic: 'क्लासिक',
+    classicSub: 'जो पहले पहुंचे, वो जीते!',
+    timer: 'टाइमर',
+    timerSub: '2 मिनट। सबसे आगे वाला जीते!',
+    classicGoalText: 'सबसे पहले खाना 100 पर पहुंचो — वही जीतेगा!',
+    goalText: '2 मिनट में सबसे ज़्यादा अंक बनाओ। हर खाना = 2 अंक!',
+    classicSteps: [
+      ['दो खिलाड़ी', 'पीला और लाल बारी-बारी खेलें। हाईलाइट खिलाड़ी पासा फेंके।'],
+      ['पासा दबाएं', 'पासा दबाओ, गोटी उतने खाने आगे बढ़ेगी।'],
+      ['सीढ़ी ऊपर 🪜', 'सीढ़ी के नीचे पहुंचो और सीधे ऊपर चढ़ो!'],
+      ['साँप नीचे 🐍', 'साँप के मुंह पर पहुंचे तो पूंछ तक नीचे।'],
+      ['100 पर जीत', 'कोई टाइमर नहीं — जो पहले 100 पर पहुंचे, वही जीते!'],
+    ],
+    steps: [
+      ['दो खिलाड़ी', 'पीला और लाल बारी-बारी खेलें। हाईलाइट खिलाड़ी पासा फेंके।'],
+      ['पासा दबाएं', 'पासा दबाओ, गोटी उतने खाने आगे बढ़ेगी।'],
+      ['सीढ़ी ऊपर 🪜', 'सीढ़ी के नीचे पहुंचो और सीधे ऊपर चढ़ो!'],
+      ['साँप नीचे 🐍', 'साँप के मुंह पर पहुंचे तो पूंछ तक नीचे।'],
+      ['अंक कमाओ', 'आपका खाना × 2 = आपके अंक। खाना 40 = 80 अंक।'],
+      ['समय से जीतो', '2 मिनट का टाइमर! समय खत्म होने पर ज़्यादा अंक वाला जीतेगा। 100 पहुंचे तो तुरंत जीत!'],
+    ],
+    turnMsg: function(n){ return n + ' की बारी — पासा दबाएं!'; },
+    rolled: function(n,v){ return n + ' ने ' + v + ' फेंका!'; },
+    snakeBite: '🐍 साँप ने काटा! नीचे...',
+    ladderUp: '🪜 सीढ़ी! ऊपर चढ़ो...',
+    reached100: function(n){ return '🎉 ' + n + ' 100 पर पहुंचा!'; },
+    wins: function(n){ return n + ' जीता!'; },
+    endSub: function(yp,rp){ return 'पीला: ' + yp + ' अंक · लाल: ' + rp + ' अंक'; }
+  }
+};
+var lang = 'en';
+function tr(){ return T[lang]; }
+
+/* ─────────────────────────── Sound + haptics ─────────────────────────── */
+var PREF_KEYS = { music:'mkk-fx-music', sfx:'mkk-fx-sfx', vibration:'mkk-fx-vibration' };
+function getPref(k){ try { var v = localStorage.getItem(PREF_KEYS[k]); return v===null ? true : v==='1'; } catch(e){ return true; } }
+function setPref(k, v){ try { localStorage.setItem(PREF_KEYS[k], v?'1':'0'); } catch(e){} }
+var AUDIO_CACHE = {};
+function sound(name){
+  if (!AUDIO_CACHE[name]) AUDIO_CACHE[name] = new Audio('audio/sfx/'+name+'.mp3');
+  return AUDIO_CACHE[name];
+}
+function playSfx(name){
+  if (!getPref('sfx')) return;
+  try {
+    var base = sound(name);
+    var el = base.currentTime > 0 && !base.ended ? base.cloneNode() : base;
+    el.volume = 1;
+    el.play().catch(function(){});
+  } catch(e){}
+}
+function vibrate(pattern){
+  if (!getPref('vibration')) return;
+  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch(e){}
+}
+var Fx = {
+  countdown: function(){ playSfx('countdown'); vibrate(12); },
+  goSignal: function(){ playSfx('go'); vibrate(25); },
+  diceRoll: function(){ playSfx('dice_roll'); vibrate(12); },
+  diceTick: function(){ vibrate(8); },
+  diceLand: function(){ playSfx('dice_land'); vibrate(25); },
+  step: function(){ playSfx('step'); vibrate(8); },
+  ladder: function(){ playSfx('ladder'); vibrate([0,12,90,22,90,38]); },
+  snake: function(){ playSfx('snake'); vibrate([0,38,160,22]); },
+  turn: function(){ playSfx('turn'); vibrate(12); },
+  timerTick: function(){ playSfx('timer_tick'); vibrate(8); },
+  roundWin: function(){ playSfx('round_win'); vibrate([0,22,100,12]); },
+  win: function(){ playSfx('win'); vibrate([0,38,130,22,130,22,130,38]); },
+  lose: function(){ playSfx('lose'); vibrate([0,22,220,38]); },
+  tap: function(){ vibrate(10); }
+};
+
+/* ─────────────────────────── Board geometry ─────────────────────────── */
+function snlCellFraction(n){
+  var idx = n - 1;
+  var rowFromBottom = Math.floor(idx / 10);
+  var posInRow = idx % 10;
+  var leftToRight = rowFromBottom % 2 === 0;
+  var col = leftToRight ? posInRow : (9 - posInRow);
+  var rowFromTop = 9 - rowFromBottom;
+  return { x: (col*10+5)/100, y: (rowFromTop*10+5)/100 };
+}
+
+/* ─────────────────────────── State ─────────────────────────── */
+var timed = true;
+var pos = { yellow: 0, red: 0 };
+var turn = 'yellow';
+var rolling = false, busy = false, gameOver = false;
+var timeLeft = 120;
+var matchTimerId = null;
+var showCountdown = true, countdownTick = 3, countdownTimerId = null;
+var diceValue = null, diceShuffleId = null;
+var msgKind = 'turn', msgValue = 0;
+var showEndScreen = false, winner = null;
+var celebrate100 = null;
+var burstRafId = null, burstStart = null;
+
+var $landingView = document.getElementById('landing-view');
+var $gameView = document.getElementById('game-view');
+var $playInner = document.getElementById('snl-play-inner');
+var $countdownBox = document.getElementById('snl-countdown');
+var $endScreen = document.getElementById('snl-end-screen');
+var $boardWrap = document.getElementById('snl-board-wrap');
+var $boardImg = document.getElementById('snl-board-img');
+var $gotiYellow = document.getElementById('snl-goti-yellow');
+var $gotiRed = document.getElementById('snl-goti-red');
+var $burstCanvas = document.getElementById('snl-burst-canvas');
+var $trophy = document.getElementById('snl-trophy');
+var $dice = document.getElementById('snl-dice');
+var $diceEmoji = document.getElementById('snl-dice-emoji');
+var $dicePips = document.getElementById('snl-dice-pips');
+var $status = document.getElementById('snl-status');
+var $timerEl = document.getElementById('snl-timer');
+var $playArea = document.getElementById('snl-play-area');
+
+function layoutBoard(){
+  var rect = $playArea.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  var availW = rect.width - 20;
+  var fixedV = (timed ? 44 : 0) + 16 + 36 + 10 + 69;
+  var availH = rect.height - fixedV - 24;
+  var size = Math.max(160, Math.min(availW, availH < 160 ? 160 : availH));
+  $boardWrap.style.width = size + 'px';
+  $boardWrap.style.height = size + 'px';
+  renderBoard();
+  if (celebrate100) setupBurstCanvas();
+}
+
+/* ─────────────────────────── Game lifecycle ─────────────────────────── */
+function startGame(isTimed){
+  timed = isTimed;
+  clearInterval(matchTimerId); matchTimerId = null;
+  clearInterval(countdownTimerId); countdownTimerId = null;
+  clearTimeout(diceShuffleId); diceShuffleId = null;
+  stopBurst();
+
+  pos = { yellow: 0, red: 0 };
+  turn = 'yellow';
+  rolling = false; busy = false; gameOver = false;
+  timeLeft = 120;
+  showCountdown = true; countdownTick = 3;
+  diceValue = null;
+  msgKind = 'turn'; msgValue = 0;
+  showEndScreen = false; winner = null;
+  celebrate100 = null;
+
+  $landingView.classList.remove('active');
+  $gameView.classList.add('active');
+  $endScreen.classList.remove('show');
+  $playInner.style.display = 'none';
+  $countdownBox.style.display = 'flex';
+  $timerEl.style.display = timed ? 'block' : 'none';
+
+  applyLang();
+  renderScores();
+  renderBoard();
+  renderDice();
+  renderStatus();
+  runCountdown();
+}
+
+function backToLanding(){
+  clearInterval(matchTimerId); matchTimerId = null;
+  clearInterval(countdownTimerId); countdownTimerId = null;
+  clearTimeout(diceShuffleId); diceShuffleId = null;
+  stopBurst();
+  $gameView.classList.remove('active');
+  $landingView.classList.add('active');
+}
+
+function runCountdown(){
+  countdownTick = 3;
+  renderCountdown();
+  Fx.countdown();
+  countdownTimerId = setInterval(function(){
+    var next = countdownTick - 1;
+    if (next <= 0){
+      clearInterval(countdownTimerId); countdownTimerId = null;
+      Fx.goSignal();
+      showCountdown = false;
+      $countdownBox.style.display = 'none';
+      $playInner.style.display = 'flex';
+      layoutBoard();
+      if (timed) startMatchTimer();
+    } else {
+      Fx.countdown();
+      countdownTick = next;
+      renderCountdown();
+    }
+  }, 700);
+}
+
+function renderCountdown(){
+  document.getElementById('snl-countdown-label').textContent = tr().getReadyIn;
+  var el = document.getElementById('snl-countdown-num');
+  el.textContent = countdownTick;
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+}
+
+function startMatchTimer(){
+  matchTimerId = setInterval(function(){
+    timeLeft--;
+    if (timeLeft > 0 && timeLeft <= 10) Fx.timerTick();
+    $timerEl.classList.toggle('urgent', timeLeft <= 20);
+    renderTimer();
+    if (timeLeft <= 0){
+      clearInterval(matchTimerId); matchTimerId = null;
+      endGame(null);
+    }
+  }, 1000);
+}
+
+function renderTimer(){
+  var m = Math.floor(timeLeft/60), s = timeLeft%60;
+  $timerEl.textContent = (m<10?'0'+m:m) + ':' + (s<10?'0'+s:s);
+}
+
+/* ─────────────────────────── Dice + movement ─────────────────────────── */
+function rollDice(){
+  if (rolling || busy || gameOver) return;
+  rolling = true; busy = true;
+  renderDice();
+  Fx.diceRoll();
+  $dice.classList.add('rolling');
+  var ticks = 0;
+  diceShuffleId = setInterval(function(){
+    ticks++;
+    if (ticks >= 8){
+      clearInterval(diceShuffleId); diceShuffleId = null;
+      $dice.classList.remove('rolling');
+      var value = Math.floor(Math.random()*6)+1;
+      Fx.diceLand();
+      diceValue = value; rolling = false;
+      msgKind = 'rolled'; msgValue = value;
+      renderDice(); renderStatus();
+      setTimeout(function(){ moveGoti(value); }, 500);
+    } else {
+      Fx.diceTick();
+      diceValue = Math.floor(Math.random()*6)+1;
+      renderDice();
+    }
+  }, 80);
+}
+
+function moveGoti(steps){
+  var color = turn;
+  var start = pos[color];
+  var target = start + steps;
+
+  if (target > 100){
+    finishTurn();
+    return;
+  }
+
+  var current = start;
+  function stepOnce(){
+    current++;
+    Fx.step();
+    pos[color] = current;
+    renderBoard();
+    renderScores();
+    if (current < target){
+      setTimeout(stepOnce, 200);
+    } else {
+      afterArrive();
+    }
+  }
+  if (target > start) stepOnce(); else afterArrive();
+
+  function afterArrive(){
+    if (SNAKES[current]){
+      msgKind = 'snakeBite'; renderStatus();
+      setTimeout(function(){
+        Fx.snake();
+        pos[color] = SNAKES[current];
+        renderBoard();
+        renderScores();
+        setTimeout(finishTurn, 500);
+      }, 700);
+    } else if (LADDERS[current]){
+      msgKind = 'ladderUp'; renderStatus();
+      setTimeout(function(){
+        Fx.ladder();
+        pos[color] = LADDERS[current];
+        renderBoard();
+        renderScores();
+        setTimeout(finishTurn, 500);
+      }, 700);
+    } else if (current === 100){
+      Fx.roundWin();
+      msgKind = 'reached100'; msgValue = 0;
+      celebrate100 = color;
+      renderStatus();
+      renderBoard();
+      renderScores();
+      startBurst();
+      setTimeout(function(){ endGame(color); }, 1500);
+    } else {
+      finishTurn();
+    }
+  }
+}
+
+function finishTurn(){
+  if (gameOver) return;
+  Fx.turn();
+  turn = (turn === 'yellow') ? 'red' : 'yellow';
+  busy = false;
+  msgKind = 'turn';
+  renderScores();
+  renderStatus();
+  renderDice();
+}
+
+function endGame(forceWinner){
+  if (gameOver) return;
+  clearInterval(matchTimerId); matchTimerId = null;
+  $timerEl.classList.remove('urgent');
+  var finalWinner = forceWinner;
+  if (finalWinner === null || finalWinner === undefined){
+    var yp = pos.yellow*2, rp = pos.red*2;
+    if (yp > rp) finalWinner = 'yellow';
+    else if (rp > yp) finalWinner = 'red';
+    else finalWinner = null;
+  }
+  gameOver = true;
+  winner = finalWinner;
+  renderDice();
+  setTimeout(function(){
+    if (finalWinner) Fx.win(); else Fx.lose();
+    showEndScreen = true;
+    renderEndScreen();
+    $endScreen.classList.add('show');
+  }, 800);
+}
+
+/* ─────────────────────────── Render: board + goti ─────────────────────────── */
+function fractionFor(color, p, otherPos){
+  if (p === 0){
+    return { x: color==='yellow' ? 0.03 : 0.09, y: 0.96 };
+  }
+  var frac = snlCellFraction(p);
+  if (p === otherPos){
+    var nudge = (color==='yellow' ? -2.4 : 2.4) / 100;
+    frac = { x: frac.x + nudge, y: frac.y };
+  }
+  return frac;
+}
+function renderBoard(){
+  var size = $boardWrap.clientWidth;
+  if (!size) return;
+  var gotiSize = size * 0.07;
+  var yf = fractionFor('yellow', pos.yellow, pos.red);
+  var rf = fractionFor('red', pos.red, pos.yellow);
+  placeGoti($gotiYellow, yf, size, gotiSize);
+  placeGoti($gotiRed, rf, size, gotiSize);
+}
+function placeGoti(el, frac, size, gotiSize){
+  el.style.width = gotiSize + 'px';
+  el.style.height = gotiSize + 'px';
+  el.style.left = (frac.x*size - gotiSize/2) + 'px';
+  el.style.top = (frac.y*size - gotiSize/2) + 'px';
+}
+
+/* ─────────────────────────── Render: dice ─────────────────────────── */
+var PIP_LAYOUT = {
+  1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8]
+};
+function renderDice(){
+  var colors, shadow;
+  if (gameOver){ colors = ['#FFFFFF','#E5E5E5']; shadow = '#A3A3A3'; }
+  else if (turn === 'yellow'){ colors = ['#FDE68A','#F59E0B']; shadow = '#B45309'; }
+  else { colors = ['#FCA5A5','#DC2626']; shadow = '#991B1B'; }
+  $dice.style.background = 'linear-gradient(135deg,' + colors[0] + ',' + colors[1] + ')';
+  $dice.style.boxShadow = '0 5px 0 ' + shadow;
+  $dice.classList.toggle('disabled', gameOver);
+
+  if (diceValue === null){
+    $diceEmoji.style.display = 'block';
+    $dicePips.style.display = 'none';
+  } else {
+    $diceEmoji.style.display = 'none';
+    $dicePips.style.display = 'grid';
+    var cells = [];
+    for (var i=0;i<9;i++) cells.push(false);
+    PIP_LAYOUT[diceValue].forEach(function(i){ cells[i] = true; });
+    $dicePips.innerHTML = cells.map(function(on){
+      return '<div class="snl-pip" style="visibility:' + (on?'visible':'hidden') + '"></div>';
+    }).join('');
+  }
+}
+
+/* ─────────────────────────── Render: scores + status ─────────────────────────── */
+function renderScores(){
+  var t = tr();
+  document.getElementById('chip-yellow-name').textContent = t.yellow;
+  document.getElementById('chip-red-name').textContent = t.red;
+  document.getElementById('chip-yellow-score').textContent = pos.yellow*2;
+  document.getElementById('chip-red-score').textContent = pos.red*2;
+  document.getElementById('chip-yellow-unit').textContent = t.pts;
+  document.getElementById('chip-red-unit').textContent = t.pts;
+  document.getElementById('chip-yellow').classList.toggle('inactive', turn !== 'yellow');
+  document.getElementById('chip-red').classList.toggle('inactive', turn !== 'red');
+  document.getElementById('chip-yellow').style.borderColor = turn==='yellow' ? '#FFC53D' : 'transparent';
+  document.getElementById('chip-red').style.borderColor = turn==='red' ? '#FF7A45' : 'transparent';
+}
+function renderStatus(){
+  var t = tr();
+  var name = turn === 'yellow' ? t.yellow : t.red;
+  var text;
+  switch(msgKind){
+    case 'turn': text = t.turnMsg(name); break;
+    case 'rolled': text = t.rolled(name, msgValue); break;
+    case 'snakeBite': text = t.snakeBite; break;
+    case 'ladderUp': text = t.ladderUp; break;
+    case 'reached100': text = t.reached100(name); break;
+    default: text = '';
+  }
+  $status.textContent = text;
+}
+
+/* ─────────────────────────── End screen ─────────────────────────── */
+function renderEndScreen(){
+  var t = tr();
+  var yp = pos.yellow*2, rp = pos.red*2;
+  var isDraw = winner === null;
+  var winnerName = winner==='yellow' ? t.yellow : (winner==='red' ? t.red : null);
+  document.getElementById('snl-end-emoji').textContent = isDraw ? '🤝' : '🏆';
+  var titleEl = document.getElementById('snl-end-title');
+  titleEl.textContent = isDraw ? t.draw : t.wins(winnerName);
+  titleEl.style.color = isDraw ? '#A3A3A3' : (winner==='yellow' ? '#FBBF24' : '#EF4444');
+  document.getElementById('snl-end-sub').textContent = t.endSub(yp, rp);
+  document.getElementById('btn-play-again').textContent = t.playAgain;
+  document.getElementById('btn-back-home').textContent = t.backToHome;
+}
+
+/* ─────────────────────────── Win burst (square 100) ─────────────────────────── */
+var DPR = Math.max(1, window.devicePixelRatio || 1);
+function setupBurstCanvas(){
+  var size = $boardWrap.clientWidth;
+  if (!size) return size;
+  $burstCanvas.width = Math.round(size*DPR);
+  $burstCanvas.height = Math.round(size*DPR);
+  $burstCanvas.style.width = size+'px';
+  $burstCanvas.style.height = size+'px';
+  var ctx = $burstCanvas.getContext('2d');
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  return size;
+}
+var burstSparks = [];
+var SPARK_PALETTE = ['#FFD54F','#FFFFFF','#FF7A45','#4ADE80','#60A5FA','#EC4899'];
+function makeSparks(){
+  var arr = [];
+  for (var i=0;i<26;i++){
+    var a = (i/26)*Math.PI*2 + Math.random()*0.3;
+    arr.push({
+      angle: a,
+      speed: 0.75 + Math.random()*0.6,
+      size: 0.05 + Math.random()*0.06,
+      color: SPARK_PALETTE[Math.floor(Math.random()*SPARK_PALETTE.length)],
+      star: Math.random() < 0.5
+    });
+  }
+  return arr;
+}
+function startBurst(){
+  var size = setupBurstCanvas();
+  if (!size) return;
+  burstSparks = makeSparks();
+  burstStart = performance.now();
+  var cell = size/10;
+  var c = snlCellFraction(100);
+  $trophy.style.left = (c.x*size) + 'px';
+  $trophy.style.top = (c.y*size) + 'px';
+  $trophy.style.fontSize = (cell*0.72) + 'px';
+  $trophy.classList.remove('pop'); void $trophy.offsetWidth; $trophy.classList.add('pop');
+  var colors = celebrate100 === 'red' ? ['#FCA5A5','#DC2626'] : ['#FDE68A','#F59E0B'];
+  function frame(now){
+    var t = Math.min(1, (now - burstStart) / 1500);
+    var loop = ((now - burstStart) % 1200) / 1200;
+    paintBurst(size, cell, c, colors, t, loop);
+    if (t < 1){
+      burstRafId = requestAnimationFrame(frame);
+    } else {
+      burstRafId = requestAnimationFrame(function loopOnly(now2){
+        var loop2 = ((now2 - burstStart) % 1200) / 1200;
+        paintBurst(size, cell, c, colors, 1, loop2);
+        burstRafId = requestAnimationFrame(loopOnly);
+      });
+    }
+  }
+  burstRafId = requestAnimationFrame(frame);
+}
+function stopBurst(){
+  if (burstRafId){ cancelAnimationFrame(burstRafId); burstRafId = null; }
+  var ctx = $burstCanvas.getContext('2d');
+  if ($burstCanvas.width) ctx.clearRect(0,0,$burstCanvas.width,$burstCanvas.height);
+  $trophy.classList.remove('pop');
+  celebrate100 = null;
+}
+function easeOut(x){ return 1 - Math.pow(1-x, 3); }
+function paintBurst(size, cell, c, colors, t, loop){
+  var ctx = $burstCanvas.getContext('2d');
+  ctx.clearRect(0,0,size,size);
+  var cx = c.x*size, cy = c.y*size;
+  var glowPulse = 0.5 + 0.5*Math.sin(loop*Math.PI*2);
+
+  // Soft glow
+  var g = ctx.createRadialGradient(cx,cy,0, cx,cy, cell*1.2);
+  g.addColorStop(0, 'rgba(255,213,79,' + (0.45+0.2*glowPulse).toFixed(3) + ')');
+  g.addColorStop(1, 'rgba(255,213,79,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(cx,cy, cell*(1+0.15*glowPulse), 0, Math.PI*2); ctx.fill();
+
+  // Spinning rays
+  var rayLen = cell*(0.8 + 1.1*easeOut(Math.min(1, t*1.6)));
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.rotate(loop*Math.PI*2/6 + t*1.2);
+  var rg = ctx.createRadialGradient(0,0,0, 0,0, rayLen);
+  rg.addColorStop(0, 'rgba(255,243,196,0.8)');
+  rg.addColorStop(1, 'rgba(255,213,79,0)');
+  ctx.fillStyle = rg;
+  for (var i=0;i<12;i++){
+    var a = i*Math.PI/6;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(Math.cos(a-0.11)*rayLen, Math.sin(a-0.11)*rayLen);
+    ctx.lineTo(Math.cos(a+0.11)*rayLen, Math.sin(a+0.11)*rayLen);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+
+  // Flash square
+  var flash = t < 0.2 ? t/0.2 : (0.55+0.25*glowPulse);
+  var sq = cell + 2*glowPulse*2;
+  ctx.save();
+  ctx.fillStyle = 'rgba(255,224,130,' + (0.78*flash).toFixed(3) + ')';
+  roundRect(ctx, cx-sq/2, cy-sq/2, sq, sq, cell*0.18); ctx.fill();
+  ctx.lineWidth = 3; ctx.strokeStyle = colors[1];
+  roundRect(ctx, cx-sq/2, cy-sq/2, sq, sq, cell*0.18); ctx.stroke();
+  ctx.restore();
+
+  // Shock rings
+  [0, 0.18].forEach(function(delay){
+    var r = Math.max(0, Math.min(1, (t - delay)/0.6));
+    if (r<=0 || r>=1) return;
+    ctx.beginPath();
+    ctx.arc(cx,cy, cell*(0.5+1.6*easeOut(r)), 0, Math.PI*2);
+    ctx.lineWidth = cell*0.12*(1-r);
+    ctx.strokeStyle = (delay===0 ? colors[0] : '#FFFFFF');
+    ctx.globalAlpha = (1-r);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+
+  // Sparks
+  if (t < 1){
+    burstSparks.forEach(function(s){
+      var d = cell*2.0*s.speed*easeOut(t);
+      var px = cx + Math.cos(s.angle)*d;
+      var py = cy + Math.sin(s.angle)*d + cell*0.6*t*t;
+      var alpha = (1-t);
+      var r = s.size*cell*(1-0.3*t);
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = s.color;
+      if (s.star){
+        drawStar(ctx, px, py, r*1.3, t*4 + s.angle);
+      } else {
+        ctx.translate(px,py);
+        ctx.rotate(s.angle + t*6);
+        ctx.fillRect(-r*0.8, -r/2, r*1.6, r);
+      }
+      ctx.restore();
+    });
+  }
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+function drawStar(ctx, cx, cy, r, rot){
+  ctx.beginPath();
+  for (var i=0;i<8;i++){
+    var rad = (i%2===0) ? r : r*0.4;
+    var a = rot + i*Math.PI/4;
+    var x = cx + Math.cos(a)*rad, y = cy + Math.sin(a)*rad;
+    if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+/* ─────────────────────────── How to play ─────────────────────────── */
+function renderHow(){
+  var t = tr();
+  document.getElementById('how-title').textContent = t.howTitle;
+  var steps = timed ? t.steps : t.classicSteps;
+  document.getElementById('how-steps').innerHTML = steps.map(function(s, i){
+    return '<div class="how-step"><div class="how-num">' + (i+1) + '</div>' +
+      '<div><div class="how-step-title">' + s[0] + '</div><div class="how-step-body">' + s[1] + '</div></div></div>';
+  }).join('');
+  document.getElementById('how-goal-title').textContent = t.goalTitle;
+  document.getElementById('how-goal-text').textContent = timed ? t.goalText : t.classicGoalText;
+}
+function openHow(){
+  renderHow();
+  document.getElementById('how-overlay').classList.add('open');
+}
+function closeHow(){
+  document.getElementById('how-overlay').classList.remove('open');
+}
+
+/* ─────────────────────────── Landing render + lang ─────────────────────────── */
+function renderLanding(){
+  var t = tr();
+  document.getElementById('card-classic-title').textContent = t.classic;
+  document.getElementById('card-classic-sub').textContent = t.classicSub;
+  document.getElementById('card-timer-title').textContent = t.timer;
+  document.getElementById('card-timer-sub').textContent = t.timerSub;
+  document.getElementById('snl-hero-img').src = lang==='hi' ? 'images/home/card_snl_hi.webp' : 'images/home/card_snl_en.webp';
+}
+function applyLang(){
+  renderLanding();
+  if ($gameView.classList.contains('active')){
+    renderScores();
+    renderStatus();
+    if (showEndScreen) renderEndScreen();
+  }
+  document.getElementById('lv-lb-en').classList.toggle('active', lang==='en');
+  document.getElementById('lv-lb-hi').classList.toggle('active', lang==='hi');
+  document.getElementById('gv-lb-en').classList.toggle('active', lang==='en');
+  document.getElementById('gv-lb-hi').classList.toggle('active', lang==='hi');
+}
+function setLang(l){ lang = l; applyLang(); if (document.getElementById('how-overlay').classList.contains('open')) renderHow(); }
+function updateSoundButtons(){
+  var on = getPref('music') || getPref('sfx') || getPref('vibration');
+  ['lv-sound','gv-sound'].forEach(function(id){
+    var btn = document.getElementById(id);
+    btn.classList.toggle('muted', !on);
+    var img = btn.querySelector('.icon-img');
+    if (img) img.src = on ? 'images/icons/icon-sound.webp' : 'images/icons/icon-sound-off.webp';
+  });
+}
+
+/* ─────────────────────────── Wiring ─────────────────────────── */
+document.getElementById('lv-back').addEventListener('click', function(){ window.location.href = 'index.html'; });
+document.getElementById('gv-back').addEventListener('click', backToLanding);
+document.getElementById('lv-help').addEventListener('click', function(){ timed = false; openHow(); });
+document.getElementById('gv-help').addEventListener('click', openHow);
+['lv-sound','gv-sound'].forEach(function(id){
+  document.getElementById(id).addEventListener('click', function(){
+    var on = getPref('music') || getPref('sfx') || getPref('vibration');
+    setPref('music', !on); setPref('sfx', !on); setPref('vibration', !on);
+    if (!on) Fx.tap();
+    updateSoundButtons();
+  });
+});
+updateSoundButtons();
+document.getElementById('how-overlay').addEventListener('click', function(e){ if (e.target.id === 'how-overlay') closeHow(); });
+document.getElementById('lv-lb-en').addEventListener('click', function(){ setLang('en'); });
+document.getElementById('lv-lb-hi').addEventListener('click', function(){ setLang('hi'); });
+document.getElementById('gv-lb-en').addEventListener('click', function(){ setLang('en'); });
+document.getElementById('gv-lb-hi').addEventListener('click', function(){ setLang('hi'); });
+document.getElementById('btn-play-again').addEventListener('click', function(){ Fx.tap(); startGame(timed); });
+document.getElementById('btn-back-home').addEventListener('click', function(){ Fx.tap(); backToLanding(); });
+$dice.addEventListener('click', rollDice);
+
+['card-classic','card-timer'].forEach(function(id, idx){
+  var el = document.getElementById(id);
+  el.addEventListener('pointerdown', function(){ el.classList.add('pressed'); });
+  el.addEventListener('pointerup', function(){ el.classList.remove('pressed'); });
+  el.addEventListener('pointercancel', function(){ el.classList.remove('pressed'); });
+  el.addEventListener('pointerleave', function(){ el.classList.remove('pressed'); });
+  el.addEventListener('click', function(){
+    Fx.tap();
+    startGame(el.getAttribute('data-timed') === '1');
+  });
+});
+
+window.addEventListener('resize', function(){
+  if ($gameView.classList.contains('active') && $playInner.style.display !== 'none'){
+    layoutBoard();
+  }
+});
+window.addEventListener('orientationchange', function(){
+  setTimeout(function(){
+    if ($gameView.classList.contains('active') && $playInner.style.display !== 'none'){
+      layoutBoard();
+    }
+  }, 50);
+});
+
+/* ─────────────────────────── Heartbeat start (staggered, like app) ─────────────────────────── */
+function startHeartbeats(){
+  var delays = [0, 300];
+  for (var i=0;i<2;i++){
+    (function(i){
+      setTimeout(function(){
+        var el = document.getElementById('hb-'+i);
+        if (el) el.style.animationPlayState = 'running';
+      }, delays[i] + 600);
+    })(i);
+  }
+}
+
+/* ─────────────────────────── Debug hook (read-only; used for QA) ─────────────────────────── */
+window.__snl = {
+  state: function(){
+    return { pos: { yellow: pos.yellow, red: pos.red }, turn: turn, gameOver: gameOver,
+      winner: winner, msgKind: msgKind, timeLeft: timeLeft, celebrate100: celebrate100,
+      busy: busy, rolling: rolling, diceValue: diceValue };
+  },
+  rollDice: rollDice
+};
+
+/* ─────────────────────────── Init ─────────────────────────── */
+applyLang();
+startHeartbeats();
+
+})();
+</script>
+</body>
+</html>

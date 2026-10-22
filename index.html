@@ -104,6 +104,27 @@
 }
 </script>
 
+<!-- ══ STRUCTURED DATA — Android app (early access APK) ══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Mil ke Khelo — Android App (Early Access)",
+  "operatingSystem": "ANDROID",
+  "applicationCategory": "GameApplication",
+  "image": "https://milkekhelo.com/app-icon-192.png",
+  "downloadUrl": "https://milkekhelo.com/MilkeKhelo-App.apk",
+  "installUrl": "https://milkekhelo.com/MilkeKhelo-App.apk",
+  "description": "Early access Android app for Mil ke Khelo — the same free party games (First, Thank You, Steps & Slides and more) as a native Android install.",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  }
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
@@ -246,16 +267,15 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .how-sheet { background:linear-gradient(160deg,#1E1040,#0D2040); border-radius:28px 28px 0 0; border:1px solid rgba(255,255,255,.12); border-bottom:none; width:100%; max-width:520px; max-height:88vh; overflow-y:auto; padding:24px 24px 40px; }
 .how-handle { width:40px; height:4px; background:rgba(255,255,255,.2); border-radius:2px; margin:0 auto 20px; }
 .how-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.how-title { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:#FFD700; }
-.how-close { width:32px; height:32px; background:rgba(255,255,255,.1); border-radius:50%; border:none; color:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.how-title { font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800; color:#FFD700; }
 .how-steps { display:flex; flex-direction:column; gap:16px; }
 .how-step { display:flex; gap:14px; align-items:flex-start; }
-.step-num { width:34px; height:34px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#FFD700,#FF8C00); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:900; color:#1A1A2E; }
+.step-num { width:34px; height:34px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#FFD700,#FF8C00); display:flex; align-items:center; justify-content:center; font-family:'Baloo 2',sans-serif; font-size:14px; font-weight:800; color:#1A1A2E; }
 .step-title { font-size:15px; font-weight:900; color:#fff; margin-bottom:3px; }
 .step-desc { font-size:13px; font-weight:600; color:rgba(255,255,255,.55); line-height:1.5; }
-.step-example { font-size:12px; font-weight:700; color:#FFD700; margin-top:4px; font-style:italic; }
-.how-goal { margin-top:22px; background:rgba(255,215,0,.1); border:1px solid rgba(255,215,0,.25); border-radius:16px; padding:16px; }
-.how-goal-title { font-size:13px; font-weight:900; color:#FFD700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.step-example { font-size:12px; font-weight:700; color:rgba(255,255,255,.38); margin-top:4px; font-style:italic; }
+.how-goal { margin-top:22px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.24); border-radius:16px; padding:16px; }
+.how-goal-title { font-size:15px; font-weight:800; color:#fff; margin-bottom:6px; }
 .how-goal-text { font-size:13px; font-weight:600; color:rgba(255,255,255,.65); line-height:1.5; }
 
 
@@ -263,10 +283,10 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 #ty-game {
   position:fixed; inset:0;
   background:#3d1c0f;
-  display:none; flex-direction:column;
+  display:none; flex-direction:column; align-items:center;
 }
 #ty-game.active { display:flex; }
-#ty-end-screen { position:absolute; inset:0; background:rgba(5,20,15,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
+#ty-end-screen { position:absolute; inset:0; max-width:480px; margin:0 auto; background:rgba(5,20,15,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
 #ty-end-screen.show { display:flex; animation:fadeIn .4s ease; }
 
 
@@ -279,7 +299,7 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 /* ══ GAME SCREEN ══ */
 #game {
   position:fixed; inset:0; background:#1b0f3d;
-  display:none; flex-direction:column;
+  display:none; flex-direction:column; align-items:center;
 }
 #game.active { display:flex; }
 
@@ -310,14 +330,14 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .g-help:active { background:rgba(255,255,255,.22); }
 
-.g-progress { padding:10px 16px 0; flex-shrink:0; display:flex; align-items:center; gap:10px; }
-.prog-bar { flex:1; height:8px; background:rgba(255,255,255,.1); border-radius:50px; overflow:hidden; }
-.prog-bar-fill { height:100%; background:linear-gradient(90deg,#FFD700,#FF8C00); border-radius:50px; transition:width .5s cubic-bezier(.34,1.56,.64,1); }
+.g-progress { width:100%; max-width:480px; padding:10px 16px 0; flex-shrink:0; display:flex; align-items:center; gap:10px; }
+.prog-bar { flex:1; height:10px; background:rgba(255,255,255,.14); border-radius:50px; overflow:hidden; }
+.prog-bar-fill { height:100%; background:#FFC53D; border-radius:50px; transition:width .25s ease-out; }
 .prog-num { font-family:'Baloo 2',sans-serif; font-size:13px; font-weight:600; color:#bababa; min-width:32px; text-align:right; }
 
 .card-swipe-hint { text-align:center; padding:0; font-family:'Baloo 2',sans-serif; font-size:11px; font-weight:600; color:#bababa; letter-spacing:.4px; flex-shrink:0; }
 .card-play-area {
-  flex:1; min-height:0;
+  flex:1; min-height:0; width:100%; max-width:480px;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   gap:16px;
@@ -333,13 +353,13 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 .card-inner-border { position:absolute; inset:8px; border-radius:15px; border:2px solid rgba(255,255,255,.22); pointer-events:none; z-index:10; }
 .card-texture { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px); background-size:20px 20px; pointer-events:none; z-index:1; }
 .card-top { padding:22px 20px 10px; position:relative; z-index:5; flex-shrink:0; }
-.card-main-title { font-family:'Montserrat',sans-serif; font-size:clamp(18px,5.5vw,26px); font-weight:900; color:#fff; line-height:1.1; text-transform:uppercase; text-shadow:0 2px 6px rgba(0,0,0,.25); letter-spacing:.5px; }
-.card-sub-title { font-family:'Montserrat',sans-serif; font-size:clamp(12px,3.5vw,15px); font-weight:700; color:rgba(255,255,255,.72); text-transform:uppercase; letter-spacing:1.5px; margin-top:5px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
+.card-main-title { font-family:'Baloo 2',sans-serif; font-size:clamp(18px,5.5vw,26px); font-weight:800; color:#fff; line-height:1.1; text-transform:uppercase; text-shadow:0 2px 6px rgba(0,0,0,.25); letter-spacing:.4px; }
+.card-sub-title { font-family:'Baloo 2',sans-serif; font-size:clamp(12px,3.5vw,15px); font-weight:700; color:rgba(255,255,255,.72); text-transform:uppercase; letter-spacing:1px; margin-top:5px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
 .card-illustration { flex:1; display:flex; align-items:center; justify-content:center; position:relative; z-index:5; padding:0 20px; }
 .card-big-icon { font-size:clamp(72px,20vw,110px); line-height:1; filter:drop-shadow(0 8px 16px rgba(0,0,0,.3)); animation:iconFloat 3s ease-in-out infinite; }
 @keyframes iconFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 .card-bottom { padding:12px 20px 20px; position:relative; z-index:5; flex-shrink:0; border-top:1px solid rgba(255,255,255,.15); }
-.card-category { font-family:'Montserrat',sans-serif; font-size:clamp(12px,3.5vw,15px); font-weight:700; color:rgba(255,255,255,.78); text-transform:uppercase; letter-spacing:2px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
+.card-category { font-family:'Baloo 2',sans-serif; font-size:clamp(12px,3.5vw,15px); font-weight:700; color:rgba(255,255,255,.78); text-transform:uppercase; letter-spacing:1.2px; text-shadow:0 1px 3px rgba(0,0,0,.2); }
 .c-mil .card-main-title,.c-mil .card-sub-title { color:#1A1A2E; text-shadow:none; }
 .c-mil .card-category { color:rgba(26,26,46,.6); text-shadow:none; }
 .c-mil .card-bottom { border-top-color:rgba(0,0,0,.12); }
@@ -353,22 +373,23 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 @keyframes flipRightOut { 0%{transform:rotateY(0) scale(1)} 100%{transform:rotateY(-90deg) scale(.9)} }
 @keyframes flipRightIn  { 0%{transform:rotateY(90deg) scale(.9)} 100%{transform:rotateY(0) scale(1)} }
 
-.g-actions { padding:10px 16px 40px; display:flex; gap:10px; flex-shrink:0; }
+.g-actions { width:100%; max-width:480px; padding:10px 16px 40px; display:flex; gap:10px; flex-shrink:0; }
 .btn-next { flex:1; background:var(--cta-grad); border:none; border-radius:16px; height:48px; padding:0; font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700; color:var(--cta-text); cursor:pointer; letter-spacing:.2px; box-shadow:0 4px 0 var(--cta-shadow); transition:transform .1s, box-shadow .1s; }
 .btn-next:active { transform:translateY(4px); box-shadow:0 1px 0 #B85C00; }
 .btn-prev { width:48px; height:48px; flex-shrink:0; background:var(--cta2-grad); border:none; border-radius:16px; padding:0; font-size:18px; font-weight:800; color:#fff; cursor:pointer; box-shadow:0 4px 0 var(--cta2-shadow); transition:transform .1s, box-shadow .1s; display:flex; align-items:center; justify-content:center; }
 .btn-prev:active { transform:scale(.95); background:rgba(255,255,255,.14); }
 
 .btn-shuffle { width:48px; height:48px; flex-shrink:0; background:var(--cta2-grad); border:none; border-radius:16px; padding:0; font-size:20px; font-weight:800; color:#fff; cursor:pointer; box-shadow:0 4px 0 var(--cta2-shadow); transition:transform .1s, box-shadow .1s; display:flex; align-items:center; justify-content:center; }
+.btn-shuffle-img { width:22px; height:22px; display:block; pointer-events:none; }
 .btn-shuffle:active, .btn-prev:active { transform:translateY(3px); box-shadow:0 1px 0 var(--cta2-shadow); }
 
-#end-screen { position:absolute; inset:0; background:rgba(26,26,46,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
+#end-screen { position:absolute; inset:0; max-width:480px; margin:0 auto; background:rgba(26,26,46,.97); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:32px; text-align:center; }
 #end-screen.show { display:flex; animation:fadeIn .4s ease; }
 @keyframes fadeIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
 .end-icon { font-size:72px; margin-bottom:16px; animation:bounce 1s ease infinite; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-.end-title { font-family:'Montserrat',sans-serif; font-size:30px; font-weight:900; color:#FFD700; margin-bottom:8px; }
-.end-sub { font-size:14px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:28px; line-height:1.5; }
+.end-title { font-family:'Baloo 2',sans-serif; font-size:30px; font-weight:800; color:#FFC53D; margin-bottom:8px; }
+.end-sub { font-family:'Baloo 2',sans-serif; font-size:14px; font-weight:700; color:#BABABA; margin-bottom:28px; line-height:1.5; }
 .btn-play-again { background:var(--cta-grad); border:none; border-radius:16px; height:48px; padding:0 32px; font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700; color:var(--cta-text); cursor:pointer; box-shadow:0 4px 0 var(--cta-shadow); letter-spacing:.2px; }
 .btn-play-again:active { transform:translateY(3px); box-shadow:0 1px 0 var(--cta-shadow); }
 
@@ -381,6 +402,18 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 .btn-back-home:active { color:rgba(255,255,255,.9); }
 
+/* ══ CARD-DECK HEADER (First / Thank You — GameHeader icon parity, Oct 22) ══ */
+.cdh{display:flex;align-items:center;padding:14px 16px 8px;flex-shrink:0;gap:8px;width:100%;max-width:480px;}
+.cdh-left{display:flex;align-items:center;gap:8px;min-width:72px;}
+.cdh-icon{width:32px;height:32px;border-radius:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.cdh-icon-img{display:block;width:18px;height:18px;flex-shrink:0;pointer-events:none;}
+.cdh-title{flex:1;}
+.ghost-btn{display:block;width:100%;height:48px;line-height:44px;text-align:center;border-radius:16px;
+  border:2px solid rgba(255,255,255,.28);background:transparent;color:#fff;font-family:'Baloo 2',sans-serif;
+  font-weight:700;font-size:16px;cursor:pointer;margin-top:12px;}
+.ghost-btn:active{background:rgba(255,255,255,.14);}
+.btn-prev-img{width:22px;height:22px;display:block;pointer-events:none;}
 
 
 
@@ -542,62 +575,52 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 }
 #launcher.hidden { display:none; }
 
-.home-lang-row {
-  width:100%; display:flex; align-items:center; justify-content:space-between;
+/* ══ HOME HEADER (Oct 2026 app parity: settings gear · wordmark · lang) ══ */
+.home-header {
+  width:100%; max-width:480px;
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center;
   padding:12px 16px 0; flex-shrink:0;
 }
-.hamburger {
+.settings-gear {
+  justify-self:start;
   width:32px; height:32px; border-radius:12px;
-  background:#16234a; border:1px solid #3a4a7a;
-  cursor:pointer; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:3px;
-  transition:background .15s; flex-shrink:0;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background .15s; flex-shrink:0; padding:0;
 }
-.hamburger:active { background:rgba(255,255,255,.24); }
-.hamburger span {
-  display:block; width:16px; height:3px; border-radius:1.5px;
-  background:#fff;
-  transition:transform .25s, opacity .2s;
-}
-.hamburger.open span:nth-child(1) { transform:translateY(6px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity:0; }
-.hamburger.open span:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
+.settings-gear:active { background:rgba(255,255,255,.24); }
+.settings-gear svg { width:16px; height:16px; display:block; fill:#fff; }
+.settings-gear img { width:18px; height:18px; display:block; pointer-events:none; }
+.home-wordmark-slot { justify-self:center; height:32px; display:flex; align-items:center; }
+.home-wordmark-slot img { width:136px; height:auto; object-fit:contain; user-select:none; -webkit-user-drag:none; }
+.home-header .lang-toggle { justify-self:end; }
 
-#logo-particles {
-  position:absolute;
-  top:0; left:0; width:100%; height:100%;
-  pointer-events:none; z-index:0;
-}
-.home-logo-wrap {
-  position:relative; z-index:1;
-  margin:auto 0;
+/* ══ FEATURED BANNER (Blocks Jodo promo) ══ */
+.featured-banner {
+  width:100%; height:264px; border-radius:24px; position:relative;
+  overflow:hidden; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  background:#1b2a5c center/cover no-repeat;
   flex-shrink:0;
-  width:100%;
-  display:flex; flex-direction:column;
-  align-items:center; gap:6px;
-  padding:0 16px;
 }
-.home-logo-img {
-  width:100%;
-  max-width:240px;
-  height:auto;
-  object-fit:contain;
-  user-select:none;
-  -webkit-user-drag:none;
+.featured-banner:active { transform:scale(.99); }
+.featured-banner-art {
+  position:absolute; top:24px; left:0; right:0;
+  display:flex; justify-content:center;
 }
-.logo-divider { width:146px; height:10px; display:flex; align-items:center; justify-content:center; }
-.logo-divider svg { display:block; width:146px; height:10px; }
-.logo-tagline {
-  width:240px; max-width:calc(100% - 32px);
-  font-family:'Baloo 2',sans-serif; font-weight:600; font-size:12px;
-  text-align:center; color:#fff;
+.featured-banner-art img { width:160px; height:160px; object-fit:contain; user-select:none; -webkit-user-drag:none; }
+.featured-banner .btn-primary-cta {
+  position:absolute; top:192px; left:50%; transform:translateX(-50%);
+  z-index:2;
+  width:240px; height:48px; margin:0; padding:0;
+  border-radius:16px; font-size:20px;
 }
 
 .home-cards {
-  width:100%; max-width:440px;
+  width:100%; max-width:480px;
   display:flex; flex-direction:column; gap:14px;
   flex-shrink:0;
-  padding-bottom:8px;
+  padding:12px 16px 8px;
 }
 
 .game-card {
@@ -688,6 +711,41 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 /* Push page down when strip is visible */
 body.has-strip #launcher { padding-top:52px; }
 
+/* ══ ANDROID APP STRIP (early-access APK download) ══ */
+/* Same shape/behaviour as the install strip above, gold accent to read as a
+   distinct "get the real app" upsell. Mutually exclusive with #install-strip
+   — see showApkStrip()/showInstallStrip() in the script below. */
+#apk-strip {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  display:none; align-items:center; justify-content:space-between;
+  gap:10px; padding:9px 14px;
+  background:linear-gradient(90deg,#c97f00,#7a4b00);
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+  font-family:'Baloo 2','Nunito Sans',sans-serif;
+  padding-top:calc(9px + env(safe-area-inset-top, 0px));
+}
+#apk-strip.show { display:flex; animation:stripDown .35s cubic-bezier(.34,1.4,.64,1); }
+.as-left { display:flex; align-items:center; gap:9px; min-width:0; }
+.as-icon { width:30px; height:30px; border-radius:7px; flex-shrink:0; }
+.as-text {
+  font-size:13px; font-weight:700; color:#fff;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.as-right { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.as-btn {
+  background:#fff; border:none; border-radius:50px;
+  padding:7px 18px; font-family:'Baloo 2',sans-serif;
+  font-size:14px; font-weight:700; color:#c97f00;
+  cursor:pointer; white-space:nowrap; text-decoration:none;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+  transition:transform .1s; display:inline-block;
+}
+.as-btn:active { transform:scale(.94); }
+.as-close {
+  background:transparent; border:none; color:rgba(255,255,255,.75);
+  font-size:16px; cursor:pointer; padding:4px 6px; line-height:1;
+}
+
 
 
 
@@ -699,47 +757,71 @@ body.has-strip #launcher { padding-top:52px; }
 
 
 /* ══ HOME CARDS ══ */
-.home-cards {
-  width:100%; max-width:360px;
-  padding:0 16px;
-  flex-shrink:0;
+/* ══ HOME SECTIONS (Oct 2026 app parity): two 3-up rows of square cards, ══
+   "MilkeKhelo Party Games" (My First · Who's That · Thank You) and
+   "Classic Games" (Snakes & Ladders · Memory Grid · Chess). Card colours
+   are reused exactly as the app reuses them (two cards per colour). */
+.home-section-title {
+  font-family:'Baloo 2',cursive; font-size:16px; font-weight:600;
+  color:#fff; line-height:1.56; margin:0 0 8px;
 }
-
-
-/* 2x2 grid — four equal cards */
-.gc-grid {
-  display:grid; grid-template-columns:1fr 1fr;
-  column-gap:16px; row-gap:22px;
+.gc-row {
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  column-gap:10px;
   width:100%;
 }
 .gc-cell {
-  aspect-ratio:152/148;
-  border-radius:24px;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:8px; padding:16px 12px 12px;
+  aspect-ratio:1 / 1;
+  border-radius:16px;
+  display:flex; align-items:flex-start; justify-content:center;
+  padding-top:8%;
   cursor:pointer; transition:transform .1s;
-  position:relative;
+  position:relative; overflow:hidden;
   background:linear-gradient(180deg, var(--c) 0%, var(--cd) 100%);
   box-shadow:0 6px 0 0 var(--cs);
 }
 .gc-cell:active { transform:translateY(3px); box-shadow:0 3px 0 0 var(--cs); }
 .gc-cell-img {
-  width:92px; height:92px; object-fit:contain;
+  width:84%; height:84%; object-fit:contain;
   user-select:none; -webkit-user-drag:none;
 }
-.gc-cell-name {
-  font-family:'Baloo 2',cursive; font-size:16px; font-weight:800;
-  color:#fff; text-align:center; line-height:1.25;
-  -webkit-text-stroke:4px rgba(0,0,0,.2);
-  paint-order:stroke fill;
-}
 
-/* Figma card colours: light top → dark bottom, + solid shadow tone */
-.gc-snl   { --c:#ff93b3; --cd:#cc2f63; --cs:#701a36; }  /* Snakes & Ladders — pink */
-.gc-mg    { --c:#6ee0ac; --cd:#1e8a5c; --cs:#114c33; }  /* Memory Grid — green */
-.gc-first { --c:#c3b0f5; --cd:#6a4fc2; --cs:#3a2b6b; }  /* First — purple */
-.gc-ty    { --c:#ffa57d; --cd:#cc4e1e; --cs:#702b11; }  /* Thank You — coral */
+/* Figma card colours: light top → dark bottom, + solid shadow tone.
+   Reused across two cards each, exactly as the app does. */
+.gc-snl   { --c:#ff93b3; --cd:#cc2f63; --cs:#701a36; }  /* pink — Snakes & Ladders + Who's That */
+.gc-mg    { --c:#6ee0ac; --cd:#1e8a5c; --cs:#114c33; }  /* green — Chess */
+.gc-first { --c:#c3b0f5; --cd:#6a4fc2; --cs:#3a2b6b; }  /* purple — My First + Memory Grid */
+.gc-ty    { --c:#ffa57d; --cd:#cc4e1e; --cs:#702b11; }  /* coral — Thank You */
+
+/* ══ CARD IDLE POLISH (app parity): a gentle "lub-dub" heartbeat pulse on   ══
+   every home card + the featured banner's hero art, and a diagonal light
+   sweep that glints across each small card at random intervals — matches
+   lib/core/widgets/heartbeat.dart + lib/home/home_screen.dart's
+   _CardShimmer. The heartbeat wraps a card in its OWN element (not the
+   card itself) so its scale animation never fights the card's own
+   :active press-down, which also animates `transform`. */
+@keyframes homeHeartbeat{
+  0%{transform:scale(1)}
+  7%{transform:scale(1.03)}
+  15%{transform:scale(1)}
+  21%{transform:scale(1.02)}
+  33%{transform:scale(1)}
+  100%{transform:scale(1)}
+}
+.heartbeat{animation:homeHeartbeat 2.6s ease-in-out infinite;animation-play-state:paused;}
+.gc-heartbeat{display:block;}
+.gc-shimmer{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit;}
+.gc-shimmer::after{
+  content:'';position:absolute;top:-30%;left:-30%;width:160%;height:160%;
+  background:linear-gradient(115deg, transparent 35%, rgba(255,255,255,.03) 42%, rgba(255,255,255,.22) 50%, rgba(255,255,255,.03) 58%, transparent 65%);
+  transform:translate(-60%,-60%);
+  opacity:0;
+}
+.gc-shimmer.play::after{ opacity:1; animation:gcShimmerSweep 2.4s cubic-bezier(.45,.05,.55,.95); }
+@keyframes gcShimmerSweep{
+  0%{transform:translate(-60%,-60%);}
+  100%{transform:translate(60%,60%);}
+}
 
 
 /* ══ SIDE MENU TRAY ══ */
@@ -840,6 +922,19 @@ body.has-strip #launcher { padding-top:52px; }
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
 
+<!-- Android app strip (early-access APK download) — takes priority over the
+     PWA install strip below when both are eligible; see JS at the bottom. -->
+<div id="apk-strip" role="banner">
+  <div class="as-left">
+    <img src="app-icon-192.png" class="as-icon" alt="" width="30" height="30">
+    <span class="as-text">Early access: get the Android app</span>
+  </div>
+  <div class="as-right">
+    <a class="as-btn" id="as-btn" href="MilkeKhelo-App.apk" download onclick="markApkDownloaded()">Download</a>
+    <button class="as-close" id="as-close" onclick="dismissApkStrip()" aria-label="Dismiss">✕</button>
+  </div>
+</div>
+
 <!-- Install strip -->
 <div id="install-strip" role="banner">
   <div class="is-left">
@@ -857,56 +952,62 @@ body.has-strip #launcher { padding-top:52px; }
 <main id="main-content">
 <div id="launcher">
 
-  <!-- lang toggle centered at top + hamburger on right -->
-  <div class="home-lang-row">
-    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
+  <!-- settings gear · wordmark · language (Oct 2026 app header) -->
+  <div class="home-header">
+    <button class="settings-gear" onclick="window.location.href='settings.html'" aria-label="Settings">
+      <img src="images/icons/icon-settings.webp" alt="">
     </button>
+    <div class="home-wordmark-slot">
+      <img src="images/home/wordmark.webp" alt="milkekhelo.com" width="136" height="19" draggable="false">
+    </div>
     <div class="lang-toggle">
       <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिं</button>
     </div>
   </div>
 
-  <!-- logo -->
-  <canvas id="logo-particles" aria-hidden="true"></canvas>
-
-  <h1 class="home-logo-wrap">
-    <img src="logo-wordmark-new.png"
-         class="home-logo-img"
-         alt="Mil ke Khelo — Less Scrolling. More Stories. Free party games to play together"
-         title="Mil ke Khelo — Free party games"
-         width="480" height="67"
-         fetchpriority="high"
-         draggable="false">
-    <div class="logo-divider" aria-hidden="true">
-      <svg viewBox="0 0 146 10" xmlns="http://www.w3.org/2000/svg">
-        <line x1="0" y1="5" x2="63" y2="5" stroke="#fff" stroke-opacity="0.4" stroke-width="1"/>
-        <path d="M73 8 C 70.5 6, 68.5 4.6, 68.5 2.9 C 68.5 1.7, 69.5 1, 70.6 1 C 71.5 1, 72.3 1.5, 73 2.4 C 73.7 1.5, 74.5 1, 75.4 1 C 76.5 1, 77.5 1.7, 77.5 2.9 C 77.5 4.6, 75.5 6, 73 8 Z" fill="#fff"/>
-        <line x1="83" y1="5" x2="146" y2="5" stroke="#fff" stroke-opacity="0.4" stroke-width="1"/>
-      </svg>
-    </div>
-    <div class="logo-tagline">Less Scrolling. More Stories.</div>
-  </h1>
-
-  <!-- game cards -->
   <div class="home-cards">
-    <div class="gc-grid">
-      <div class="game-card gc-cell gc-snl" onclick="startSnlGame()">
-        <img src="snl-home.png" class="gc-cell-img" width="280" height="280" loading="eager" alt="Snakes and Ladders — dice board game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-snl">Snakes &amp; Ladders</div>
+    <!-- Featured banner — Blocks Jodo early-access promo -->
+    <div class="featured-banner" id="banner-blocks-jodo" style="background-image:url('images/home/banner_bg.webp')" onclick="openBlocksJodo()" role="button" aria-label="Play Block Jodo">
+      <div class="featured-banner-art heartbeat" id="banner-hb">
+        <img id="banner-blocks-jodo-img" src="images/home/card_blocks_jodo_en.webp" alt="Block Jodo" draggable="false">
       </div>
-      <div class="game-card gc-cell gc-mg" onclick="openMemoryGrid()">
-        <img src="memorygrid-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Memory Grid — memory pattern game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-mg">Memory Grid</div>
+      <button class="btn-primary-cta" id="banner-blocks-jodo-btn" onclick="event.stopPropagation(); openBlocksJodo()">Play Now</button>
+    </div>
+
+    <div>
+      <div class="home-section-title" id="gc-title-party">MilkeKhelo Party Games</div>
+      <div class="gc-row">
+        <div class="heartbeat gc-heartbeat" id="gc-hb-0"><div class="game-card gc-cell gc-first" onclick="startGame()" role="button" aria-label="My First">
+          <img id="gc-img-my_first" src="images/home/card_my_first_en.webp" class="gc-cell-img" loading="eager" alt="My First" draggable="false">
+          <div class="gc-shimmer" id="gc-sh-0"></div>
+        </div></div>
+        <div class="heartbeat gc-heartbeat" id="gc-hb-1"><div class="game-card gc-cell gc-snl" onclick="window.location.href='whosthat.html'" role="button" aria-label="Who's That?">
+          <img id="gc-img-whos_that" src="images/home/card_whos_that_en.webp" class="gc-cell-img" loading="eager" alt="Who's That?" draggable="false">
+          <div class="gc-shimmer" id="gc-sh-1"></div>
+        </div></div>
+        <div class="heartbeat gc-heartbeat" id="gc-hb-2"><div class="game-card gc-cell gc-ty" onclick="startTyGame()" role="button" aria-label="Thank You">
+          <img id="gc-img-thank_you" src="images/home/card_thank_you_en.webp" class="gc-cell-img" loading="eager" alt="Thank You" draggable="false">
+          <div class="gc-shimmer" id="gc-sh-2"></div>
+        </div></div>
       </div>
-      <div class="game-card gc-cell gc-first" onclick="startGame()">
-        <img src="first-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="First — the icebreaker card game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-first">First</div>
-      </div>
-      <div class="game-card gc-cell gc-ty" onclick="startTyGame()">
-        <img src="thankyou-home.png" class="gc-cell-img" width="320" height="320" loading="eager" alt="Thank You — the gratitude card game" draggable="false">
-        <div class="gc-cell-name" id="gc-name-ty">Thank You</div>
+    </div>
+
+    <div>
+      <div class="home-section-title" id="gc-title-classic">Classic Games</div>
+      <div class="gc-row">
+        <div class="heartbeat gc-heartbeat" id="gc-hb-3"><div class="game-card gc-cell gc-snl" onclick="window.location.href='snakes-and-ladders.html'" role="button" aria-label="Snakes &amp; Ladders">
+          <img id="gc-img-snl" src="images/home/card_snl_en.webp" class="gc-cell-img" loading="eager" alt="Snakes and Ladders" draggable="false">
+          <div class="gc-shimmer" id="gc-sh-3"></div>
+        </div></div>
+        <div class="heartbeat gc-heartbeat" id="gc-hb-4"><div class="game-card gc-cell gc-first" onclick="openMemoryGrid()" role="button" aria-label="Memory Grid">
+          <img id="gc-img-memory_grid" src="images/home/card_memory_grid_en.webp" class="gc-cell-img" loading="eager" alt="Memory Grid" draggable="false">
+          <div class="gc-shimmer" id="gc-sh-4"></div>
+        </div></div>
+        <div class="heartbeat gc-heartbeat" id="gc-hb-5"><div class="game-card gc-cell gc-mg" onclick="openChess()" role="button" aria-label="Chess">
+          <img id="gc-img-chess" src="images/home/card_chess_en.webp" class="gc-cell-img" loading="eager" alt="Chess" draggable="false">
+          <div class="gc-shimmer" id="gc-sh-5"></div>
+        </div></div>
       </div>
     </div>
   </div>
@@ -938,19 +1039,15 @@ body.has-strip #launcher { padding-top:52px; }
 
 <!-- ══════════ GAME SCREEN ══════════ -->
 <div id="game">
-  <div class="g-header">
-    <div class="hdr-left">
-      <button class="g-back g-back-arrow" id="g-back" onclick="exitGame()" aria-label="Back"></button>
-      <button class="g-help" onclick="openHow()" aria-label="How to play">?</button>
+  <div class="cdh">
+    <div class="cdh-left">
+      <button class="cdh-icon" id="g-back" onclick="exitGame()" aria-label="Back"><img src="images/icons/icon-back.webp" class="cdh-icon-img" alt="" draggable="false"></button>
+      <button class="cdh-icon" onclick="openHow()" aria-label="How to play"><img src="images/icons/icon-help.webp" class="cdh-icon-img" alt="" draggable="false"></button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo" id="g-logo-first">First</div>
-    </div>
-    <div class="hdr-right">
-      <div class="lang-toggle lang-toggle-sm">
-        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
-      </div>
+    <div class="cdh-title"></div>
+    <div class="lang-toggle lang-toggle-sm">
+      <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
     </div>
   </div>
   <div class="g-progress">
@@ -980,16 +1077,16 @@ body.has-strip #launcher { padding-top:52px; }
   <div class="card-swipe-hint" id="card-swipe-hint">Tap card or swipe to flip</div>
   </div>
   <div class="g-actions">
-    <button class="btn-prev" id="btn-prev" onclick="prevCard()" aria-label="Previous card">←</button>
+    <button class="btn-prev" id="btn-prev" onclick="prevCard()" aria-label="Previous card"><img src="images/icons/icon-back.webp" class="btn-prev-img" alt="" draggable="false"></button>
     <button class="btn-next" id="btn-next" onclick="nextCard()" aria-label="Next card">Next Card →</button>
-    <button class="btn-shuffle" onclick="reshuffleDeck()" aria-label="Reshuffle deck">↻</button>
+    <button class="btn-shuffle" onclick="reshuffleDeck()" aria-label="Reshuffle deck"><img src="images/icons/icon-refresh.webp" class="btn-shuffle-img" alt="" draggable="false"></button>
   </div>
   <div id="end-screen">
     <div class="end-icon">🎉</div>
     <div class="end-title" id="end-title">All Done!</div>
     <div class="end-sub" id="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
     <button class="btn-play-again" id="btn-again" onclick="reshuffleDeck()">🔀 &nbsp; Play Again</button>
-    <div class="btn-back-home" id="fh-back-home" onclick="exitGame()">🏠 Back to Home</div>
+    <button class="ghost-btn" id="fh-back-home" onclick="exitGame()">Back to Home</button>
   </div>
 </div>
 
@@ -999,7 +1096,6 @@ body.has-strip #launcher { padding-top:52px; }
     <div class="how-handle"></div>
     <div class="how-header">
       <div class="how-title" id="how-title">How to Play</div>
-      <button class="how-close" onclick="closeHow()">✕</button>
     </div>
     <div class="how-steps" id="how-steps"></div>
     <div class="how-goal">
@@ -1114,6 +1210,7 @@ const CARDS = [
 
 document.addEventListener('DOMContentLoaded', function() {
   history.replaceState({ view: 'home' }, '');
+  startHomeIdlePolish();
 
   // Back button — close any open game
   window.addEventListener('popstate', function(e) {
@@ -1170,6 +1267,47 @@ function openMemoryGrid() {
   window.location.href = 'memorygrid.html';
 }
 
+function openChess() {
+  window.location.href = 'chess.html';
+}
+
+function openBlocksJodo() {
+  window.location.href = 'blocks-jodo.html';
+}
+
+// ── HOME CARD IDLE POLISH (app parity: Heartbeat + _CardShimmer) ──
+// Each card's heartbeat starts `220ms * index` apart (plus a small fudge so
+// they don't all begin mid-layout) and then just loops via CSS forever.
+// The shimmer is scheduled in JS instead of pure CSS because each card's
+// sweep needs its own *randomized*, ever-changing interval (first pass
+// 1.2–4.7s in, then every 4–9s) rather than a fixed repeating cadence —
+// mirrors lib/core/widgets/heartbeat.dart + lib/home/home_screen.dart's
+// _CardShimmer exactly (same timings).
+function startHomeIdlePolish() {
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  for (var i = 0; i < 6; i++) {
+    (function(i){
+      var hb = document.getElementById('gc-hb-' + i);
+      if (hb) setTimeout(function(){ hb.style.animationPlayState = 'running'; }, 220 * i + 600);
+      var sh = document.getElementById('gc-sh-' + i);
+      if (sh) scheduleShimmer(sh, true);
+    })(i);
+  }
+  var bannerHb = document.getElementById('banner-hb');
+  if (bannerHb) setTimeout(function(){ bannerHb.style.animationPlayState = 'running'; }, 600);
+}
+function scheduleShimmer(el, first) {
+  var ms = first ? (1200 + Math.random() * 3500) : (4000 + Math.random() * 5000);
+  setTimeout(function(){
+    el.classList.remove('play');
+    void el.offsetWidth; // restart the CSS animation
+    el.classList.add('play');
+    setTimeout(function(){ scheduleShimmer(el, false); }, 2400);
+  }, ms);
+}
+
 
 // ═══════════════════════════════════════════════════════════════
 //  SIDE MENU + POLICY
@@ -1219,8 +1357,7 @@ function renderPolicy() {
 }
 
 const POLICY_EN = `
-  <div class="updated">Last updated: October 2026</div>
-
+  <div class="updated">Last updated: August 2026</div>
 
   <h2>Introduction</h2>
   <p>Welcome to MilkeKhelo ("MKK", "we", "our", or "us"). MilkeKhelo is a bilingual social gaming platform offering conversation-based games and interactive experiences designed to encourage meaningful interactions among friends, families, colleagues, and communities.</p>
@@ -1228,13 +1365,11 @@ const POLICY_EN = `
   <p><strong>MilkeKhelo is built to create conversations, not collect them.</strong></p>
 
   <h2>Information We Collect</h2>
-  <p>We collect as little as possible. Signing in is optional — you can play every game without an account and without giving us any personal information.</p>
+  <p>We collect as little as possible. You can play most of our games without providing any personal information.</p>
   <p><strong>Information you provide:</strong></p>
   <ul>
-    <li>Account information (only if you sign in): when you choose "Continue with Google" or "Continue with Facebook", that provider shares your name, email address, profile photo and a unique account ID with us. We never see or store your Google or Facebook password.</li>
-    <li>Game progress (only if you sign in): your best scores and streaks, and the state of a game you leave mid-way, so you can continue later or on another phone.</li>
-    <li>Display name: In multiplayer games like "Who's That?", the name you type is shared with other players in your game session and stored temporarily to run the game.</li>
-    <li>Feedback: Any message you choose to send us by email.</li>
+    <li><strong>Display name:</strong> In multiplayer games like "Who's That?", the name you type is shared with other players in your game session and stored temporarily to run the game.</li>
+    <li><strong>Feedback:</strong> Any message you choose to send us by email.</li>
   </ul>
   <p><strong>Information collected automatically:</strong></p>
   <ul>
@@ -1245,49 +1380,40 @@ const POLICY_EN = `
   </ul>
 
   <h2>Information We Do NOT Collect</h2>
-  <p>We do not ask for or store your phone number, home address, passwords, payment information, contacts, friends list, precise location, photos, microphone, or SMS. We never post anything to your Google or Facebook account. We do not sell your personal information to anyone.</p>
+  <p>We do not require accounts or logins. We do not ask for or store your email address, phone number, home address, passwords, payment information, contacts, precise location, photos, microphone, or SMS. We do not sell your personal information to anyone.</p>
 
   <h2>How We Use Your Information</h2>
   <ul>
     <li>To provide and run the games</li>
-    <li>To sign you in and keep your account secure (if you choose to sign in)</li>
-    <li>To save your best scores and game progress — on your device, and to your account if you are signed in, so you can continue on any device</li>
+    <li>To save game progress and preferences on your device</li>
     <li>To understand performance and improve the experience</li>
-    <li>To respond to support and account requests (we use your email address only for this — no marketing emails)</li>
+    <li>To respond to support requests</li>
     <li>To prevent misuse and keep the service safe</li>
   </ul>
 
-  <h2>Sign-in with Google &amp; Facebook</h2>
-  <p>Sign-in is handled by Google Firebase Authentication together with Google Sign-In and Facebook Login. We only request your basic public profile and email address. Your account ID links your saved progress to you; your email lets us identify your account if you contact us for support or deletion.</p>
-  <p>You can remove MilkeKhelo's access at any time from your Google Account (Security → Third-party apps) or Facebook (Settings → Apps and Websites). Removing access signs you out; to also erase your saved data, see "Deleting Your Account &amp; Data" below.</p>
-
-  <h2>Multiplayer &amp; Firebase</h2>
-  <p>Multiplayer games use Google Firebase to sync players in real time. Display names and temporary game data are stored on Firebase servers only for as long as needed to run a game session, and old sessions are cleared automatically. If you are signed in, your best scores and saved games are stored in Google Firebase, linked to your account ID.</p>
+  <h2>Multiplayer & Firebase</h2>
+  <p>Multiplayer games use Google Firebase to sync players in real time. Display names and temporary game data are stored on Firebase servers only for as long as needed to run a game session, and old sessions are cleared automatically.</p>
 
   <h2>Local Storage</h2>
-  <p>Games save your settings, best scores and unfinished games on your own device so you can pick up where you left off. If you are not signed in, this information stays on your device and is not sent to us.</p>
+  <p>Some games (like Memory Grid) save your best score on your own device so you can beat it later. This information never leaves your device and is not sent to us.</p>
 
   <h2>Sharing of Information</h2>
-  <p>We do not sell personal information. We share limited information only with trusted service providers who help us run MilkeKhelo — Google (Firebase hosting, authentication and analytics) and Meta (Facebook Login, only if you use it) — solely to operate the service. We may also disclose information if required by law, regulation, or valid legal process.</p>
+  <p>We do not sell personal information. We may share limited information with trusted service providers who help us run MilkeKhelo — such as hosting (Google Firebase) and analytics (Google Analytics) — solely to operate the service. We may also disclose information if required by law, regulation, or valid legal process.</p>
 
   <h2>AI Features</h2>
   <p>Some MilkeKhelo features may use artificial intelligence to generate conversation prompts or game content. Where this happens, information is processed by trusted AI providers solely to generate the requested output. We do not sell your conversations to third parties.</p>
 
   <h2>Data Retention</h2>
-  <p>We keep account information and saved progress for as long as your account exists. Temporary multiplayer game data is cleared automatically after a session ends. When you delete your account, we delete your account information and saved progress within 30 days, except where we must keep something to meet a legal obligation.</p>
-
-  <h2>Deleting Your Account &amp; Data</h2>
-  <p>You can ask us to delete your account and all data linked to it at any time. Email <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a> from the email address linked to your MilkeKhelo account with the subject "Delete my account", and say whether you signed in with Google or Facebook. We will confirm and delete your account information and saved progress within 30 days.</p>
-  <p>Data stored only on your device (when you are not signed in) can be removed by clearing the app's data or uninstalling the app.</p>
+  <p>We retain information only as long as necessary to provide the service, meet legal obligations, and resolve any disputes. Temporary multiplayer game data is cleared automatically after a session ends.</p>
 
   <h2>Children's Privacy</h2>
-  <p>MilkeKhelo is intended for users above the minimum digital-consent age in their region. Children under 13 should use the service only with parental supervision, and should not sign in. We do not knowingly collect personal information from children under 13. Accounts are optional, so the app can be enjoyed without sharing personal details. If you believe a child has shared personal information, contact us and we will remove it.</p>
+  <p>MilkeKhelo is intended for users above the minimum digital-consent age in their region. Children under 13 should use the service only with parental supervision. We do not knowingly collect personal information from children under 13. Since we don't require emails or accounts, the app can be enjoyed without sharing personal details. If you believe a child has shared personal information, contact us and we will remove it.</p>
 
   <h2>Your Rights</h2>
-  <p>Depending on your region, you may have the right to access, correct, or delete information relating to you, or to withdraw consent. If you are signed in, you can ask us for a copy of your account data or for it to be deleted. For any request, email us at <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a>.</p>
+  <p>Depending on your region, you may have the right to access, correct, or delete information relating to you, or to withdraw consent. Because we don't operate accounts, most data is either temporary or stored only on your own device. You can clear on-device data anytime through your browser settings. For any request, email us at <a href="mailto:talk@milkekhelo.com">talk@milkekhelo.com</a>.</p>
 
   <h2>Security</h2>
-  <p>We use commercially reasonable safeguards and rely on trusted providers (Google Firebase, Google Sign-In, Facebook Login) that use industry-standard security. However, no method of internet transmission or storage can be guaranteed 100% secure.</p>
+  <p>We use commercially reasonable safeguards and rely on trusted providers (Google Firebase, Google Analytics) that use industry-standard security. However, no method of internet transmission or storage can be guaranteed 100% secure.</p>
 
   <h2>Terms of Use</h2>
   <p>MilkeKhelo is provided free, "as is", for personal entertainment. Please play respectfully with others. Do not misuse the app, disrupt its services, or use it for any unlawful purpose. We may update or discontinue games at any time.</p>
@@ -1300,8 +1426,6 @@ const POLICY_EN = `
 `;
 
 const POLICY_HI = `
-  <div class="updated">पूरी और नवीनतम नीति (Google/Facebook साइन-इन सहित) अंग्रेज़ी में यहाँ देखें: <a href="/privacy.html">milkekhelo.com/privacy.html</a></div>
-
   <div class="updated">अंतिम अपडेट: अगस्त 2026</div>
 
   <h2>परिचय</h2>
@@ -1384,6 +1508,17 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
   const hi = (l === 'hi');
   const _el = id => document.getElementById(id);
 
+  // ── HOME: card art is language-specific (the game name is baked into the
+  // image itself, same as the app) — swap every home card + banner image.
+  ['my_first','whos_that','thank_you','snl','memory_grid','chess'].forEach(g => {
+    const img = _el('gc-img-' + g);
+    if (img) img.src = 'images/home/card_' + g + '_' + l + '.webp';
+  });
+  if (_el('banner-blocks-jodo-img')) _el('banner-blocks-jodo-img').src = 'images/home/card_blocks_jodo_' + l + '.webp';
+  if (_el('banner-blocks-jodo-btn')) _el('banner-blocks-jodo-btn').textContent = hi ? 'अभी खेलें' : 'Play Now';
+  if (_el('gc-title-party'))   _el('gc-title-party').textContent   = hi ? 'मिलकेखेलो पार्टी गेम्स' : 'MilkeKhelo Party Games';
+  if (_el('gc-title-classic')) _el('gc-title-classic').textContent = hi ? 'क्लासिक खेल' : 'Classic Games';
+
   // ── HOME: game names transliterated to Devanagari (same sound) ──
   if (_el('gc-name-first')) _el('gc-name-first').textContent = hi ? 'फर्स्ट' : 'First';
   if (_el('gc-desc-first')) _el('gc-desc-first').textContent = hi ? 'आइसब्रेकर कार्ड गेम' : 'The icebreaker card game';
@@ -1407,7 +1542,7 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
   if (_el('end-title'))        _el('end-title').textContent        = t.endTitle;
   if (_el('end-sub'))          _el('end-sub').innerHTML            = t.endSub.replace('\n','<br>');
   if (_el('btn-again'))        _el('btn-again').innerHTML          = t.playAgain;
-  if (_el('fh-back-home'))     _el('fh-back-home').textContent     = hi ? '🏠 होम पर जाएं' : '🏠 Back to Home';
+  if (_el('fh-back-home'))     _el('fh-back-home').textContent     = hi ? 'होम पर जाएं' : 'Back to Home';
   if (_el('how-overlay') && _el('how-overlay').classList.contains('open')) renderHow();
   // re-render current FIRST card in new language
   if (typeof deck !== 'undefined' && deck.length && typeof idx === 'number') applyCard(deck[idx]);
@@ -1422,7 +1557,7 @@ document.querySelectorAll('.lb-en, #btn-en').forEach(e => e.classList.toggle('ac
     const es = tyGame.querySelector('.end-sub');      if (es) es.innerHTML = hi ? 'सभी 51 कार्ड देख लिए!<br>एक और राउंड खेलें?' : "You've gone through all 51 cards!<br>Ready for another round?";
     const ag = tyGame.querySelector('.btn-play-again'); if (ag) ag.innerHTML = hi ? '🔀 &nbsp; फिर खेलें' : '🔀 &nbsp; Play Again';
   }
-  if (_el('ty-back-home')) _el('ty-back-home').textContent = hi ? '🏠 होम पर जाएं' : '🏠 Back to Home';
+  if (_el('ty-back-home')) _el('ty-back-home').textContent = hi ? 'होम पर जाएं' : 'Back to Home';
   // re-render current TY card
   if (typeof tyDeck !== 'undefined' && tyDeck.length && typeof tyIdx === 'number') setTyCard(tyDeck[tyIdx]);
 
@@ -2182,12 +2317,63 @@ function isAndroid() {
   return /android/i.test(navigator.userAgent);
 }
 
+// ── Android app strip (early-access APK) ──────────────────────────────────
+// A plain website can't ask Android "is this APK installed?" — that check
+// (Digital Asset Links / getInstalledRelatedApps) needs extra server files
+// and the app's signing fingerprint, which is outside this page. The
+// practical stand-in: once someone has tapped Download here, we remember it
+// on this device (localStorage, so it persists across sessions, unlike the
+// sessionStorage dismiss-for-now below) and stop showing the strip. This is
+// independent of the PWA install strip — installing the PWA ("Add to Home
+// Screen") is not the same as installing this APK, so that doesn't suppress
+// this strip.
+function isApkGrabbed() {
+  return localStorage.getItem('mkk-apk-downloaded') === '1';
+}
+
+function isApkStripEligible() {
+  if (!isAndroid()) return false;                              // Android only
+  if (isApkGrabbed()) return false;                             // already downloaded
+  if (sessionStorage.getItem('mkk-apk-hidden')) return false;   // dismissed this session
+  if (!isHomeVisible()) return false;                           // home page only
+  return true;
+}
+
+function showApkStrip() {
+  if (!isApkStripEligible()) return;
+  const strip = document.getElementById('apk-strip');
+  if (!strip) return;
+  hideInstallStrip(); // this strip takes priority over the PWA install strip
+  strip.classList.add('show');
+  document.body.classList.add('has-strip');
+}
+
+function hideApkStrip() {
+  const strip = document.getElementById('apk-strip');
+  if (strip) strip.classList.remove('show');
+  document.body.classList.remove('has-strip');
+}
+
+function dismissApkStrip() {
+  sessionStorage.setItem('mkk-apk-hidden', '1');
+  hideApkStrip();
+  showInstallStrip(); // let the PWA install strip take the slot if eligible
+}
+
+function markApkDownloaded() {
+  localStorage.setItem('mkk-apk-downloaded', '1');
+  hideApkStrip();
+  showInstallStrip(); // let the PWA install strip take the slot if eligible
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 function showInstallStrip() {
   if (!isAndroid()) return;                                  // Android only
   if (isStandalone()) return;                                // already installed
   if (sessionStorage.getItem('mkk-install-hidden')) return;  // dismissed this session
   if (!isHomeVisible()) return;                              // home page only
   if (!deferredPrompt && !installReady) return;              // prompt not ready yet
+  if (isApkStripEligible()) return;                          // APK strip has priority
   const strip = document.getElementById('install-strip');
   if (!strip) return;
   strip.classList.add('show');
@@ -2209,8 +2395,10 @@ function isHomeVisible() {
 // Call whenever we navigate between home and a game
 function refreshInstallStrip() {
   if (isHomeVisible()) {
+    showApkStrip();
     showInstallStrip();
   } else {
+    hideApkStrip();
     hideInstallStrip();
   }
 }
@@ -2374,19 +2562,15 @@ if ('serviceWorker' in navigator) {
 
 <!-- ══════════ THANK YOU GAME SCREEN ══════════ -->
 <div id="ty-game">
-  <div class="g-header">
-    <div class="hdr-left">
-      <button class="g-back g-back-arrow" onclick="exitTyGame()" aria-label="Back"></button>
-      <button class="g-help" onclick="openTyHow()" aria-label="How to play">?</button>
+  <div class="cdh">
+    <div class="cdh-left">
+      <button class="cdh-icon" onclick="exitTyGame()" aria-label="Back"><img src="images/icons/icon-back.webp" class="cdh-icon-img" alt="" draggable="false"></button>
+      <button class="cdh-icon" onclick="openTyHow()" aria-label="How to play"><img src="images/icons/icon-help.webp" class="cdh-icon-img" alt="" draggable="false"></button>
     </div>
-    <div class="hdr-center">
-      <div class="g-logo" id="g-logo-ty">Thank You</div>
-    </div>
-    <div class="hdr-right">
-      <div class="lang-toggle lang-toggle-sm">
-        <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
-      </div>
+    <div class="cdh-title"></div>
+    <div class="lang-toggle lang-toggle-sm">
+      <button class="lang-btn lb-en active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn lb-hi" onclick="setLang('hi')">हिं</button>
     </div>
   </div>
   <div class="g-progress">
@@ -2416,16 +2600,16 @@ if ('serviceWorker' in navigator) {
   <div class="card-swipe-hint">Tap card or swipe to flip</div>
   </div>
   <div class="g-actions">
-    <button class="btn-prev" id="ty-btn-prev" onclick="prevTyCard()" aria-label="Previous card">←</button>
+    <button class="btn-prev" id="ty-btn-prev" onclick="prevTyCard()" aria-label="Previous card"><img src="images/icons/icon-back.webp" class="btn-prev-img" alt="" draggable="false"></button>
     <button class="btn-next" onclick="nextTyCard()">Next →</button>
-    <button class="btn-shuffle" onclick="reshuffleTyDeck()" aria-label="Reshuffle deck">↻</button>
+    <button class="btn-shuffle" onclick="reshuffleTyDeck()" aria-label="Reshuffle deck"><img src="images/icons/icon-refresh.webp" class="btn-shuffle-img" alt="" draggable="false"></button>
   </div>
   <div id="ty-end-screen">
     <div class="end-icon">😇</div>
     <div class="end-title" style="color:#4ADE80;">All Done!</div>
     <div class="end-sub">You've gone through all 51 cards!<br>Ready for another round?</div>
     <button class="btn-play-again" onclick="reshuffleTyDeck()">🔀 &nbsp; Play Again</button>
-    <div class="btn-back-home" id="ty-back-home" onclick="exitTyGame()">🏠 Back to Home</div>
+    <button class="ghost-btn" id="ty-back-home" onclick="exitTyGame()">Back to Home</button>
   </div>
 </div>
 
@@ -2435,7 +2619,6 @@ if ('serviceWorker' in navigator) {
     <div class="how-handle"></div>
     <div class="how-header">
       <div class="how-title" style="color:#4ADE80;">How to Play</div>
-      <button class="how-close" onclick="closeTyHow()">✕</button>
     </div>
     <div class="how-steps">
       <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">1</div><div class="step-body"><div class="step-title">Gather Players</div><div class="step-desc">Minimum 2 players. The more the merrier!</div></div></div>
@@ -2444,8 +2627,8 @@ if ('serviceWorker' in navigator) {
       <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">4</div><div class="step-body"><div class="step-title">Tell the Story</div><div class="step-desc">Share why you are thankful — a memory, a reason, a feeling.</div></div></div>
       <div class="how-step"><div class="step-num" style="background:linear-gradient(135deg,#4ADE80,#16A34A);color:#fff;">5</div><div class="step-body"><div class="step-title">Next Card</div><div class="step-desc">Tap Next Card and keep the gratitude going!</div></div></div>
     </div>
-    <div class="how-goal" style="background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);">
-      <div class="how-goal-title" style="color:#4ADE80;">😇 Goal of the Game</div>
+    <div class="how-goal">
+      <div class="how-goal-title">😇 Goal of the Game</div>
       <div class="how-goal-text">Pause, reflect, and share what you are truly grateful for. A beautiful way to connect and appreciate life together.</div>
     </div>
   </div>

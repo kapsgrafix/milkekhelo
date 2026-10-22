@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0F1A3D">
+<meta name="robots" content="noindex">
+<title>Settings — Mil ke Khelo!</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; background:#000E3A; font-family:'Baloo 2',sans-serif; overflow:hidden; }
+
+#page {
+  position:fixed; inset:0;
+  display:flex; flex-direction:column;
+  background:#000E3A;
+  overflow-y:auto; overflow-x:hidden;
+}
+.bg-glow {
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(circle at 50% 63%, #0026A0 0%, #001A6D 50%, #001453 75%, #000E3A 100%);
+}
+
+/* header — same recipe as the games (back arrow · title · language) */
+.hdr { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:14px 16px 8px; gap:8px; }
+.hdr-left { justify-self:start; }
+.hdr-center { justify-self:center; font-size:16px; font-weight:800; color:#fff; }
+.hdr-right { justify-self:end; }
+.g-back-arrow {
+  width:32px; height:32px; padding:8px; border-radius:12px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.g-back-arrow::before { content:'←'; color:#fff; font-size:17px; font-weight:900; line-height:1; transform:translateY(-1px); display:block; }
+.lang-toggle { display:flex; align-items:center; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:12px; overflow:hidden; padding:4px; height:32px; }
+.lang-btn { padding:0 12px; font-size:15px; font-weight:700; color:#a9b4d6; cursor:pointer; background:transparent; border:none; font-family:'Baloo 2',sans-serif; height:100%; display:flex; align-items:center; border-radius:8px; }
+.lang-btn.active { background:#ffc53d; color:#1b2340; }
+
+/* content */
+.content { width:100%; max-width:480px; margin:0 auto; padding:20px 24px 32px; flex:1; display:flex; flex-direction:column; }
+.section-label { font-size:11px; font-weight:800; color:#bababa; letter-spacing:.88px; margin-bottom:10px; }
+.pref-card { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:16px; overflow:hidden; }
+.pref-row { display:flex; align-items:center; gap:12px; padding:12px 16px; cursor:pointer; }
+.pref-row + .pref-row { border-top:1px solid rgba(255,255,255,.28); }
+.pref-row-text { flex:1; min-width:0; }
+.pref-title { font-size:16px; font-weight:700; color:#fff; line-height:1.375; }
+.pref-sub { font-size:12px; font-weight:500; color:#bababa; line-height:1.33; }
+.toggle { width:44px; height:26px; border-radius:13px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); flex-shrink:0; position:relative; transition:background .18s, border-color .18s; }
+.toggle.on { background:#ffc53d; border-color:#ffc53d; }
+.toggle-knob { position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:#bababa; transition:transform .18s; }
+.toggle.on .toggle-knob { background:#fff; transform:translateX(18px); box-shadow:0 1px 3px rgba(0,0,0,.2); }
+
+.footer { margin-top:auto; padding-top:32px; text-align:center; }
+.footer a { font-size:14px; font-weight:600; color:#fff; text-decoration:underline; }
+
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div id="page">
+  <div class="hdr">
+    <div class="hdr-left"><button class="g-back-arrow" onclick="window.location.href='index.html'" aria-label="Back"></button></div>
+    <div class="hdr-center" id="s-title">Settings</div>
+    <div class="hdr-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिं</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section-label" id="s-prefs-label">PREFERENCES</div>
+    <div class="pref-card">
+      <div class="pref-row" onclick="toggle('music')">
+        <div class="pref-row-text">
+          <div class="pref-title" id="s-music-title">Music</div>
+          <div class="pref-sub" id="s-music-sub">Background music while you play</div>
+        </div>
+        <div class="toggle on" id="t-music"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="pref-row" onclick="toggle('sfx')">
+        <div class="pref-row-text">
+          <div class="pref-title" id="s-sfx-title">Sound Effects</div>
+          <div class="pref-sub" id="s-sfx-sub">Taps, dice, wins and game sounds</div>
+        </div>
+        <div class="toggle on" id="t-sfx"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="pref-row" onclick="toggle('vibration')">
+        <div class="pref-row-text">
+          <div class="pref-title" id="s-vibration-title">Vibration</div>
+          <div class="pref-sub" id="s-vibration-sub">Haptic feedback on taps and wins</div>
+        </div>
+        <div class="toggle on" id="t-vibration"><div class="toggle-knob"></div></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="privacy.html" id="s-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Preferences persist in this browser only (no account on the website —
+// sign in / cloud save is an app-only feature, matching the documented
+// website/app split). Keys mirror the app's fx-music / fx-sfx / fx-haptics
+// in spirit; defaults are all on, same as the app.
+const KEYS = { music:'mkk-fx-music', sfx:'mkk-fx-sfx', vibration:'mkk-fx-vibration' };
+function getPref(k) {
+  try { const v = localStorage.getItem(KEYS[k]); return v === null ? true : v === '1'; }
+  catch (e) { return true; }
+}
+function setPref(k, v) {
+  try { localStorage.setItem(KEYS[k], v ? '1' : '0'); } catch (e) {}
+}
+function toggle(k) {
+  const el = document.getElementById('t-' + k);
+  const on = !el.classList.contains('on');
+  el.classList.toggle('on', on);
+  setPref(k, on);
+  if (navigator.vibrate && getPref('vibration')) navigator.vibrate(8);
+}
+['music','sfx','vibration'].forEach(k => {
+  document.getElementById('t-' + k).classList.toggle('on', getPref(k));
+});
+
+function setLang(l) {
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.getElementById('btn-hi').classList.toggle('active', l === 'hi');
+  const hi = l === 'hi';
+  document.getElementById('s-title').textContent = hi ? 'सेटिंग्स' : 'Settings';
+  document.getElementById('s-prefs-label').textContent = hi ? 'पसंद' : 'PREFERENCES';
+  document.getElementById('s-music-title').textContent = hi ? 'संगीत' : 'Music';
+  document.getElementById('s-music-sub').textContent = hi ? 'खेलते समय बैकग्राउंड संगीत' : 'Background music while you play';
+  document.getElementById('s-sfx-title').textContent = hi ? 'आवाज़ें' : 'Sound Effects';
+  document.getElementById('s-sfx-sub').textContent = hi ? 'टैप, पासा, जीत और खेल की आवाज़ें' : 'Taps, dice, wins and game sounds';
+  document.getElementById('s-vibration-title').textContent = hi ? 'वाइब्रेशन' : 'Vibration';
+  document.getElementById('s-vibration-sub').textContent = hi ? 'टैप और जीत पर हल्का कंपन' : 'Haptic feedback on taps and wins';
+  document.getElementById('s-privacy').textContent = hi ? 'प्राइवेसी पॉलिसी' : 'Privacy Policy';
+}
+</script>
+</body>
+</html>
