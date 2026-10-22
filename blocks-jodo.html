@@ -43,7 +43,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:var(--screen-bg);font-family:'Baloo 2',sans-serif;overscroll-behavior:none;}
 body{overflow:hidden;}
-#stack{position:fixed;inset:0;overflow:hidden;background:var(--screen-bg);}
+#stack{position:fixed;inset:0;max-width:480px;margin:0 auto;overflow:hidden;background:var(--screen-bg);}
 #col{position:absolute;inset:0;display:flex;flex-direction:column;}
 
 /* ── Header (GameHeader) ── */
@@ -160,7 +160,7 @@ body{overflow:hidden;}
 .how-goal-text{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-top:6px;line-height:1.4;}
 
 /* ── Confetti ── */
-#confetti-canvas{position:fixed;inset:0;z-index:55;pointer-events:none;}
+#confetti-canvas{position:absolute;inset:0;z-index:55;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -346,6 +346,7 @@ function tr(){ return T[lang]; }
 
 /* ─────────────────────────── Color helpers ─────────────────────────── */
 function hexToRgb(hex){
+  if (hex && typeof hex === 'object') return hex;
   var h = hex.replace('#','');
   return { r:parseInt(h.substr(0,2),16), g:parseInt(h.substr(2,2),16), b:parseInt(h.substr(4,2),16) };
 }
@@ -838,8 +839,8 @@ function newGame(){
 
 function deal(){
   tray = dealPieces(board);
-  updateTrayDom();
   layout();
+  updateTrayDom();
   refillStart = performance.now();
   Fx.refill();
   after(500, checkMoves);
@@ -975,7 +976,7 @@ function spawnClear(cleared, lines, origin, tint){
 }
 
 function spawnConfetti(){
-  var vw = window.innerWidth;
+  var vw = $stack.getBoundingClientRect().width;
   var t = now();
   for (var i=0;i<110;i++){
     confetti.push({
@@ -1083,6 +1084,7 @@ function onDown(slot, e){
   finger = toStack(e.clientX, e.clientY);
   liftStart = performance.now();
   Fx.blockPick();
+  renderTraySlot(slot);
   renderDragged();
   e.preventDefault();
 }
@@ -1446,12 +1448,13 @@ function lerpColor(a, b, t){
 
 /* ─────────────────────────── Confetti painter ─────────────────────────── */
 function setupConfettiCanvas(){
-  var w = window.innerWidth, h = window.innerHeight;
-  confettiCtx = setupCanvas($confettiCanvas, w, h);
+  var r = $stack.getBoundingClientRect();
+  confettiCtx = setupCanvas($confettiCanvas, r.width, r.height);
 }
 function paintConfetti(){
   var ctx = confettiCtx;
-  var w = window.innerWidth, h = window.innerHeight;
+  var r = $stack.getBoundingClientRect();
+  var w = r.width, h = r.height;
   ctx.clearRect(0,0,w,h);
   var t = now();
   confetti.forEach(function(p){
@@ -1472,14 +1475,16 @@ function paintConfetti(){
 
 /* ─────────────────────────── Main loop ─────────────────────────── */
 function tick(){
-  scenePrune();
-  confettiAlive();
-  var shakeNow = isShaking();
-  var off = shakeOffset();
-  $boardWrap.style.transform = 'translate('+off.x+'px,'+off.y+'px)';
-  paintBoard();
-  paintConfetti();
-  if (dragSlot!==null) renderDragged();
+  try {
+    scenePrune();
+    confettiAlive();
+    var shakeNow = isShaking();
+    var off = shakeOffset();
+    $boardWrap.style.transform = 'translate('+off.x+'px,'+off.y+'px)';
+    paintBoard();
+    paintConfetti();
+    if (dragSlot!==null) renderDragged();
+  } catch(e){}
   requestAnimationFrame(tick);
 }
 
@@ -1554,8 +1559,8 @@ window.addEventListener('pointermove', onMove, {passive:false});
 window.addEventListener('pointerup', onUp, {passive:false});
 window.addEventListener('pointercancel', onCancel, {passive:false});
 
-window.addEventListener('resize', function(){ setupConfettiCanvas(); layout(); });
-window.addEventListener('orientationchange', function(){ setTimeout(function(){ setupConfettiCanvas(); layout(); }, 50); });
+window.addEventListener('resize', function(){ setupConfettiCanvas(); layout(); updateTrayDom(); });
+window.addEventListener('orientationchange', function(){ setTimeout(function(){ setupConfettiCanvas(); layout(); updateTrayDom(); }, 50); });
 
 document.addEventListener('visibilitychange', function(){
   if (document.hidden){
