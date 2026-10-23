@@ -675,80 +675,6 @@ html,body { height:100%; background:#1A1A2E; font-family:'Nunito Sans',sans-seri
 
 
 
-/* ══ INSTALL STRIP ══ */
-#install-strip {
-  position:fixed; top:0; left:0; right:0; z-index:500;
-  display:none; align-items:center; justify-content:space-between;
-  gap:10px; padding:9px 14px;
-  background:linear-gradient(90deg,#3B82F6,#1e4fa0);
-  box-shadow:0 2px 12px rgba(0,0,0,.35);
-  font-family:'Baloo 2','Nunito Sans',sans-serif;
-  padding-top:calc(9px + env(safe-area-inset-top, 0px));
-}
-#install-strip.show { display:flex; animation:stripDown .35s cubic-bezier(.34,1.4,.64,1); }
-@keyframes stripDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
-
-.is-left { display:flex; align-items:center; gap:9px; min-width:0; }
-.is-icon { width:30px; height:30px; border-radius:7px; flex-shrink:0; }
-.is-text {
-  font-size:14px; font-weight:700; color:#fff;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.is-right { display:flex; align-items:center; gap:4px; flex-shrink:0; }
-.is-btn {
-  background:#fff; border:none; border-radius:50px;
-  padding:7px 18px; font-family:'Baloo 2',sans-serif;
-  font-size:14px; font-weight:700; color:#3B82F6;
-  cursor:pointer; white-space:nowrap;
-  box-shadow:0 2px 6px rgba(0,0,0,.2);
-  transition:transform .1s;
-}
-.is-btn:active { transform:scale(.94); }
-.is-close {
-  background:transparent; border:none; color:rgba(255,255,255,.75);
-  font-size:16px; cursor:pointer; padding:4px 6px; line-height:1;
-}
-/* Push page down when strip is visible */
-body.has-strip #launcher { padding-top:52px; }
-
-/* ══ ANDROID APP STRIP (early-access APK download) ══ */
-/* Same shape/behaviour as the install strip above, gold accent to read as a
-   distinct "get the real app" upsell. Mutually exclusive with #install-strip
-   — see showApkStrip()/showInstallStrip() in the script below. */
-#apk-strip {
-  position:fixed; top:0; left:0; right:0; z-index:500;
-  display:none; align-items:center; justify-content:space-between;
-  gap:10px; padding:9px 14px;
-  background:linear-gradient(90deg,#c97f00,#7a4b00);
-  box-shadow:0 2px 12px rgba(0,0,0,.35);
-  font-family:'Baloo 2','Nunito Sans',sans-serif;
-  padding-top:calc(9px + env(safe-area-inset-top, 0px));
-}
-#apk-strip.show { display:flex; animation:stripDown .35s cubic-bezier(.34,1.4,.64,1); }
-.as-left { display:flex; align-items:center; gap:9px; min-width:0; }
-.as-icon { width:30px; height:30px; border-radius:7px; flex-shrink:0; }
-.as-text {
-  font-size:13px; font-weight:700; color:#fff;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.as-right { display:flex; align-items:center; gap:4px; flex-shrink:0; }
-.as-btn {
-  background:#fff; border:none; border-radius:50px;
-  padding:7px 18px; font-family:'Baloo 2',sans-serif;
-  font-size:14px; font-weight:700; color:#c97f00;
-  cursor:pointer; white-space:nowrap; text-decoration:none;
-  box-shadow:0 2px 6px rgba(0,0,0,.2);
-  transition:transform .1s; display:inline-block;
-}
-.as-btn:active { transform:scale(.94); }
-.as-close {
-  background:transparent; border:none; color:rgba(255,255,255,.75);
-  font-size:16px; cursor:pointer; padding:4px 6px; line-height:1;
-}
-
-
-
-
 .first-prompt {
   flex-shrink:0; text-align:center;
   font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:800;
@@ -921,32 +847,6 @@ body.has-strip #launcher { padding-top:52px; }
 </style>
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
-
-<!-- Android app strip (early-access APK download) — takes priority over the
-     PWA install strip below when both are eligible; see JS at the bottom. -->
-<div id="apk-strip" role="banner">
-  <div class="as-left">
-    <img src="app-icon-192.png" class="as-icon" alt="" width="30" height="30">
-    <span class="as-text">Early access: get the Android app</span>
-  </div>
-  <div class="as-right">
-    <a class="as-btn" id="as-btn" href="MilkeKhelo-App.apk" download onclick="markApkDownloaded()">Download</a>
-    <button class="as-close" id="as-close" onclick="dismissApkStrip()" aria-label="Dismiss">✕</button>
-  </div>
-</div>
-
-<!-- Install strip -->
-<div id="install-strip" role="banner">
-  <div class="is-left">
-    <img src="icon-192.png" class="is-icon" alt="" width="32" height="32">
-    <span class="is-text" id="is-text">Install MilkeKhelo app</span>
-  </div>
-  <div class="is-right">
-    <button class="is-btn" id="is-btn" onclick="installApp()">Install</button>
-    <button class="is-close" id="is-close" onclick="dismissInstall()" aria-label="Dismiss">✕</button>
-  </div>
-</div>
-
 
 <!-- ══════════ LAUNCHER (3 slides) ══════════ -->
 <main id="main-content">
@@ -1221,14 +1121,12 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('end-screen').classList.remove('show');
       g.classList.remove('active');
       document.getElementById('launcher').classList.remove('hidden');
-  refreshInstallStrip();
       return;
     }
     if (ty && ty.classList.contains('active')) {
       document.getElementById('ty-end-screen').classList.remove('show');
       ty.classList.remove('active');
       document.getElementById('launcher').classList.remove('hidden');
-  refreshInstallStrip();
       return;
     }
     if (snl && snl.classList.contains('active')) {
@@ -1599,7 +1497,6 @@ function startGame() {
   const fPrev = document.getElementById('btn-prev');
   renderCard(idx, false);
   document.getElementById('launcher').classList.add('hidden');
-  hideInstallStrip();
   document.getElementById('game').classList.add('active');
   history.pushState({ view: 'first-game' }, '');
 }
@@ -1608,7 +1505,6 @@ function exitGame() {
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
-  refreshInstallStrip();
 }
 
 function renderCard(i, animate, dir) {
@@ -1733,7 +1629,6 @@ function startTyGame(){
   tyDeck=shuffleArr(TY_CARDS); tyIdx=0;
   applyTyCard(tyDeck[0], false);
   document.getElementById('launcher').classList.add('hidden');
-  hideInstallStrip();
   document.getElementById('ty-game').classList.add('active');
   history.pushState({ view: 'ty-game' }, '');
   // Localise TY game UI
@@ -1755,7 +1650,6 @@ function exitTyGame(){
   document.getElementById('ty-end-screen').classList.remove('show');
   document.getElementById('ty-game').classList.remove('active');
   document.getElementById('launcher').classList.remove('hidden');
-  refreshInstallStrip();
 }
 
 function applyTyCard(c, animate, dir){
@@ -2051,7 +1945,6 @@ function startSnlGame(isRestart) {
 
   document.getElementById('snl-end-screen').classList.remove('show');
   document.getElementById('launcher').classList.add('hidden');
-  hideInstallStrip();
   document.getElementById('snl-game').classList.add('active');
   if (!isRestart) history.pushState({ view: 'snl-game' }, '');
 
@@ -2153,7 +2046,6 @@ function exitSnlGame() {
   document.getElementById('snl-game').classList.remove('active');
   document.getElementById('snl-end-screen').classList.remove('show');
   document.getElementById('launcher').classList.remove('hidden');
-  refreshInstallStrip();
 }
 
 function rollSnlDice() {
@@ -2304,160 +2196,6 @@ window.addEventListener('resize', () => {
 
 </script>
 
-<script>
-// ══ INSTALL PROMPT ══════════════════════════════════════════════
-let deferredPrompt = null;
-
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches ||
-         window.navigator.standalone === true;
-}
-
-function isAndroid() {
-  return /android/i.test(navigator.userAgent);
-}
-
-// ── Android app strip (early-access APK) ──────────────────────────────────
-// A plain website can't ask Android "is this APK installed?" — that check
-// (Digital Asset Links / getInstalledRelatedApps) needs extra server files
-// and the app's signing fingerprint, which is outside this page. The
-// practical stand-in: once someone has tapped Download here, we remember it
-// on this device (localStorage, so it persists across sessions, unlike the
-// sessionStorage dismiss-for-now below) and stop showing the strip. This is
-// independent of the PWA install strip — installing the PWA ("Add to Home
-// Screen") is not the same as installing this APK, so that doesn't suppress
-// this strip.
-function isApkGrabbed() {
-  return localStorage.getItem('mkk-apk-downloaded') === '1';
-}
-
-function isApkStripEligible() {
-  if (!isAndroid()) return false;                              // Android only
-  if (isApkGrabbed()) return false;                             // already downloaded
-  if (sessionStorage.getItem('mkk-apk-hidden')) return false;   // dismissed this session
-  if (!isHomeVisible()) return false;                           // home page only
-  return true;
-}
-
-function showApkStrip() {
-  if (!isApkStripEligible()) return;
-  const strip = document.getElementById('apk-strip');
-  if (!strip) return;
-  hideInstallStrip(); // this strip takes priority over the PWA install strip
-  strip.classList.add('show');
-  document.body.classList.add('has-strip');
-}
-
-function hideApkStrip() {
-  const strip = document.getElementById('apk-strip');
-  if (strip) strip.classList.remove('show');
-  document.body.classList.remove('has-strip');
-}
-
-function dismissApkStrip() {
-  sessionStorage.setItem('mkk-apk-hidden', '1');
-  hideApkStrip();
-  showInstallStrip(); // let the PWA install strip take the slot if eligible
-}
-
-function markApkDownloaded() {
-  localStorage.setItem('mkk-apk-downloaded', '1');
-  hideApkStrip();
-  showInstallStrip(); // let the PWA install strip take the slot if eligible
-}
-// ────────────────────────────────────────────────────────────────────────────
-
-function showInstallStrip() {
-  if (!isAndroid()) return;                                  // Android only
-  if (isStandalone()) return;                                // already installed
-  if (sessionStorage.getItem('mkk-install-hidden')) return;  // dismissed this session
-  if (!isHomeVisible()) return;                              // home page only
-  if (!deferredPrompt && !installReady) return;              // prompt not ready yet
-  if (isApkStripEligible()) return;                          // APK strip has priority
-  const strip = document.getElementById('install-strip');
-  if (!strip) return;
-  strip.classList.add('show');
-  document.body.classList.add('has-strip');
-}
-
-// True only when the launcher (home) is showing and no game is active
-function isHomeVisible() {
-  const launcher = document.getElementById('launcher');
-  if (!launcher || launcher.classList.contains('hidden')) return false;
-  // Any active game screen means we're not on home
-  const games = ['game', 'ty-game', 'snl-game'];
-  return !games.some(id => {
-    const el = document.getElementById(id);
-    return el && el.classList.contains('active');
-  });
-}
-
-// Call whenever we navigate between home and a game
-function refreshInstallStrip() {
-  if (isHomeVisible()) {
-    showApkStrip();
-    showInstallStrip();
-  } else {
-    hideApkStrip();
-    hideInstallStrip();
-  }
-}
-
-function hideInstallStrip() {
-  const strip = document.getElementById('install-strip');
-  if (strip) strip.classList.remove('show');
-  document.body.classList.remove('has-strip');
-}
-
-function dismissInstall() {
-  sessionStorage.setItem('mkk-install-hidden', '1');
-  hideInstallStrip();
-}
-
-async function installApp() {
-  // Clear old caches first so the installed app gets the latest build
-  await refreshAppCache();
-
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    if (outcome === 'accepted') hideInstallStrip();
-  } else {
-    alert('To install: open your browser menu (⋮) and choose "Install app" or "Add to Home Screen".');
-  }
-}
-
-// Wipe caches + re-register SW so the installed copy is always current
-async function refreshAppCache() {
-  try {
-    if ('caches' in window) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-    if ('serviceWorker' in navigator) {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r => r.update()));
-    }
-  } catch (e) { /* non-fatal */ }
-}
-
-let installReady = false;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installReady = true;
-  showInstallStrip();
-});
-
-window.addEventListener('appinstalled', () => {
-  deferredPrompt = null;
-  hideInstallStrip();
-});
-
-
-
-</script>
 
 <script>
 if ('serviceWorker' in navigator) {
