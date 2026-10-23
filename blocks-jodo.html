@@ -12,15 +12,42 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Block Jodo — Mil ke Khelo!</title>
-<meta name="description" content="Block Jodo: a Block Blast-style puzzle. Drag pieces onto the board, clear full rows and columns, chain combos and beat your best score. Free to play, in English or Hindi.">
+<title>Block Jodo — Free Online Block Puzzle Game | Mil ke Khelo</title>
+<meta name="description" content="Block Jodo is a free block puzzle game — drag pieces to clear rows and columns, chain combos and beat your high score. Casual online gaming, no download. English or Hindi.">
+<meta name="keywords" content="block jodo, block puzzle, block puzzle game, block blast, block games, puzzle games, puzzle game online, casual gaming, online gaming, board games, party games, free puzzle game">
+<meta name="author" content="Mil ke Khelo!">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://milkekhelo.com/blocks-jodo.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://milkekhelo.com/blocks-jodo.html">
-<meta property="og:title" content="Block Jodo — Mil ke Khelo!">
-<meta property="og:description" content="A Block Blast-style puzzle. Drag, fill lines, build combos and beat your best score.">
+<meta property="og:title" content="Block Jodo — Free Online Block Puzzle Game">
+<meta property="og:description" content="A free block puzzle game — drag pieces to clear rows and columns, chain combos and beat your high score. No download needed.">
 <meta property="og:image" content="https://milkekhelo.com/images/home/card_blocks_jodo_en.webp">
+<meta property="og:site_name" content="Mil ke Khelo!">
+<meta property="og:locale" content="en_IN">
+<meta property="og:locale:alternate" content="hi_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Block Jodo — Free Online Block Puzzle Game">
+<meta name="twitter:description" content="Drag pieces to clear rows and columns, chain combos and beat your high score. Free, no download.">
+<meta name="twitter:image" content="https://milkekhelo.com/images/home/card_blocks_jodo_en.webp">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Game",
+  "name": "Block Jodo",
+  "alternateName": ["Block Puzzle", "Block Blast", "Block Game", "Block Puzzle Game"],
+  "url": "https://milkekhelo.com/blocks-jodo.html",
+  "image": "https://milkekhelo.com/images/home/card_blocks_jodo_en.webp",
+  "genre": ["Puzzle Game", "Block Puzzle"],
+  "description": "A free block puzzle game — drag pieces onto the board, clear full rows and columns, chain combos and beat your best score.",
+  "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1 },
+  "inLanguage": ["en", "hi"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+  "publisher": { "@type": "Organization", "name": "Mil ke Khelo", "url": "https://milkekhelo.com/" },
+  "isPartOf": { "@type": "WebSite", "name": "Mil ke Khelo", "url": "https://milkekhelo.com/" }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -40,7 +67,8 @@
   --cta-shadow:#7A4B00;
   --cta-pressed:#E1AB3E;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 html,body{height:100%;background:var(--screen-bg);font-family:'Baloo 2',sans-serif;overscroll-behavior:none;}
 body{overflow:hidden;}
 #stack{position:fixed;inset:0;max-width:480px;margin:0 auto;overflow:hidden;background:var(--screen-bg);}
@@ -164,6 +192,7 @@ body{overflow:hidden;}
 </style>
 </head>
 <body>
+<h1 class="sr-only">Block Jodo — Free Online Block Puzzle Game</h1>
 <div id="stack">
   <div id="col">
     <div class="hdr">
@@ -789,7 +818,7 @@ function layout(){
   $trayWrap.style.alignItems = 'center';
   document.getElementById('tray').style.height = trayHeight+'px';
   document.getElementById('tray').style.display = 'flex';
-  document.getElementById('tray').style.alignItems = 'center';
+  document.getElementById('tray').style.alignItems = 'stretch';
 
   for (var i=0;i<3;i++){
     var p = tray[i];
@@ -1517,7 +1546,7 @@ function applyLang(){
   document.getElementById('lb-hi').classList.toggle('active', lang==='hi');
   document.getElementById('lbl-best').textContent = tr().bestScore;
   document.getElementById('lbl-score').textContent = tr().score;
-  document.title = (lang==='hi' ? tr().title : 'Block Jodo') + ' — Mil ke Khelo!';
+  document.title = lang==='hi' ? (tr().title + ' — Mil ke Khelo!') : 'Block Jodo — Free Online Block Puzzle Game | Mil ke Khelo';
   renderHow();
   if (showGameOverFlag) renderGameOver();
 }

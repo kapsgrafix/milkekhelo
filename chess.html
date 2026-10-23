@@ -12,15 +12,42 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Chess — Mil ke Khelo!</title>
-<meta name="description" content="Chess: play casual, friendly-rules chess against the bot or pass-and-play with a friend on one device. Free, in English or Hindi.">
+<title>Online Chess — Free 2 Player Chess &amp; Shatranj | Mil ke Khelo</title>
+<meta name="description" content="Play chess online for free — casual 2 player chess (shatranj) against a friend on one device, or solo vs the bot. No download, no login. English or Hindi.">
+<meta name="keywords" content="chess, online chess, 2 player chess, play chess online, chess game, shatranj, shatranj online, free chess, chess vs computer, chess bot, casual chess, board games, strategy games, online gaming, casual gaming, party games">
+<meta name="author" content="Mil ke Khelo!">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://milkekhelo.com/chess.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://milkekhelo.com/chess.html">
-<meta property="og:title" content="Chess — Mil ke Khelo!">
-<meta property="og:description" content="Casual, friendly-rules chess. Play against the bot or head-to-head on one device.">
+<meta property="og:title" content="Online Chess — Free 2 Player Chess &amp; Shatranj">
+<meta property="og:description" content="Casual, friendly-rules online chess. Play 2 player chess (shatranj) against a friend on one device, or solo vs the bot. Free, no login.">
 <meta property="og:image" content="https://milkekhelo.com/images/home/card_chess_en.webp">
+<meta property="og:site_name" content="Mil ke Khelo!">
+<meta property="og:locale" content="en_IN">
+<meta property="og:locale:alternate" content="hi_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Online Chess — Free 2 Player Chess &amp; Shatranj">
+<meta name="twitter:description" content="Casual, friendly-rules online chess — solo vs the bot or 2 player chess on one device. Free, no login.">
+<meta name="twitter:image" content="https://milkekhelo.com/images/home/card_chess_en.webp">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Game",
+  "name": "Chess",
+  "alternateName": ["Online Chess", "2 Player Chess", "Shatranj", "Shatranj Online", "Chess Online"],
+  "url": "https://milkekhelo.com/chess.html",
+  "image": "https://milkekhelo.com/images/home/card_chess_en.webp",
+  "genre": ["Board Game", "Strategy Game"],
+  "description": "Free online chess — casual, friendly-rules chess against the bot (solo) or 2 player chess pass-and-play on one device. No download, no login required.",
+  "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2 },
+  "inLanguage": ["en", "hi"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+  "publisher": { "@type": "Organization", "name": "Mil ke Khelo", "url": "https://milkekhelo.com/" },
+  "isPartOf": { "@type": "WebSite", "name": "Mil ke Khelo", "url": "https://milkekhelo.com/" }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -37,6 +64,7 @@
   --piece-white-top:#FFFFFF; --piece-black-top:#5E5A58; --piece-black-edge:#111111;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 html,body{height:100%;background:var(--screen-bg);font-family:'Baloo 2',sans-serif;overscroll-behavior:none;}
 body{overflow:hidden;}
 #stack{position:fixed;inset:0;max-width:480px;margin:0 auto;overflow:hidden;background:var(--screen-bg);}
@@ -164,6 +192,7 @@ body{overflow:hidden;}
 </style>
 </head>
 <body>
+<h1 class="sr-only">Online Chess — Play Free 2 Player Chess &amp; Shatranj</h1>
 <div id="stack">
 
   <!-- ══════════════ LANDING VIEW ══════════════ -->

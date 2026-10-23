@@ -12,15 +12,42 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Memory Grid — Mil ke Khelo!</title>
-<meta name="description" content="Memory Grid: memorise the lit blocks, tap them from memory and build a streak. Play solo against your best score, or head-to-head with a friend on one device. Free, in English or Hindi.">
+<title>Memory Grid — Free Online Memory Game | Mil ke Khelo</title>
+<meta name="description" content="Memory Grid is a free online memory game — memorise the lit blocks, tap them back and build your streak. Solo or 2 players, casual online gaming. English or Hindi.">
+<meta name="keywords" content="memory game, memory grid, memory matching game, brain game, online memory game, 2 player memory game, puzzle games, casual gaming, online gaming, party games, free online games">
+<meta name="author" content="Mil ke Khelo!">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://milkekhelo.com/memorygrid.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://milkekhelo.com/memorygrid.html">
-<meta property="og:title" content="Memory Grid — Mil ke Khelo!">
-<meta property="og:description" content="Memorise the lit blocks, tap them from memory and build a streak. Solo or 2 players.">
+<meta property="og:title" content="Memory Grid — Free Online Memory Game">
+<meta property="og:description" content="Memorise the lit blocks, tap them from memory and build a streak. Solo or 2 players. Free, no download.">
 <meta property="og:image" content="https://milkekhelo.com/images/home/card_memory_grid_en.webp">
+<meta property="og:site_name" content="Mil ke Khelo!">
+<meta property="og:locale" content="en_IN">
+<meta property="og:locale:alternate" content="hi_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Memory Grid — Free Online Memory Game">
+<meta name="twitter:description" content="Memorise the lit blocks, tap them from memory and build a streak. Solo or 2 players.">
+<meta name="twitter:image" content="https://milkekhelo.com/images/home/card_memory_grid_en.webp">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Game",
+  "name": "Memory Grid",
+  "alternateName": ["Memory Game", "Memory Matching Game", "Online Memory Game"],
+  "url": "https://milkekhelo.com/memorygrid.html",
+  "image": "https://milkekhelo.com/images/home/card_memory_grid_en.webp",
+  "genre": ["Puzzle Game", "Memory Game"],
+  "description": "A free memory matching game — memorise the lit blocks, tap them back from memory and build your streak. Solo or 2 players.",
+  "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2 },
+  "inLanguage": ["en", "hi"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+  "publisher": { "@type": "Organization", "name": "Mil ke Khelo", "url": "https://milkekhelo.com/" },
+  "isPartOf": { "@type": "WebSite", "name": "Mil ke Khelo", "url": "https://milkekhelo.com/" }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -41,6 +68,7 @@
   --cta-top:#FFE08A; --cta-bottom:#C97F00; --cta-shadow:#7A4B00; --cta-pressed:#E1AB3E;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 html,body{height:100%;background:var(--screen-bg);font-family:'Baloo 2',sans-serif;overscroll-behavior:none;}
 body{overflow:hidden;}
 /* Mobile layout only — even on a wide desktop window the game stays a
@@ -258,6 +286,7 @@ body{overflow:hidden;}
 </style>
 </head>
 <body>
+<h1 class="sr-only">Memory Grid — Free Online Memory Game</h1>
 <div id="stack">
 
   <!-- ══════════════ LANDING VIEW ══════════════ -->
@@ -1183,7 +1212,7 @@ function renderLanding(){
   document.getElementById('card-hard-sub').textContent = t.beatYourBest;
   document.getElementById('card-duel-title').textContent = t.twoPlayers;
   document.getElementById('card-duel-sub').textContent = t.twoPlayersSub;
-  document.title = (lang==='hi' ? (t.titleA+t.titleB) : 'Memory Grid') + ' — Mil ke Khelo!';
+  document.title = lang==='hi' ? ((t.titleA+t.titleB) + ' — Mil ke Khelo!') : 'Memory Grid — Free Online Memory Game | Mil ke Khelo';
 }
 function startGame(chosenLevel){
   isDuel = chosenLevel === null;
@@ -1203,7 +1232,7 @@ function startGame(chosenLevel){
   renderStatusRow();
   renderHintButton();
   setupConfettiCanvas();
-  document.title = 'Memory Grid — Mil ke Khelo!';
+  document.title = lang==='hi' ? (tr().titleA+tr().titleB+' — Mil ke Khelo!') : 'Memory Grid — Free Online Memory Game | Mil ke Khelo';
   runCountdown(function(){
     if (isDuel) duelStartRound(); else soloNewRound();
   });
