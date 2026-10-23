@@ -106,14 +106,6 @@ body{overflow:hidden;}
 .pbar-cap-row{display:flex;align-items:center;gap:6px;height:18px;margin-top:3px;}
 .pbar-cap-canvas{display:block;}
 .pbar-lead{font-size:12px;font-weight:700;color:var(--text-muted);}
-.pbar-assist{margin-left:8px;flex-shrink:0;}
-.assist-box{display:flex;align-items:center;gap:8px;padding:5px 5px 5px 10px;border-radius:10px;background:rgba(0,0,0,.30);
-  border:1px solid var(--border-default);cursor:pointer;touch-action:manipulation;user-select:none;}
-.assist-label{font-size:12px;font-weight:700;color:var(--text-muted);white-space:nowrap;}
-.assist-track{width:36px;height:21px;border-radius:999px;background:rgba(255,255,255,.22);position:relative;transition:background .18s;flex-shrink:0;}
-.assist-track.on{background:var(--brand-yellow);}
-.assist-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .18s;box-shadow:0 1px 3px rgba(0,0,0,.4);}
-.assist-track.on .assist-knob{left:17px;}
 
 #board-wrap{position:relative;flex-shrink:0;}
 #chess-canvas{display:block;touch-action:manipulation;}
@@ -746,7 +738,7 @@ var TXT = {
   en: {
     title:'Chess', solo:'Solo', soloSub:'Play against the bot', twoPlayers:'2 Players', twoPlayersSub:'Play together on one device',
     you:'You', bot:'Chess Bot', player1:'Player 1', player2:'Player 2', white:'White', black:'Black',
-    yourTurn:'Your turn', assist:'Assist', thinking:'Thinking', turn:'Turn',
+    yourTurn:'Your turn', thinking:'Thinking', turn:'Turn',
     check:'Check!', checkmate:'Checkmate!', kingCaptured:'King Captured!', promoteTo:'Promote pawn',
     youWin:'You win! 🎉', botWins:'The bot wins', draw:'Draw', stalemate:'Stalemate — no legal moves',
     insufficient:'Not enough pieces to checkmate', fiftyMove:'50-move rule', repetition:'Same position three times',
@@ -765,7 +757,7 @@ var TXT = {
   hi: {
     title:'शतरंज', solo:'सोलो', soloSub:'बॉट के खिलाफ़ खेलें', twoPlayers:'2 खिलाड़ी', twoPlayersSub:'एक ही फ़ोन पर साथ खेलें',
     you:'आप', bot:'शतरंज बॉट', player1:'खिलाड़ी 1', player2:'खिलाड़ी 2', white:'सफ़ेद', black:'काला',
-    yourTurn:'आपकी बारी', assist:'मदद', thinking:'सोच रहा है', turn:'बारी',
+    yourTurn:'आपकी बारी', thinking:'सोच रहा है', turn:'बारी',
     check:'शह!', checkmate:'शह और मात!', kingCaptured:'राजा मारा गया!', promoteTo:'प्यादे को बदलें',
     youWin:'आप जीत गए! 🎉', botWins:'बॉट जीत गया', draw:'ड्रॉ', stalemate:'स्टेलमेट — कोई चाल नहीं बची',
     insufficient:'मात देने लायक मोहरे नहीं बचे', fiftyMove:'50 चालों का नियम', repetition:'एक ही स्थिति तीन बार',
@@ -944,62 +936,17 @@ var viewAngle = 0; // 0 or Math.PI — instant, not animated (matches the app)
 
 var endClock = new AnimClock(700);
 
-var ASSIST_KEY = 'chess_assist';
-var assist = false, assistMove = null, assistGen = 0, assistTimer = null;
-var assistClock = new AnimClock(1200, {repeat:'plain'});
-
 var confettiBits = [], confettiStart = null;
-
-function loadAssist(){
-  try { assist = localStorage.getItem(ASSIST_KEY) === '1'; } catch(e){ assist = false; }
-  if (assist) scheduleAssist();
-}
-function toggleAssist(){
-  Fx.tap();
-  assist = !assist;
-  try { localStorage.setItem(ASSIST_KEY, assist ? '1' : '0'); } catch(e){}
-  if (assist) scheduleAssist(); else clearAssist();
-  renderBars();
-}
 
 function busy(){
   return moveClock.isAnimating(nowMs()) || thinking || game.over || promoChoices !== null;
-}
-function assistWanted(){
-  return vsBot && assist && !game.over && game.whiteToMove && !busy() && selected === null && !showEnd;
-}
-function clearAssist(){
-  assistGen++;
-  if (assistTimer) { clearTimeout(assistTimer); assistTimer = null; }
-  assistClock.stop(0);
-  assistMove = null;
-}
-function scheduleAssist(){
-  clearAssist();
-  if (!assistWanted()) return;
-  var gen = assistGen;
-  assistTimer = setTimeout(function(){
-    if (gen !== assistGen || !assistWanted()) return;
-    computeBotMove(game.position.encode(), function(pick){
-      if (!pick || gen !== assistGen || !assistWanted()) return;
-      var wanted = Move.decode(pick);
-      var legal = game.playableMoves;
-      var m = null;
-      for (var i = 0; i < legal.length; i++) if (legal[i].equals(wanted)) { m = legal[i]; break; }
-      if (!m) return;
-      assistMove = m;
-      assistClock.start(nowMs());
-    });
-  }, 2000);
 }
 
 /* ───────────────────────── Input ───────────────────────── */
 function onTapSquare(sq){
   if (busy()) return;
   if (vsBot && !game.whiteToMove) return;
-  clearAssist();
   tapSquare(sq);
-  if (selected === null) scheduleAssist();
   renderBars();
 }
 function tapSquare(sq){
@@ -1063,7 +1010,7 @@ function play(m){
       bannerClock.start(nowMs());
     }
     renderBars();
-    if (vsBot && !game.whiteToMove) botTurn(); else scheduleAssist();
+    if (vsBot && !game.whiteToMove) botTurn();
   }, 260);
 }
 
@@ -1115,7 +1062,6 @@ function gameOver(){
 
 function restart(){
   generation++;
-  clearAssist();
   game = new Game();
   selected = null; targets = []; promoChoices = null; closePromoPicker();
   thinking = false; showEnd = false;
@@ -1124,7 +1070,6 @@ function restart(){
   bannerClock.stop(0); bannerKind = null; endClock.stop(0); viewAngle = 0;
   document.getElementById('end-overlay').classList.remove('show');
   renderBars();
-  if (vsBot) scheduleAssist();
 }
 
 /* ───────────────────────── Derived ───────────────────────── */
@@ -1266,27 +1211,6 @@ function drawBoard(){
     ctx.fillRect(rs.x, rs.y, rs.w, rs.h);
   }
 
-  // Assist: blinking suggested square.
-  var assistM = anim === null ? assistMove : null;
-  var av = assistClock.value(now);
-  if (assistM) {
-    var blink = 0.5 - 0.5*Math.cos(2*Math.PI*av);
-    var ra = rectOf(assistM.to, cell, frame);
-    ctx.fillStyle = 'rgba(255,197,61,' + (0.24 + 0.43*blink) + ')';
-    ctx.fillRect(ra.x, ra.y, ra.w, ra.h);
-    ctx.save();
-    ctx.lineWidth = cell*(0.08+0.06*blink);
-    ctx.strokeStyle = 'rgba(255,197,61,' + (0.5+0.4*blink) + ')';
-    ctx.strokeRect(ra.x+cell*0.01, ra.y+cell*0.01, ra.w-cell*0.02, ra.h-cell*0.02);
-    ctx.restore();
-    ctx.save();
-    ctx.lineWidth = cell*0.09;
-    ctx.strokeStyle = '#FFC53D';
-    var infl = cell*0.045;
-    ctx.strokeRect(ra.x+infl, ra.y+infl, ra.w-2*infl, ra.h-2*infl);
-    ctx.restore();
-  }
-
   // 2. King in check — pulsing red square.
   if ((game.inCheck && anim === null) || mated) {
     var k = game.position.kingSquare(game.whiteToMove);
@@ -1318,7 +1242,6 @@ function drawBoard(){
       hidden[rookTo] = true;
     }
   }
-  if (assistM) hidden[assistM.from] = true;
   var loserKing = mated ? game.position.kingSquare(game.whiteToMove) : -1;
   for (var sq = 0; sq < 64; sq++) {
     var v = board[sq];
@@ -1326,16 +1249,6 @@ function drawBoard(){
     var rsq = rectOf(sq, cell, frame);
     if (sq === loserKing) { drawTopple(ctx, rsq, v, endClock.value(now), angle); continue; }
     drawPieceRotated(ctx, rsq, v, angle, {});
-  }
-  if (assistM) {
-    var from = rectOf(assistM.from, cell, frame), to = rectOf(assistM.to, cell, frame);
-    var fc = rectCenter(from), tc = rectCenter(to);
-    var dx = tc.x-fc.x, dy = tc.y-fc.y, dist = Math.sqrt(dx*dx+dy*dy);
-    var ux = dist ? dx/dist : 0, uy = dist ? dy/dist : 0;
-    var phase = (av*2) % 1;
-    var hop = phase < 0.5 ? Math.sin(Math.PI*phase*2) : 0;
-    var shifted = { x:from.x+ux*cell*0.16*hop, y:from.y+uy*cell*0.16*hop, w:from.w, h:from.h };
-    drawPieceRotated(ctx, scaleRect(shifted, 1+0.08*hop), board[assistM.from], angle, {});
   }
   if (anim && anim.isCapture()) {
     drawPieceRotated(ctx, rectOf(anim.captureSquare(), cell, frame), anim.captured, angle, {});
@@ -1458,12 +1371,6 @@ function barHtml(white){
   var lead = materialLead() * (white ? 1 : -1);
   var leadHtml = lead > 0 ? '<span class="pbar-lead">+' + lead + '</span>' : '';
 
-  var assistHtml = '';
-  if (white && vsBot) {
-    assistHtml = '<div class="pbar-assist"><div class="assist-box" id="assist-toggle"><span class="assist-label">' + escapeHtml(T.assist) +
-      '</span><span class="assist-track' + (assist?' on':'') + '"><span class="assist-knob"></span></span></div></div>';
-  }
-
   return (
     '<div class="pbar-avatar" style="border-color:' + ring + '"><div class="pbar-avatar-face" style="background:' + avatarBg + '">' + avatar + '</div></div>' +
     '<div class="pbar-info">' +
@@ -1473,8 +1380,7 @@ function barHtml(white){
         statusHtml +
       '</div>' +
       '<div class="pbar-cap-row"><canvas class="pbar-cap-canvas" id="cap-canvas-' + (white?'w':'b') + '"></canvas>' + leadHtml + '</div>' +
-    '</div>' +
-    assistHtml
+    '</div>'
   );
 }
 function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -1485,8 +1391,6 @@ function renderBars(){
   document.getElementById('bar-top-wrap').classList.toggle('flip', twoPlayer);
   drawCapturedTray(document.getElementById('cap-canvas-w'), getCaptured(true), 18);
   drawCapturedTray(document.getElementById('cap-canvas-b'), getCaptured(false), 18);
-  var at = document.getElementById('assist-toggle');
-  if (at) at.onclick = toggleAssist;
 }
 
 /* ═══════════════════════ Check banner, promotion, end overlay ═══════════════════════ */
@@ -1725,11 +1629,9 @@ function startGame(mode){
   layoutBoard();
   setupConfettiCanvas();
   renderBars();
-  if (vsBot) loadAssist();
 }
 function backToLanding(){
   generation++;
-  clearAssist();
   showView('landing-view');
 }
 
